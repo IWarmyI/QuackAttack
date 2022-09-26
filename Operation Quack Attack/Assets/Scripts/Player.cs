@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+//using System.Diagnostics;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -28,6 +29,13 @@ public class Player : MonoBehaviour
     [SerializeField] private float accelRate = 10;
     const float deccel = 0.75f; // Ground Friction
 
+    // Dashing
+    private bool canDash = true;
+    private bool isDashing = false;
+    [SerializeField] private float dashingSpeed = 10f;
+    [SerializeField] private float dashingTime = 0.1f;
+    [SerializeField] private float dashingCooldown = 0.5f;
+
     // Jumping and Falling
     [SerializeField] private float jumpStrength = 10;
     [SerializeField] private float jumpGravity = 10;
@@ -39,6 +47,9 @@ public class Player : MonoBehaviour
     // GameObject Components
     SpriteRenderer spr;
     Rigidbody2D rb;
+
+    //Air jump counter
+    [SerializeField] int numOfJumps = 0 ;
 
     // Start is called before the first frame update
     void Start()
@@ -64,6 +75,7 @@ public class Player : MonoBehaviour
                 break;
             // Dashing
             case PlayerState.Dashing:
+                UpdateDashing();
                 break;
             default:
                 break;
@@ -130,6 +142,25 @@ public class Player : MonoBehaviour
         }
     }
 
+    private void UpdateDashing()
+    {
+        spr.color = Color.yellow; // Dashing debug color
+
+        // Dashing timer counting
+        dashingTime -= Time.smoothDeltaTime;
+
+        // Apply dashing speed
+        vel.x = speed;
+
+        // When counter is over, go back to Normal state and reset dash timer
+        if (dashingTime <= 0)
+        {
+            isDashing = false;
+            dashingTime = 0.2f;
+            state = PlayerState.Normal;
+        }
+    }
+
     // ========================================================================
     // Player Input Messages
     // ========================================================================
@@ -154,20 +185,36 @@ public class Player : MonoBehaviour
         // Can only jump if in normal state
         if (state == PlayerState.Normal)
         {
-            // Jumps if on ground
-            if (onGround)
+            // Jumps if on ground or double jump
+            if (numOfJumps < 1 || onGround)
             {
                 vel.y = jumpStrength;
                 onGround = false;
+                numOfJumps++;
             }
         }
     }
 
     private void OnDash(InputValue value)
     {
-        // !!!!!!!!!!!!!!!!!!
-        //        TBD
-        // !!!!!!!!!!!!!!!!!!
+        // Can only dash if in normal state
+        if (state == PlayerState.Normal)
+        {
+            // Change state to dashing and reset vertical speed
+            state = PlayerState.Dashing;
+            vel.y = 0;
+
+            // Get dashing direction
+            if (vel.x >= 0)
+            {
+                speed = dashingSpeed;
+            }
+            else
+            {
+                speed = -dashingSpeed;
+            }
+            
+        }
     }
 
     // ========================================================================
@@ -179,6 +226,7 @@ public class Player : MonoBehaviour
         if (collision.collider.bounds.max.y < collision.otherCollider.bounds.min.y)
         {
             onGround = true;
+            numOfJumps = 0;
 
             // Resets vertical velocity
             if (vel.y < 0)
@@ -203,6 +251,7 @@ public class Player : MonoBehaviour
         if (collision.collider.bounds.max.y < collision.otherCollider.bounds.min.y)
         {
             onGround = true;
+            numOfJumps = 0;
         }
 
         // If player bumps into wall/side of a platform
