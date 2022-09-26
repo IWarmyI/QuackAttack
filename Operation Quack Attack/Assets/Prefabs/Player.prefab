@@ -164,9 +164,9 @@ MonoBehaviour:
   topSpeed: 15
   accelRate: 15
   jumpStrength: 11.5
-  fallGravity: 30
   jumpGravity: 20
-  driftSpeed: 35
+  fallGravity: 30
+  driftInfluence: 35
 --- !u!114 &913230024881484952
 MonoBehaviour:
   m_ObjectHideFlags: 0
