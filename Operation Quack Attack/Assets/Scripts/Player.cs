@@ -40,6 +40,9 @@ public class Player : MonoBehaviour
     SpriteRenderer spr;
     Rigidbody2D rb;
 
+    //Air jump counter
+    [SerializeField] int numOfJumps = 0 ;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -154,11 +157,12 @@ public class Player : MonoBehaviour
         // Can only jump if in normal state
         if (state == PlayerState.Normal)
         {
-            // Jumps if on ground
-            if (onGround)
+            // Jumps if on ground or double jump
+            if (numOfJumps < 1 || onGround)
             {
                 vel.y = jumpStrength;
                 onGround = false;
+                numOfJumps++;
             }
         }
     }
@@ -179,6 +183,7 @@ public class Player : MonoBehaviour
         if (collision.collider.bounds.max.y < collision.otherCollider.bounds.min.y)
         {
             onGround = true;
+            numOfJumps = 0;
 
             // Resets vertical velocity
             if (vel.y < 0)
@@ -203,6 +208,7 @@ public class Player : MonoBehaviour
         if (collision.collider.bounds.max.y < collision.otherCollider.bounds.min.y)
         {
             onGround = true;
+            numOfJumps = 0;
         }
 
         // If player bumps into wall/side of a platform
