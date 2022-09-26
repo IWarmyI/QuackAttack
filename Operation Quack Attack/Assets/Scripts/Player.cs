@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+//using System.Diagnostics;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -27,6 +28,13 @@ public class Player : MonoBehaviour
     [SerializeField] private float topSpeed = 10;
     [SerializeField] private float accelRate = 10;
     const float deccel = 0.75f; // Ground Friction
+
+    // Dashing
+    private bool canDash = true;
+    private bool isDashing = false;
+    [SerializeField] private float dashingSpeed = 10f;
+    [SerializeField] private float dashingTime = 0.1f;
+    [SerializeField] private float dashingCooldown = 0.5f;
 
     // Jumping and Falling
     [SerializeField] private float jumpStrength = 10;
@@ -67,6 +75,7 @@ public class Player : MonoBehaviour
                 break;
             // Dashing
             case PlayerState.Dashing:
+                UpdateDashing();
                 break;
             default:
                 break;
@@ -133,6 +142,25 @@ public class Player : MonoBehaviour
         }
     }
 
+    private void UpdateDashing()
+    {
+        spr.color = Color.yellow; // Dashing debug color
+
+        // Dashing timer counting
+        dashingTime -= Time.smoothDeltaTime;
+
+        // Apply dashing speed
+        vel.x = speed;
+
+        // When counter is over, go back to Normal state and reset dash timer
+        if (dashingTime <= 0)
+        {
+            isDashing = false;
+            dashingTime = 0.2f;
+            state = PlayerState.Normal;
+        }
+    }
+
     // ========================================================================
     // Player Input Messages
     // ========================================================================
@@ -169,9 +197,24 @@ public class Player : MonoBehaviour
 
     private void OnDash(InputValue value)
     {
-        // !!!!!!!!!!!!!!!!!!
-        //        TBD
-        // !!!!!!!!!!!!!!!!!!
+        // Can only dash if in normal state
+        if (state == PlayerState.Normal)
+        {
+            // Change state to dashing and reset vertical speed
+            state = PlayerState.Dashing;
+            vel.y = 0;
+
+            // Get dashing direction
+            if (vel.x >= 0)
+            {
+                speed = dashingSpeed;
+            }
+            else
+            {
+                speed = -dashingSpeed;
+            }
+            
+        }
     }
 
     // ========================================================================
