@@ -13,13 +13,26 @@ public class Player : MonoBehaviour
         Dashing
     }
 
+    public enum AnimState
+    {
+        Idle,
+        Run,
+        Air,
+        Dash
+    }
+
     // Player state
     private PlayerState state = PlayerState.Normal;
+
+    // Animation
+    private AnimState animState = AnimState.Idle;
+    private PlayerAnimation anim;
 
     // Position and Input
     private Vector2 pos;
     private Vector2 input = Vector2.zero;
     private Vector2 oldInput = Vector2.zero;
+    private bool facingRight = true;
 
     // Ground Movement
     [SerializeField] private Vector2 vel = Vector2.zero;
@@ -58,6 +71,8 @@ public class Player : MonoBehaviour
         speed = baseSpeed;
         spr = GetComponent<SpriteRenderer>();
         rb = GetComponent<Rigidbody2D>();
+
+        anim = GetComponentInChildren<PlayerAnimation>();
     }
 
     // Update is called once per frame
@@ -76,6 +91,7 @@ public class Player : MonoBehaviour
             // Dashing
             case PlayerState.Dashing:
                 UpdateDashing();
+                animState = AnimState.Dash;
                 break;
             default:
                 break;
@@ -84,11 +100,16 @@ public class Player : MonoBehaviour
         // Apply velocity
         pos += vel * Time.deltaTime;
         rb.velocity = vel;
+
+        // Animate
+        anim.Animate(animState, onGround, vel.y <= 0, speed >= topSpeed, facingRight);
     }
 
-    //
     private void UpdateNormal()
     {
+        // Get facing
+        if (input.x != 0) facingRight = input.x > 0;
+
         // Ground Movement
         if (onGround)
         {
@@ -97,8 +118,10 @@ public class Player : MonoBehaviour
             // Lateral movement
             if (input.x != 0)
             {
+                animState = AnimState.Run;
+
                 // Reset speed when changing directions
-                if (input.x + oldInput.x == 0) { speed = baseSpeed; Debug.Log("Pivot."); }
+                if (input.x + oldInput.x == 0) { speed = baseSpeed; }
 
                 // Accelerate speed, clamped from baseSpeed to topSpeed
                 speed = Mathf.Clamp(speed + accelRate * Time.deltaTime, baseSpeed, topSpeed);
@@ -108,6 +131,8 @@ public class Player : MonoBehaviour
             }
             else
             {
+                animState = AnimState.Idle;
+
                 // Reset speed and deccelerate velocity
                 speed = baseSpeed;
                 vel.x *= deccel;
@@ -118,6 +143,8 @@ public class Player : MonoBehaviour
         // Air Movement
         else
         {
+            animState = AnimState.Air;
+
             spr.color = Color.blue; // In-air debug color
 
             // Vertical movement
@@ -150,7 +177,7 @@ public class Player : MonoBehaviour
         dashingTime -= Time.smoothDeltaTime;
 
         // Apply dashing speed
-        vel.x = speed;
+        vel.x = speed * (facingRight ? 1 : -1);
 
         // When counter is over, go back to Normal state and reset dash timer
         if (dashingTime <= 0)
@@ -167,7 +194,7 @@ public class Player : MonoBehaviour
     private void OnMove(InputValue value)
     {
         // Can only move if in normal state
-        if (state == PlayerState.Normal)
+        //if (state == PlayerState.Normal)
         {
             // Stores old input
             oldInput = input;
@@ -204,21 +231,13 @@ public class Player : MonoBehaviour
             state = PlayerState.Dashing;
             vel.y = 0;
 
-            // Get dashing direction
-            if (vel.x >= 0)
-            {
-                speed = dashingSpeed;
-            }
-            else
-            {
-                speed = -dashingSpeed;
-            }
-            
+            // Set dashing speed
+            speed = dashingSpeed;
         }
     }
 
     // ========================================================================
-    // Collion Messages
+    // Collision Messages
     // ========================================================================
     private void OnCollisionEnter2D(Collision2D collision)
     {
@@ -261,13 +280,22 @@ public class Player : MonoBehaviour
             {
                 spr.color = Color.red; // Bumping debug color
 
-                // If in the air, reduces lateral velocity as if on the ground
-                speed = baseSpeed;
-                vel.x *= deccel;
+                // If air dashing, bonk off of the wall
+                if (state == PlayerState.Dashing || Math.Abs(vel.x) >= topSpeed)
+                {
+                    speed = baseSpeed * -1;
+                    vel.x = speed * (facingRight ? 1 : -1) * deccel;
+                }
+                // Otherwise, if in the air, reduces lateral velocity as if on the ground
+                else
+                {
+                    speed = baseSpeed;
+                    vel.x *= deccel;
+                }
                 if (Mathf.Abs(vel.x) < baseSpeed * 0.1f) vel.x = 0;
 
                 // If rising, reduce vertical velocity
-                if (vel.y > 0) vel.y *= deccel;
+                if (vel.y > 0 && Math.Abs(vel.x) >= baseSpeed) vel.y *= deccel;
             }
         }
     }
