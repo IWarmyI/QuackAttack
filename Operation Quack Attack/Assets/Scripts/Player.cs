@@ -283,8 +283,11 @@ public class Player : MonoBehaviour
                 // If air dashing, bonk off of the wall
                 if (state == PlayerState.Dashing || Math.Abs(vel.x) >= topSpeed)
                 {
-                    speed = baseSpeed * -1;
-                    vel.x = speed * (facingRight ? 1 : -1) * deccel;
+                    if (collision.collider.bounds.min.y <= collision.otherCollider.bounds.max.y)
+                    {
+                        speed = baseSpeed * -1;
+                        vel.x = speed * (facingRight ? 1 : -1) * deccel;
+                    }
                 }
                 // Otherwise, if in the air, reduces lateral velocity as if on the ground
                 else

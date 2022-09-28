@@ -286,8 +286,8 @@ MonoBehaviour:
   dashingSpeed: 30
   dashingTime: 0.1
   dashingCooldown: 0.5
-  jumpStrength: 14.25
-  jumpGravity: 35
+  jumpStrength: 15
+  jumpGravity: 40
   fallGravity: 60
   driftInfluence: 60
   numOfJumps: 0
