@@ -5,6 +5,7 @@ using UnityEngine;
 public class MainMenu : MonoBehaviour
 {
     public GameObject main;
+    public GameObject difficulty;
     public GameObject options;
     public GameObject credits;
 
@@ -14,7 +15,7 @@ public class MainMenu : MonoBehaviour
         MainMenuButton();
     }
 
-    public void StartButton()
+    public void DifficultyButton()
     {
         // Play Game
         UnityEngine.SceneManagement.SceneManager.LoadScene("Game");
@@ -26,11 +27,21 @@ public class MainMenu : MonoBehaviour
         UnityEngine.SceneManagement.SceneManager.LoadScene("Tutorial");
     }
 
+    public void StartButton()
+    {
+        // Show Main Menu
+        options.SetActive(false);
+        credits.SetActive(false);
+        main.SetActive(false);
+        difficulty.SetActive(true);
+    }
+
     public void MainMenuButton()
     {
         // Show Main Menu
         options.SetActive(false);
         credits.SetActive(false);
+        difficulty.SetActive(false);
         main.SetActive(true);
     }
 
@@ -39,6 +50,7 @@ public class MainMenu : MonoBehaviour
         // Show Options
         main.SetActive(false);
         credits.SetActive(false);
+        difficulty.SetActive(false);
         options.SetActive(true);
     }
 
@@ -47,12 +59,7 @@ public class MainMenu : MonoBehaviour
         // Show Credits Menu
         main.SetActive(false);
         options.SetActive(false);
+        difficulty.SetActive(false);
         credits.SetActive(true);
-    }
-
-    public void QuitButton()
-    {
-        // Quit Game
-        Application.Quit();
     }
 }
