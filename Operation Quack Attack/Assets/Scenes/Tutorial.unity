@@ -1406,6 +1406,10 @@ PrefabInstance:
       propertyPath: quack
       value: 
       objectReference: {fileID: 8300000, guid: 8f133431776716f4ea93a7ec5c8ba724, type: 3}
+    - target: {fileID: 913230024881484953, guid: 3b0efaa01c9a47e409acaf5e07669ca8, type: 3}
+      propertyPath: projectile
+      value: 
+      objectReference: {fileID: 8125120347618727777, guid: 381eb93ad2ad0ea4697c6c43fabe51a0, type: 3}
     - target: {fileID: 913230024881484954, guid: 3b0efaa01c9a47e409acaf5e07669ca8, type: 3}
       propertyPath: m_RootOrder
       value: 1
