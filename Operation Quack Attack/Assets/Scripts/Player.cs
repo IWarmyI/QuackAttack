@@ -212,6 +212,10 @@ public class Player : MonoBehaviour, IDamageable
             isDashing = false;
             dashingTimer = dashingTime;
             state = PlayerState.Normal;
+            if(oldInput != input)
+            {
+                vel.x = 0;
+            }
         }
     }
 
@@ -291,6 +295,8 @@ public class Player : MonoBehaviour, IDamageable
         else if (collision.collider.bounds.min.y > collision.otherCollider.bounds.max.y)
         {
             spr.color = Color.red; // Bumping debug color
+
+            numOfJumps++;
 
             // When bumping head, kill vertical velocity
             if (vel.y > 0) vel.y = 0;
