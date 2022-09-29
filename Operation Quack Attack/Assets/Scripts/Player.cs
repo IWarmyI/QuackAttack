@@ -37,14 +37,16 @@ public class Player : MonoBehaviour, IDamageable
     private bool facingRight = true;
 
     // Ground Movement
+    [Header("Movement")]
     [SerializeField] private Vector2 vel = Vector2.zero;
     private float speed = 0;
     [SerializeField] private float baseSpeed = 5;
     [SerializeField] private float topSpeed = 10;
     [SerializeField] private float accelRate = 10;
-    const float deccel = 0.75f; // Ground Friction
+    private const float deccel = 0.75f; // Ground Friction
 
     // Dashing
+    [Header("Dashing")]
     private bool canDash = true;
     private bool isDashing = false;
     [SerializeField] private float dashingSpeed = 10f;
@@ -52,23 +54,26 @@ public class Player : MonoBehaviour, IDamageable
     private float dashingTimer = 0.2f;
 
     // Jumping and Falling
+    [Header("Jumping")]
     [SerializeField] private float jumpStrength = 10;
     [SerializeField] private float jumpGravity = 10;
     [SerializeField] private float fallGravity = 15;
     private bool onGround = false;
     [SerializeField] private float driftInfluence = 25;
-    const float airDeccel = 0.96f; // Air Resistance
-
-    [SerializeField] int numOfJumps = 0;
+    private const float airDeccel = 0.96f; // Air Resistance
+    private int numOfJumps = 0;
     private bool onWall = false;
 
     // Shooting
-    public Projectile projectile;
-    public List<Projectile> projectileList = new List<Projectile>();
+    [Header("Shooting")]
+    [SerializeField] public Projectile projectile;
+    [SerializeField] private Vector2 projectileOffset = Vector2.zero;
+    [SerializeField] public List<Projectile> projectileList = new List<Projectile>();
+    [SerializeField] private Transform projectileManager;
 
     //Sound Effects 
-    [SerializeField]
-    private AudioClip quack = null;
+    [Header("Sound")]
+    [SerializeField] private AudioClip quack = null;
     private AudioSource _source = null;
 
     // GameObject Components
@@ -77,6 +82,15 @@ public class Player : MonoBehaviour, IDamageable
 
     // Properties
     public int Health { get; set; }
+    private Vector2 ProjectilePos {
+        get
+        {
+            return pos + new Vector2(
+                projectileOffset.x * (facingRight ? 1 : -1),
+                projectileOffset.y
+                );
+        }
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -103,14 +117,8 @@ public class Player : MonoBehaviour, IDamageable
 
         for (int i = 0; i < 10; i++)
         {
-            projectileList.Add(Instantiate(projectile, pos, Quaternion.identity));
+            projectileList.Add(Instantiate(projectile, ProjectilePos, Quaternion.identity, projectileManager));
             projectileList[projectileList.Count - 1].gameObject.SetActive(false);
-
-            foreach (Projectile bullet in projectileList)
-            {
-                Physics2D.IgnoreCollision(projectileList[projectileList.Count - 1].GetComponent<Collider2D>(),
-                    bullet.GetComponent<Collider2D>());
-            }
         }
     }
 
@@ -301,8 +309,9 @@ public class Player : MonoBehaviour, IDamageable
             }
             else
             {
-                bullet.transform.position = pos;
+                bullet.transform.position = ProjectilePos;
                 bullet.facingRight = facingRight;
+                bullet.transform.SetParent(projectileManager);
                 bullet.gameObject.SetActive(true);
                 break;
             }
@@ -314,115 +323,125 @@ public class Player : MonoBehaviour, IDamageable
     // ========================================================================
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        // If bottom of player collider is over top of platform colllider
-        if (collision.collider.bounds.max.y < collision.otherCollider.bounds.min.y)
+        if (collision.gameObject.CompareTag("Stage"))
         {
-            onGround = true;
-            numOfJumps = 0;
 
-            // Resets vertical velocity
-            if (vel.y < 0)
+            // If bottom of player collider is over top of platform colllider
+            if (collision.collider.bounds.max.y < collision.otherCollider.bounds.min.y)
             {
-                vel.y = 0;
+                onGround = true;
+                numOfJumps = 0;
+
+                // Resets vertical velocity
+                if (vel.y < 0)
+                {
+                    vel.y = 0;
+                }
             }
-        }
 
-        // If top of player collider is under bottom of platform colllider
-        else if (collision.collider.bounds.min.y > collision.otherCollider.bounds.max.y)
-        {
-            spr.color = Color.red; // Bumping debug color
-
-            // When bumping head, kill vertical velocity
-            if (vel.y > 0) vel.y = 0;
-        }
-
-        // If player bumps into wall/side of a platform
-        else if (collision.collider.bounds.min.y <= collision.otherCollider.bounds.max.y)
-        {
-            // If air dashing, bonk off of the wall
-            if (!onGround && (state == PlayerState.Dashing))// || Math.Abs(vel.x) >= topSpeed))
+            // If top of player collider is under bottom of platform colllider
+            else if (collision.collider.bounds.min.y > collision.otherCollider.bounds.max.y)
             {
                 spr.color = Color.red; // Bumping debug color
 
-                speed = baseSpeed * -1;
-                vel.x = speed * (facingRight ? 1 : -1);
+                // When bumping head, kill vertical velocity
+                if (vel.y > 0) vel.y = 0;
+            }
 
-                // Cancel dash
-                isDashing = false;
-                dashingTimer = dashingTime;
-                state = PlayerState.Normal;
+            // If player bumps into wall/side of a platform
+            else if (collision.collider.bounds.min.y <= collision.otherCollider.bounds.max.y)
+            {
+                // If air dashing, bonk off of the wall
+                if (!onGround && (state == PlayerState.Dashing))// || Math.Abs(vel.x) >= topSpeed))
+                {
+                    spr.color = Color.red; // Bumping debug color
+
+                    speed = baseSpeed * -1;
+                    vel.x = speed * (facingRight ? 1 : -1);
+
+                    // Cancel dash
+                    isDashing = false;
+                    dashingTimer = dashingTime;
+                    state = PlayerState.Normal;
+                }
             }
         }
     }
 
     private void OnCollisionStay2D(Collision2D collision)
     {
-        // OtherCollider (this)
-        float aMinX = collision.otherCollider.bounds.min.x;
-        float aMaxX = collision.otherCollider.bounds.max.x;
-        float aMinY = collision.otherCollider.bounds.min.y;
-        float aMaxY = collision.otherCollider.bounds.max.y;
-        // Collider
-        float bMinX = collision.collider.bounds.min.x;
-        float bMaxX = collision.collider.bounds.max.x;
-        float bMinY = collision.collider.bounds.min.y;
-        float bMaxY = collision.collider.bounds.max.y;
-
-        // If bottom of player collider is over top of platform colllider
-        if (bMaxY < aMinY)
+        if (collision.gameObject.CompareTag("Stage"))
         {
-            onGround = true;
-            numOfJumps = 0;
-        }
+            // OtherCollider (this)
+            float aMinX = collision.otherCollider.bounds.min.x;
+            float aMaxX = collision.otherCollider.bounds.max.x;
+            float aMinY = collision.otherCollider.bounds.min.y;
+            float aMaxY = collision.otherCollider.bounds.max.y;
+            // Collider
+            float bMinX = collision.collider.bounds.min.x;
+            float bMaxX = collision.collider.bounds.max.x;
+            float bMinY = collision.collider.bounds.min.y;
+            float bMaxY = collision.collider.bounds.max.y;
 
-        // If player bumps into wall/side of a platform
-        else
-        {
-            if (!onGround)
+            // If bottom of player collider is over top of platform colllider
+            if (bMaxY < aMinY)
             {
-                spr.color = Color.red; // Bumping debug color
+                onGround = true;
+                numOfJumps = 0;
+            }
 
-                // If on wall, allow walljump
-                if (bMinY <= bMaxY) onWall = true; 
-
-                // If air dashing, bonk off of the wall
-                if (state == PlayerState.Dashing)// || Math.Abs(vel.x) >= topSpeed))
+            // If player bumps into wall/side of a platform
+            else
+            {
+                if (!onGround)
                 {
-                    if (bMinY <= aMaxY)
-                    {
-                        // Only trigger when dashing into wall
-                        float deltaX = vel.x * Time.deltaTime;
-                        if ((bMinX < aMaxX + deltaX && bMaxX > aMinX) ||
-                            (bMaxX > aMinX + deltaX && bMinX < aMaxX))
-                        {
-                            speed = baseSpeed;
-                            vel.x = -1 * speed * (facingRight ? 1 : -1);
+                    spr.color = Color.red; // Bumping debug color
 
-                            // Cancel dash
-                            isDashing = false;
-                            dashingTime = 0.2f;
-                            state = PlayerState.Normal;
+                    // If on wall, allow walljump
+                    if (bMinY <= bMaxY) onWall = true;
+
+                    // If air dashing, bonk off of the wall
+                    if (state == PlayerState.Dashing)// || Math.Abs(vel.x) >= topSpeed))
+                    {
+                        if (bMinY <= aMaxY)
+                        {
+                            // Only trigger when dashing into wall
+                            float deltaX = vel.x * Time.deltaTime;
+                            if ((bMinX < aMaxX + deltaX && bMaxX > aMinX) ||
+                                (bMaxX > aMinX + deltaX && bMinX < aMaxX))
+                            {
+                                speed = baseSpeed;
+                                vel.x = -1 * speed * (facingRight ? 1 : -1);
+
+                                // Cancel dash
+                                isDashing = false;
+                                dashingTime = 0.2f;
+                                state = PlayerState.Normal;
+                            }
                         }
                     }
-                }
-                // Otherwise, if in the air, reduces lateral velocity as if on the ground
-                else
-                {
-                    speed = baseSpeed;
-                    vel.x *= deccel;
-                    if (Mathf.Abs(vel.x) < baseSpeed * 0.1f) vel.x = 0;;
-                }
+                    // Otherwise, if in the air, reduces lateral velocity as if on the ground
+                    else
+                    {
+                        speed = baseSpeed;
+                        vel.x *= deccel;
+                        if (Mathf.Abs(vel.x) < baseSpeed * 0.1f) vel.x = 0; ;
+                    }
 
-                // If rising, reduce vertical velocity
-                if (vel.y > 0 && Math.Abs(vel.x) >= baseSpeed) vel.y *= deccel;
+                    // If rising, reduce vertical velocity
+                    if (vel.y > 0 && Math.Abs(vel.x) >= baseSpeed) vel.y *= deccel;
+                }
             }
         }
     }
 
     private void OnCollisionExit2D(Collision2D collision)
     {
-        onGround = false;
-        onWall = false;
+        if (collision.gameObject.CompareTag("Stage"))
+        {
+            onGround = false;
+            onWall = false;
+        }
     }
 
     // ========================================================================
@@ -430,19 +449,31 @@ public class Player : MonoBehaviour, IDamageable
     // ========================================================================
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (state != PlayerState.Dashing)
+        if (collision.gameObject.CompareTag("Enemy"))
         {
-            TakeDamage();
-        }
-        else
-        {
-            DealDamage(collision.GetComponent<IDamageable>());
+            if (state != PlayerState.Dashing)
+            {
+                TakeDamage();
+            }
+            else
+            {
+                DealDamage(collision.gameObject);
+            }
         }
     }
 
     public int DealDamage(IDamageable target, int damage = 1)
     {
         return target.TakeDamage(damage);
+    }
+
+    public int DealDamage(GameObject target, int damage = 1)
+    {
+        if (target.TryGetComponent(out IDamageable damageable))
+        {
+            return DealDamage(damageable, damage);
+        }
+        return 0;
     }
 
     public int TakeDamage(int damage = 1)

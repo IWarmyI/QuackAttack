@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Threading;
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 
 public class Projectile : MonoBehaviour
 {
@@ -49,20 +50,28 @@ public class Projectile : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject == player)
-            Physics2D.IgnoreCollision(player.GetComponent<Collider2D>(), GetComponent<Collider2D>());
-        else
-            this.gameObject.SetActive(false);
+        this.gameObject.SetActive(false);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        DealDamage(collision.GetComponent<IDamageable>());
-        this.gameObject.SetActive(false);
+        if (!collision.gameObject.CompareTag(player.tag))
+        {
+            DealDamage(collision.gameObject);
+            this.gameObject.SetActive(false);
+        }
     }
 
     public int DealDamage(IDamageable target, int damage = 1)
     {
         return target.TakeDamage(damage);
+    }
+    public int DealDamage(GameObject target, int damage = 1)
+    {
+        if (target.TryGetComponent(out IDamageable damageable))
+        {
+            return DealDamage(damageable, damage);
+        }
+        return 0;
     }
 }
