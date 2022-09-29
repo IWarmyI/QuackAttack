@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Net.Mime;
 //using System.Diagnostics;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -49,7 +50,6 @@ public class Player : MonoBehaviour, IDamageable
     [SerializeField] private float dashingSpeed = 10f;
     [SerializeField] private float dashingTime = 0.2f;
     private float dashingTimer = 0.2f;
-    [SerializeField] private float dashingCooldown = 0.5f;
 
     // Jumping and Falling
     [SerializeField] private float jumpStrength = 10;
@@ -64,7 +64,11 @@ public class Player : MonoBehaviour, IDamageable
     Rigidbody2D rb;
 
     //Air jump counter
-    [SerializeField] int numOfJumps = 0 ;
+    [SerializeField] int numOfJumps = 0;
+
+    // Shooting
+    public Projectile projectile;
+    public List<Projectile> projectileList = new List<Projectile>();
 
     public int Health { get; }
 
@@ -78,7 +82,7 @@ public class Player : MonoBehaviour, IDamageable
     {
         _source = GetComponent<AudioSource>();
 
-        if( _source == null)
+        if (_source == null)
         {
             Debug.LogError("Audio Source is empty");
         }
@@ -212,6 +216,10 @@ public class Player : MonoBehaviour, IDamageable
             isDashing = false;
             dashingTimer = dashingTime;
             state = PlayerState.Normal;
+            if (oldInput != input)
+            {
+                vel.x = 0;
+            }
         }
     }
 
@@ -267,6 +275,20 @@ public class Player : MonoBehaviour, IDamageable
     {
         //Play the quack sound effect when button is pressed
         _source.Play();
+    }
+
+    private void OnShoot(InputValue value)
+    {
+        projectileList.Add(Instantiate(projectile, pos, Quaternion.identity));
+        projectileList[projectileList.Count - 1].pos = pos;
+        if (facingRight)
+        {
+            projectileList[projectileList.Count - 1].facingRight = true;
+        }
+        else
+        {
+            projectileList[projectileList.Count - 1].facingRight = false;
+        }
     }
 
     // ========================================================================
