@@ -384,7 +384,14 @@ public class Player : MonoBehaviour, IDamageable
     // ========================================================================
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        TakeDamage();
+        if (state != PlayerState.Dashing)
+        {
+            TakeDamage();
+        }
+        else
+        {
+            DealDamage(collision.GetComponent<IDamageable>());
+        }
     }
 
     public int DealDamage(IDamageable target, int damage = 1)
