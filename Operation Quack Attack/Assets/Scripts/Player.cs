@@ -76,7 +76,7 @@ public class Player : MonoBehaviour, IDamageable
     private Rigidbody2D rb;
 
     // Properties
-    public int Health { get; }
+    public int Health { get; set; }
 
     // Start is called before the first frame update
     void Start()
