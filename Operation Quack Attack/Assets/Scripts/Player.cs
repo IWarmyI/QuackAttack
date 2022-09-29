@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+//using System.Diagnostics;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -67,9 +68,25 @@ public class Player : MonoBehaviour, IDamageable
 
     public int Health { get; }
 
+    //Sound Effects 
+    [SerializeField]
+    private AudioClip quack = null;
+    private AudioSource _source = null;
+
     // Start is called before the first frame update
     void Start()
     {
+        _source = GetComponent<AudioSource>();
+
+        if( _source == null)
+        {
+            Debug.LogError("Audio Source is empty");
+        }
+        else
+        {
+            _source.clip = quack;
+        }
+
         pos = transform.position;
         speed = baseSpeed;
         dashingTimer = dashingTime;
@@ -244,6 +261,12 @@ public class Player : MonoBehaviour, IDamageable
             // Set dashing speed
             speed = dashingSpeed;
         }
+    }
+
+    private void OnQuack(InputValue value)
+    {
+        //Play the quack sound effect when button is pressed
+        _source.Play();
     }
 
     // ========================================================================
