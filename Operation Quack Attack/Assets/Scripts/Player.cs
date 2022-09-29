@@ -100,6 +100,18 @@ public class Player : MonoBehaviour, IDamageable
         rb = GetComponent<Rigidbody2D>();
 
         anim = GetComponentInChildren<PlayerAnimation>();
+
+        for (int i = 0; i < 10; i++)
+        {
+            projectileList.Add(Instantiate(projectile, pos, Quaternion.identity));
+            projectileList[projectileList.Count - 1].gameObject.SetActive(false);
+
+            foreach (Projectile bullet in projectileList)
+            {
+                Physics2D.IgnoreCollision(projectileList[projectileList.Count - 1].GetComponent<Collider2D>(),
+                    bullet.GetComponent<Collider2D>());
+            }
+        }
     }
 
     // Update is called once per frame
@@ -217,10 +229,6 @@ public class Player : MonoBehaviour, IDamageable
             isDashing = false;
             dashingTimer = dashingTime;
             state = PlayerState.Normal;
-            //if (input != oldInput) // [Creates inconsistent post-dash behavior]
-            //{
-            //    vel.x = 0;
-            //}
         }
     }
 
@@ -284,15 +292,20 @@ public class Player : MonoBehaviour, IDamageable
 
     private void OnShoot(InputValue value)
     {
-        projectileList.Add(Instantiate(projectile, pos, Quaternion.identity));
-        projectileList[projectileList.Count - 1].pos = pos;
-        if (facingRight)
+        // Create projectile instance
+        foreach (Projectile bullet in projectileList)
         {
-            projectileList[projectileList.Count - 1].facingRight = true;
-        }
-        else
-        {
-            projectileList[projectileList.Count - 1].facingRight = false;
+            if (bullet.gameObject.activeSelf)
+            {
+                continue;
+            }
+            else
+            {
+                bullet.transform.position = pos;
+                bullet.facingRight = facingRight;
+                bullet.gameObject.SetActive(true);
+                break;
+            }
         }
     }
 

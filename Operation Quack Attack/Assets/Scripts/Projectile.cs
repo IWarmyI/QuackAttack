@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Security.Cryptography;
@@ -10,6 +11,7 @@ public class Projectile : MonoBehaviour
     [SerializeField] private Vector2 velRight = new Vector2(0, 20);
     [SerializeField] private Vector2 velLeft = new Vector2(0, -20);
     public bool facingRight = false;
+    public GameObject player;
 
     // GameObject Components
     SpriteRenderer spr;
@@ -22,6 +24,9 @@ public class Projectile : MonoBehaviour
 
         spr = GetComponent<SpriteRenderer>();
         rb = GetComponent<Rigidbody2D>();
+
+        if (player == null)
+            player = GameObject.FindWithTag("Player");
     }
 
     // Update is called once per frame
@@ -40,5 +45,24 @@ public class Projectile : MonoBehaviour
             rb.velocity = velLeft;
         }
 
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject == player)
+            Physics2D.IgnoreCollision(player.GetComponent<Collider2D>(), GetComponent<Collider2D>());
+        else
+            this.gameObject.SetActive(false);
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        DealDamage(collision.GetComponent<IDamageable>());
+        this.gameObject.SetActive(false);
+    }
+
+    public int DealDamage(IDamageable target, int damage = 1)
+    {
+        return target.TakeDamage(damage);
     }
 }
