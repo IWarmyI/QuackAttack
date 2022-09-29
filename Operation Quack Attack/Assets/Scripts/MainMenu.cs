@@ -62,10 +62,4 @@ public class MainMenu : MonoBehaviour
         difficulty.SetActive(false);
         credits.SetActive(true);
     }
-
-    public void QuitButton()
-    {
-        // Quit Game
-        Application.Quit();
-    }
 }
