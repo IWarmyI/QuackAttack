@@ -22,7 +22,7 @@ public class Player : MonoBehaviour, IDamageable
         Dash
     }
 
-    // Player state
+    // Player State
     private PlayerState state = PlayerState.Normal;
     [SerializeField] private int health = 1;
 
@@ -59,23 +59,24 @@ public class Player : MonoBehaviour, IDamageable
     [SerializeField] private float driftInfluence = 25;
     const float airDeccel = 0.96f; // Air Resistance
 
-    // GameObject Components
-    SpriteRenderer spr;
-    Rigidbody2D rb;
-
-    //Air jump counter
     [SerializeField] int numOfJumps = 0;
+    private bool onWall = false;
 
     // Shooting
     public Projectile projectile;
     public List<Projectile> projectileList = new List<Projectile>();
 
-    public int Health { get; }
-
     //Sound Effects 
     [SerializeField]
     private AudioClip quack = null;
     private AudioSource _source = null;
+
+    // GameObject Components
+    private SpriteRenderer spr;
+    private Rigidbody2D rb;
+
+    // Properties
+    public int Health { get; }
 
     // Start is called before the first frame update
     void Start()
@@ -216,10 +217,10 @@ public class Player : MonoBehaviour, IDamageable
             isDashing = false;
             dashingTimer = dashingTime;
             state = PlayerState.Normal;
-            if (oldInput != input)
-            {
-                vel.x = 0;
-            }
+            //if (input != oldInput) // [Creates inconsistent post-dash behavior]
+            //{
+            //    vel.x = 0;
+            //}
         }
     }
 
@@ -228,18 +229,14 @@ public class Player : MonoBehaviour, IDamageable
     // ========================================================================
     private void OnMove(InputValue value)
     {
-        // Can only move if in normal state
-        //if (state == PlayerState.Normal)
-        {
-            // Stores old input
-            oldInput = input;
-            // Gets new input
-            input = value.Get<Vector2>();
+        // Stores old input
+        oldInput = input;
+        // Gets new input
+        input = value.Get<Vector2>();
 
-            // Only uses x axis of input (x can only be -1, 0, or 1)
-            input.y = 0;
-            if (input != Vector2.zero) input.Normalize();
-        }
+        // Only uses x axis of input (x can only be -1, 0, or 1)
+        input.y = 0;
+        if (input != Vector2.zero) input.Normalize();
     }
 
     private void OnJump(InputValue value)
@@ -247,6 +244,14 @@ public class Player : MonoBehaviour, IDamageable
         // Can only jump if in normal state
         if (state == PlayerState.Normal)
         {
+            // Wall jumps if on wall
+            if (input.x != 0 && onWall && !onGround)
+            {
+                Vector2 wallJump = new Vector2(jumpStrength * -input.x, jumpStrength);
+                vel = wallJump;
+                onWall = false;
+            }
+
             // Jumps if on ground or double jump
             if (numOfJumps < 1 || onGround)
             {
@@ -317,6 +322,7 @@ public class Player : MonoBehaviour, IDamageable
             // When bumping head, kill vertical velocity
             if (vel.y > 0) vel.y = 0;
         }
+
         // If player bumps into wall/side of a platform
         else if (collision.collider.bounds.min.y <= collision.otherCollider.bounds.max.y)
         {
@@ -328,6 +334,7 @@ public class Player : MonoBehaviour, IDamageable
                 speed = baseSpeed * -1;
                 vel.x = speed * (facingRight ? 1 : -1);
 
+                // Cancel dash
                 isDashing = false;
                 dashingTimer = dashingTime;
                 state = PlayerState.Normal;
@@ -361,6 +368,9 @@ public class Player : MonoBehaviour, IDamageable
             if (!onGround)
             {
                 spr.color = Color.red; // Bumping debug color
+
+                // If on wall, allow walljump
+                if (bMinY <= bMaxY) onWall = true; 
 
                 // If air dashing, bonk off of the wall
                 if (state == PlayerState.Dashing)// || Math.Abs(vel.x) >= topSpeed))
@@ -399,6 +409,7 @@ public class Player : MonoBehaviour, IDamageable
     private void OnCollisionExit2D(Collision2D collision)
     {
         onGround = false;
+        onWall = false;
     }
 
     // ========================================================================
