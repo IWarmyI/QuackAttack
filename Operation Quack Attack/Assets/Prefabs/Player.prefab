@@ -284,7 +284,7 @@ MonoBehaviour:
   topSpeed: 20
   accelRate: 15
   dashingSpeed: 30
-  dashingTime: 0.1
+  dashingTime: 0.2
   dashingCooldown: 0.5
   jumpStrength: 15
   jumpGravity: 40

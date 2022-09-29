@@ -1,11 +1,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-//using System.Diagnostics;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class Player : MonoBehaviour
+public class Player : MonoBehaviour, IDamageable
 {
     public enum PlayerState
     {
@@ -23,6 +22,7 @@ public class Player : MonoBehaviour
 
     // Player state
     private PlayerState state = PlayerState.Normal;
+    [SerializeField] private int health = 1;
 
     // Animation
     private AnimState animState = AnimState.Idle;
@@ -46,7 +46,8 @@ public class Player : MonoBehaviour
     private bool canDash = true;
     private bool isDashing = false;
     [SerializeField] private float dashingSpeed = 10f;
-    [SerializeField] private float dashingTime = 0.1f;
+    [SerializeField] private float dashingTime = 0.2f;
+    private float dashingTimer = 0.2f;
     [SerializeField] private float dashingCooldown = 0.5f;
 
     // Jumping and Falling
@@ -64,11 +65,15 @@ public class Player : MonoBehaviour
     //Air jump counter
     [SerializeField] int numOfJumps = 0 ;
 
+    public int Health { get; }
+
     // Start is called before the first frame update
     void Start()
     {
         pos = transform.position;
         speed = baseSpeed;
+        dashingTimer = dashingTime;
+
         spr = GetComponent<SpriteRenderer>();
         rb = GetComponent<Rigidbody2D>();
 
@@ -91,7 +96,6 @@ public class Player : MonoBehaviour
             // Dashing
             case PlayerState.Dashing:
                 UpdateDashing();
-                animState = AnimState.Dash;
                 break;
             default:
                 break;
@@ -118,6 +122,7 @@ public class Player : MonoBehaviour
             // Lateral movement
             if (input.x != 0)
             {
+                // Set animation state to Run
                 animState = AnimState.Run;
 
                 // Reset speed when changing directions
@@ -131,6 +136,7 @@ public class Player : MonoBehaviour
             }
             else
             {
+                // Set animation state to Idle
                 animState = AnimState.Idle;
 
                 // Reset speed and deccelerate velocity
@@ -143,9 +149,10 @@ public class Player : MonoBehaviour
         // Air Movement
         else
         {
-            animState = AnimState.Air;
-
             spr.color = Color.blue; // In-air debug color
+
+            // Set animation state to Air
+            animState = AnimState.Air;
 
             // Vertical movement
             // If rising, use jump gravity; if falling, use fall gravity
@@ -173,17 +180,20 @@ public class Player : MonoBehaviour
     {
         spr.color = Color.yellow; // Dashing debug color
 
+        // Set animation state to Air
+        animState = AnimState.Dash;
+
         // Dashing timer counting
-        dashingTime -= Time.smoothDeltaTime;
+        dashingTimer -= Time.smoothDeltaTime;
 
         // Apply dashing speed
         vel.x = speed * (facingRight ? 1 : -1);
 
         // When counter is over, go back to Normal state and reset dash timer
-        if (dashingTime <= 0)
+        if (dashingTimer <= 0)
         {
             isDashing = false;
-            dashingTime = 0.2f;
+            dashingTimer = dashingTime;
             state = PlayerState.Normal;
         }
     }
@@ -262,12 +272,39 @@ public class Player : MonoBehaviour
             // When bumping head, kill vertical velocity
             if (vel.y > 0) vel.y = 0;
         }
+        // If player bumps into wall/side of a platform
+        else if (collision.collider.bounds.min.y <= collision.otherCollider.bounds.max.y)
+        {
+            // If air dashing, bonk off of the wall
+            if (!onGround && (state == PlayerState.Dashing))// || Math.Abs(vel.x) >= topSpeed))
+            {
+                spr.color = Color.red; // Bumping debug color
+
+                speed = baseSpeed * -1;
+                vel.x = speed * (facingRight ? 1 : -1);
+
+                isDashing = false;
+                dashingTimer = dashingTime;
+                state = PlayerState.Normal;
+            }
+        }
     }
 
     private void OnCollisionStay2D(Collision2D collision)
     {
+        // OtherCollider (this)
+        float aMinX = collision.otherCollider.bounds.min.x;
+        float aMaxX = collision.otherCollider.bounds.max.x;
+        float aMinY = collision.otherCollider.bounds.min.y;
+        float aMaxY = collision.otherCollider.bounds.max.y;
+        // Collider
+        float bMinX = collision.collider.bounds.min.x;
+        float bMaxX = collision.collider.bounds.max.x;
+        float bMinY = collision.collider.bounds.min.y;
+        float bMaxY = collision.collider.bounds.max.y;
+
         // If bottom of player collider is over top of platform colllider
-        if (collision.collider.bounds.max.y < collision.otherCollider.bounds.min.y)
+        if (bMaxY < aMinY)
         {
             onGround = true;
             numOfJumps = 0;
@@ -281,12 +318,23 @@ public class Player : MonoBehaviour
                 spr.color = Color.red; // Bumping debug color
 
                 // If air dashing, bonk off of the wall
-                if (state == PlayerState.Dashing || Math.Abs(vel.x) >= topSpeed)
+                if (state == PlayerState.Dashing)// || Math.Abs(vel.x) >= topSpeed))
                 {
-                    if (collision.collider.bounds.min.y <= collision.otherCollider.bounds.max.y)
+                    if (bMinY <= aMaxY)
                     {
-                        speed = baseSpeed * -1;
-                        vel.x = speed * (facingRight ? 1 : -1) * deccel;
+                        // Only trigger when dashing into wall
+                        float deltaX = vel.x * Time.deltaTime;
+                        if ((bMinX < aMaxX + deltaX && bMaxX > aMinX) ||
+                            (bMaxX > aMinX + deltaX && bMinX < aMaxX))
+                        {
+                            speed = baseSpeed;
+                            vel.x = -1 * speed * (facingRight ? 1 : -1);
+
+                            // Cancel dash
+                            isDashing = false;
+                            dashingTime = 0.2f;
+                            state = PlayerState.Normal;
+                        }
                     }
                 }
                 // Otherwise, if in the air, reduces lateral velocity as if on the ground
@@ -294,16 +342,37 @@ public class Player : MonoBehaviour
                 {
                     speed = baseSpeed;
                     vel.x *= deccel;
+                    if (Mathf.Abs(vel.x) < baseSpeed * 0.1f) vel.x = 0;;
                 }
-                if (Mathf.Abs(vel.x) < baseSpeed * 0.1f) vel.x = 0;
 
                 // If rising, reduce vertical velocity
                 if (vel.y > 0 && Math.Abs(vel.x) >= baseSpeed) vel.y *= deccel;
             }
         }
     }
+
     private void OnCollisionExit2D(Collision2D collision)
     {
         onGround = false;
+    }
+
+    // ========================================================================
+    // Damageable Methods
+    // ========================================================================
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        TakeDamage();
+    }
+
+    public int DealDamage(IDamageable target, int damage = 1)
+    {
+        return target.TakeDamage(damage);
+    }
+
+    public int TakeDamage(int damage = 1)
+    {
+        health -= damage;
+        if (health <= 0) gameObject.SetActive(false);
+        return health;
     }
 }
