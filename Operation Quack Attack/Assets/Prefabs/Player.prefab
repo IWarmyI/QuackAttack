@@ -291,7 +291,7 @@ MonoBehaviour:
   jumpGravity: 40
   fallGravity: 60
   driftInfluence: 60
-  airJumps: 0
+  airJumps: 1
   wallSide: 0
   projectile: {fileID: 8125120347618727777, guid: 381eb93ad2ad0ea4697c6c43fabe51a0, type: 3}
   projectileOffset: {x: 0, y: 0.35}
