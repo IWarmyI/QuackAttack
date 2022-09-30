@@ -79,6 +79,7 @@ public class Player : MonoBehaviour, IDamageable
     // GameObject Components
     private SpriteRenderer spr;
     private Rigidbody2D rb;
+    [SerializeField]private GameObject gameOverScreen;
 
     // Properties
     public int Health { get; set; }
@@ -479,7 +480,11 @@ public class Player : MonoBehaviour, IDamageable
     public int TakeDamage(int damage = 1)
     {
         health -= damage;
-        if (health <= 0) gameObject.SetActive(false);
+        if (health <= 0)
+        {
+            gameObject.SetActive(false);
+            gameOverScreen.SetActive(true);
+        }
         return health;
     }
 }
