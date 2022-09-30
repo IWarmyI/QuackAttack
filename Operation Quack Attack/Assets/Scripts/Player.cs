@@ -61,8 +61,11 @@ public class Player : MonoBehaviour, IDamageable
     private bool onGround = false;
     [SerializeField] private float driftInfluence = 25;
     private const float airDeccel = 0.96f; // Air Resistance
-    private int numOfJumps = 0;
+
+    [SerializeField] private int airJumps = 1;
+    private int jumpCount = 0;
     private bool onWall = false;
+    [SerializeField] private int wallSide = 0;
 
     // Shooting
     [Header("Shooting")]
@@ -216,6 +219,9 @@ public class Player : MonoBehaviour, IDamageable
                 vel.x *= airDeccel;
             }
         }
+
+        // Stores old input
+        oldInput = input;
     }
 
     private void UpdateDashing()
@@ -245,8 +251,6 @@ public class Player : MonoBehaviour, IDamageable
     // ========================================================================
     private void OnMove(InputValue value)
     {
-        // Stores old input
-        oldInput = input;
         // Gets new input
         input = value.Get<Vector2>();
 
@@ -263,17 +267,17 @@ public class Player : MonoBehaviour, IDamageable
             // Wall jumps if on wall
             if (input.x != 0 && onWall && !onGround)
             {
-                Vector2 wallJump = new Vector2(jumpStrength * -input.x, jumpStrength);
-                vel = wallJump;
+                Vector2 wallJump = new Vector2(wallSide * 0.45f, 1);
+                vel = wallJump * jumpStrength;
                 onWall = false;
             }
 
             // Jumps if on ground or double jump
-            if (numOfJumps < 1 || onGround)
+            if (jumpCount < airJumps || onGround)
             {
                 vel.y = jumpStrength;
                 onGround = false;
-                numOfJumps++;
+                jumpCount++;
             }
         }
     }
@@ -325,12 +329,11 @@ public class Player : MonoBehaviour, IDamageable
     {
         if (collision.gameObject.CompareTag("Stage"))
         {
-
             // If bottom of player collider is over top of platform colllider
             if (collision.collider.bounds.max.y < collision.otherCollider.bounds.min.y)
             {
                 onGround = true;
-                numOfJumps = 0;
+                jumpCount = 0;
 
                 // Resets vertical velocity
                 if (vel.y < 0)
@@ -387,7 +390,7 @@ public class Player : MonoBehaviour, IDamageable
             if (bMaxY < aMinY)
             {
                 onGround = true;
-                numOfJumps = 0;
+                jumpCount = 0;
             }
 
             // If player bumps into wall/side of a platform
@@ -398,7 +401,17 @@ public class Player : MonoBehaviour, IDamageable
                     spr.color = Color.red; // Bumping debug color
 
                     // If on wall, allow walljump
-                    if (bMinY <= bMaxY) onWall = true;
+                    if (bMinY <= aMaxY)
+                    {
+                        onWall = true;
+
+                        // Determine which side the wall is on
+                        float deltaX = vel.x * Time.deltaTime;
+                        if (aMaxX + deltaX >= bMinX && aMinX < bMinX) // Rightside Wall
+                            wallSide = -1;
+                        else if (aMinX + deltaX <= bMaxX && aMaxX > bMaxX) // Leftside Wall
+                            wallSide = 1;
+                    }
 
                     // If air dashing, bonk off of the wall
                     if (state == PlayerState.Dashing)// || Math.Abs(vel.x) >= topSpeed))
@@ -407,8 +420,8 @@ public class Player : MonoBehaviour, IDamageable
                         {
                             // Only trigger when dashing into wall
                             float deltaX = vel.x * Time.deltaTime;
-                            if ((bMinX < aMaxX + deltaX && bMaxX > aMinX) ||
-                                (bMaxX > aMinX + deltaX && bMinX < aMaxX))
+                            if ((aMaxX + deltaX >= deltaX && aMinX < bMinX) ||
+                                (aMinX + deltaX <= bMaxX && aMaxX > bMaxX))
                             {
                                 speed = baseSpeed;
                                 vel.x = -1 * speed * (facingRight ? 1 : -1);
@@ -441,6 +454,7 @@ public class Player : MonoBehaviour, IDamageable
         {
             onGround = false;
             onWall = false;
+            wallSide = 0;
         }
     }
 

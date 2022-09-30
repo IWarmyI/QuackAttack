@@ -33,18 +33,18 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Quack",
+                    "name": "Shoot",
                     "type": "Button",
-                    "id": "7a08e655-a6c3-4c97-9cda-bdbf72350c30",
+                    "id": "c2bc4497-acc1-4f5d-8a4b-4f7bb43b649b",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Shoot",
+                    "name": "Quack",
                     "type": "Button",
-                    "id": "c2bc4497-acc1-4f5d-8a4b-4f7bb43b649b",
+                    "id": "7a08e655-a6c3-4c97-9cda-bdbf72350c30",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -285,17 +285,6 @@
                 },
                 {
                     "name": "",
-                    "id": "8eafe3b9-ee61-4d69-ac22-02cbb5e7b1a5",
-                    "path": "<Keyboard>/q",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Quack",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "10b1fc48-6b24-429f-932a-66aead4a6e74",
                     "path": "<Keyboard>/c",
                     "interactions": "",
@@ -335,6 +324,39 @@
                     "processors": "",
                     "groups": "",
                     "action": "Shoot",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "13de8e19-4862-4821-86d1-b884bef76943",
+                    "path": "<Gamepad>/rightTrigger",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Shoot",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "8eafe3b9-ee61-4d69-ac22-02cbb5e7b1a5",
+                    "path": "<Keyboard>/q",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Quack",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "59cb496e-c550-48c9-b153-02b089652c8c",
+                    "path": "<Gamepad>/select",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Quack",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

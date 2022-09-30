@@ -287,12 +287,17 @@ MonoBehaviour:
   accelRate: 15
   dashingSpeed: 30
   dashingTime: 0.2
-  dashingCooldown: 0.5
   jumpStrength: 15
   jumpGravity: 40
   fallGravity: 60
   driftInfluence: 60
-  numOfJumps: 0
+  airJumps: 0
+  wallSide: 0
+  projectile: {fileID: 8125120347618727777, guid: 381eb93ad2ad0ea4697c6c43fabe51a0, type: 3}
+  projectileOffset: {x: 0, y: 0.35}
+  projectileList: []
+  projectileManager: {fileID: 0}
+  quack: {fileID: 8300000, guid: 8f133431776716f4ea93a7ec5c8ba724, type: 3}
 --- !u!114 &913230024881484952
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -336,8 +341,8 @@ CapsuleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  m_Size: {x: 1, y: 2}
+  m_Offset: {x: 0, y: 0.125}
+  m_Size: {x: 1, y: 2.25}
   m_Direction: 0
 --- !u!50 &913230024881484950
 Rigidbody2D:
