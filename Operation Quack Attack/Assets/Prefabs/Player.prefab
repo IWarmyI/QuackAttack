@@ -298,6 +298,7 @@ MonoBehaviour:
   projectileList: []
   projectileManager: {fileID: 0}
   quack: {fileID: 8300000, guid: 8f133431776716f4ea93a7ec5c8ba724, type: 3}
+  gameOverScreen: {fileID: 0}
 --- !u!114 &913230024881484952
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -377,7 +378,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 8f133431776716f4ea93a7ec5c8ba724, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0.72
   m_Pitch: 1
   Loop: 0
   Mute: 0
