@@ -53,7 +53,7 @@ public class Projectile : MonoBehaviour
         {
             vel = Vector2.left * speed;
         }
-
+        pos += vel * Time.deltaTime;
         rb.velocity = vel;
     }
 

@@ -248,7 +248,7 @@ public class Player : MonoBehaviour, IDamageable
         animState = AnimState.Dash;
 
         // Dashing timer counting
-        dashingTimer -= Time.smoothDeltaTime;
+        dashingTimer -= Time.deltaTime;
 
         // Apply dashing speed
         vel.x = speed * (facingRight ? 1 : -1);
