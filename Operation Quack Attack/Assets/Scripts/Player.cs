@@ -88,6 +88,7 @@ public class Player : MonoBehaviour, IDamageable
     [SerializeField]private GameObject gameOverScreen;
 
     // Properties
+    public PlayerState State { get; }
     public int Health { get; set; }
     public bool OnGround { get { return onGround; } }
     public Vector2 Velocity { get { return vel; } }
@@ -217,6 +218,7 @@ public class Player : MonoBehaviour, IDamageable
                 // Inluence velocity by driftInfluence, clamped at topSpeed
                 Vector2 latVel = new Vector2(vel.x + input.x * driftInfluence * Time.deltaTime, 0);
                 latVel = Vector2.ClampMagnitude(latVel, topAirSpeed);
+                speed = latVel.magnitude;
 
                 // Update velocity
                 vel.x = latVel.x;
@@ -420,6 +422,12 @@ public class Player : MonoBehaviour, IDamageable
             {
                 onGround = true;
                 jumpCount = 0;
+
+                // Resets vertical velocity
+                if (vel.y < 0)
+                {
+                    vel.y = 0;
+                }
             }
 
             // If player bumps into wall/side of a platform
@@ -460,7 +468,7 @@ public class Player : MonoBehaviour, IDamageable
 
                                 // Cancel dash
                                 isDashing = false;
-                                dashingTime = 0.2f;
+                                dashingTimer = dashingTime;
                                 state = PlayerState.Normal;
                             }
                         }

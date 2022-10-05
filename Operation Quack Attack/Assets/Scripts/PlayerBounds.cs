@@ -32,17 +32,20 @@ public class PlayerBounds : MonoBehaviour
     {
         if (player == null) return;
 
-        if (player.OnGround || player.Velocity.y < 0)
+        if (player.State != Player.PlayerState.Dashing)
         {
-            Vector2[] points = boundingBox.points;
-            points[bottomIndex] = bottom;
-            boundingBox.points = points;
-        }
-        else
-        {
-            Vector2[] points = boundingBox.points;
-            points[bottomIndex] = bottom + new Vector2(0, offset);
-            boundingBox.points = points;
+            if (player.OnGround || (player.Velocity.y < 0 && !player.OnGround))
+            {
+                Vector2[] points = boundingBox.points;
+                points[bottomIndex] = bottom;
+                boundingBox.points = points;
+            }
+            else
+            {
+                Vector2[] points = boundingBox.points;
+                points[bottomIndex] = bottom + new Vector2(0, offset);
+                boundingBox.points = points;
+            }
         }
     }
 }
