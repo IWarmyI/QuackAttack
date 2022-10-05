@@ -4,13 +4,26 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour, IDamageable
 {
-    [SerializeField] private int health = 1;
+    [SerializeField] private int maxHealth = 1;
+    private int health = 1;
+    private SpriteRenderer spr;
+    private Color color;
+
     public int Health { get; set; }
 
-    // Start is called before the first frame update
-    void Start()
+    void OnEnable()
     {
-        
+        health = maxHealth;
+
+        if (spr == null)
+        {
+            spr = GetComponent<SpriteRenderer>();
+            color = spr.color;
+        }
+        else
+        {
+            spr.color = color;
+        }
     }
 
     // Update is called once per frame
@@ -26,8 +39,9 @@ public class Enemy : MonoBehaviour, IDamageable
 
     public int TakeDamage(int damage = 1)
     {
-        health -= damage;
-        if (health <= 0) gameObject.SetActive(false); 
-        return health;
+        maxHealth -= damage;
+        spr.color = Color.red;
+        if (maxHealth <= 0) gameObject.SetActive(false); 
+        return maxHealth;
     }
 }
