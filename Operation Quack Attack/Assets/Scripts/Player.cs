@@ -340,7 +340,7 @@ public class Player : MonoBehaviour, IDamageable
     private void OnQuack(InputValue value)
     {
         //Play the quack sound effect when button is pressed
-        _source.Play();
+        _source.PlayOneShot(quack);
     }
 
     private void OnShoot(InputValue value)
