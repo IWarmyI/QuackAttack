@@ -13,13 +13,17 @@ public class PlayerAnimation : MonoBehaviour
     private bool _isTopSpeed = false;
     [SerializeField] private float speedMultiplier = 1.25f;
 
+    private Color high = new Color(0, 2.0f / 3.0f, 1);
+
     private Animator anim;
     private SpriteRenderer spr;
+    private TrailRenderer trail;
 
     void Start()
     {
         anim = GetComponent<Animator>();
         spr = GetComponent<SpriteRenderer>();
+        trail = GetComponentInChildren<TrailRenderer>();
     }
 
     public void Animate()
@@ -29,6 +33,18 @@ public class PlayerAnimation : MonoBehaviour
         anim.SetBool("IsFalling", _isFalling);
         anim.SetFloat("Speed", _isTopSpeed ? speedMultiplier : 1);
         spr.flipX = !_facing;
+
+        if (trail != null)
+        {
+            if (_animState == AnimState.Dash)
+            {
+                trail.emitting = true;
+            }
+            else
+            {
+                trail.emitting = false;
+            }
+        }
     }
 
     public void Animate(AnimState animState, bool onGround, bool isFalling, bool isTopSpeed, bool facing)

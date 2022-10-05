@@ -1,16 +1,12 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Security.Cryptography;
-using System.Threading;
 using UnityEngine;
-using static UnityEngine.GraphicsBuffer;
 
 public class Projectile : MonoBehaviour
 {
     public Vector2 pos;
-    [SerializeField] private Vector2 velRight = new Vector2(0, 20);
-    [SerializeField] private Vector2 velLeft = new Vector2(0, -20);
+    [SerializeField] private float speed = 20;
     public bool facingRight = false;
     public GameObject player;
 
@@ -48,17 +44,17 @@ public class Projectile : MonoBehaviour
     {
         pos = transform.position;
 
+        Vector2 vel = Vector2.zero;
         if (facingRight)
         {
-            pos += velRight * Time.deltaTime;
-            rb.velocity = velRight;
+            vel = Vector2.right * speed;
         }
         else
         {
-            pos += velLeft * Time.deltaTime;
-            rb.velocity = velLeft;
+            vel = Vector2.left * speed;
         }
 
+        rb.velocity = vel;
     }
 
     private void OnCollisionEnter2D(Collision2D collision)

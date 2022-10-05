@@ -69,9 +69,13 @@ public class Player : MonoBehaviour, IDamageable
     // Shooting
     [Header("Shooting")]
     [SerializeField] public Projectile projectile;
-    [SerializeField] private Vector2 projectileOffset = Vector2.zero;
-    [SerializeField] public List<Projectile> projectileList = new List<Projectile>();
     [SerializeField] private Transform projectileManager;
+    [SerializeField] private Vector2 projectileOffset = Vector2.zero;
+    [SerializeField] private bool autoShoot = true;
+    [SerializeField] private float fireRate = 0.2f;
+    private float fireTimer = 0.2f;
+    private bool isFiring = false;
+    [SerializeField] public List<Projectile> projectileList = new List<Projectile>();
 
     //Sound Effects 
     [Header("Sound")]
@@ -96,6 +100,7 @@ public class Player : MonoBehaviour, IDamageable
                 );
         }
     }
+    private float FireTime { get { return 1.0f / fireRate; } }
 
     // Start is called before the first frame update
     void Start()
@@ -114,6 +119,7 @@ public class Player : MonoBehaviour, IDamageable
         pos = transform.position;
         speed = baseSpeed;
         dashingTimer = dashingTime;
+        fireTimer = FireTime;
 
         spr = GetComponentInChildren<SpriteRenderer>();
         rb = GetComponentInChildren<Rigidbody2D>();
@@ -150,6 +156,12 @@ public class Player : MonoBehaviour, IDamageable
         // Apply velocity
         pos += vel * Time.deltaTime;
         rb.velocity = vel;
+
+        // Update Shooting Timer
+        if (fireTimer < FireTime)
+        {
+            fireTimer += Time.deltaTime;
+        }
 
         // Animate
         anim.Animate(animState, onGround, vel.y <= 0, speed >= topSpeed, facingRight);
@@ -217,6 +229,15 @@ public class Player : MonoBehaviour, IDamageable
             }
         }
 
+        if (autoShoot && isFiring)
+        {
+            if (fireTimer >= FireTime)
+            {
+                ShootProjectile();
+                fireTimer -= FireTime;
+            }
+        }
+
         // Stores old input
         oldInput = input;
     }
@@ -238,6 +259,26 @@ public class Player : MonoBehaviour, IDamageable
             isDashing = false;
             dashingTimer = dashingTime;
             state = PlayerState.Normal;
+        }
+    }
+
+    private void ShootProjectile()
+    {
+        // Create projectile instance
+        foreach (Projectile bullet in projectileList)
+        {
+            if (bullet.gameObject.activeSelf)
+            {
+                continue;
+            }
+            else
+            {
+                bullet.transform.position = ProjectilePos;
+                bullet.facingRight = facingRight;
+                bullet.transform.SetParent(projectileManager);
+                bullet.gameObject.SetActive(true);
+                break;
+            }
         }
     }
 
@@ -301,23 +342,15 @@ public class Player : MonoBehaviour, IDamageable
 
     private void OnShoot(InputValue value)
     {
-        if (state == PlayerState.Normal)
+        if (autoShoot)
         {
-            // Create projectile instance
-            foreach (Projectile bullet in projectileList)
+            isFiring = value.isPressed;
+        }
+        else
+        {
+            if (state == PlayerState.Normal)
             {
-                if (bullet.gameObject.activeSelf)
-                {
-                    continue;
-                }
-                else
-                {
-                    bullet.transform.position = ProjectilePos;
-                    bullet.facingRight = facingRight;
-                    bullet.transform.SetParent(projectileManager);
-                    bullet.gameObject.SetActive(true);
-                    break;
-                }
+                if (value.isPressed) ShootProjectile();
             }
         }
     }
