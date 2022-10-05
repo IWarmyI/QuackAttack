@@ -5,7 +5,7 @@ using UnityEngine;
 public class Enemy : MonoBehaviour, IDamageable
 {
     [SerializeField] private int maxHealth = 1;
-    private int health = 1;
+    [SerializeField] private int health = 1;
     private SpriteRenderer spr;
     private Color color;
 
@@ -39,9 +39,9 @@ public class Enemy : MonoBehaviour, IDamageable
 
     public int TakeDamage(int damage = 1)
     {
-        maxHealth -= damage;
+        health -= damage;
         spr.color = Color.red;
-        if (maxHealth <= 0) gameObject.SetActive(false); 
-        return maxHealth;
+        if (health <= 0) gameObject.SetActive(false); 
+        return health;
     }
 }

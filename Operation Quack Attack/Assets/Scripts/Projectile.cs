@@ -18,6 +18,22 @@ public class Projectile : MonoBehaviour
     SpriteRenderer spr;
     Rigidbody2D rb;
 
+    private void OnEnable()
+    {
+        if (player == null) player = GameObject.FindWithTag("Player");
+
+        Collider2D[] colliders = GetComponentsInChildren<Collider2D>();
+        Collider2D[] playerCols = player.GetComponentsInChildren<Collider2D>();
+
+        foreach (Collider2D col in colliders)
+        {
+            foreach (Collider2D col2 in playerCols)
+            {
+                Physics2D.IgnoreCollision(col, col2);
+            }
+        }
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -25,9 +41,6 @@ public class Projectile : MonoBehaviour
 
         spr = GetComponent<SpriteRenderer>();
         rb = GetComponent<Rigidbody2D>();
-
-        if (player == null)
-            player = GameObject.FindWithTag("Player");
     }
 
     // Update is called once per frame
@@ -50,12 +63,15 @@ public class Projectile : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        this.gameObject.SetActive(false);
+        if (!collision.gameObject.CompareTag(player.tag))
+        {
+            this.gameObject.SetActive(false);
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (!collision.gameObject.CompareTag(player.tag))
+        if (!collision.gameObject.CompareTag(player.tag) && gameObject.activeInHierarchy)
         {
             DealDamage(collision.gameObject);
             this.gameObject.SetActive(false);

@@ -115,9 +115,8 @@ public class Player : MonoBehaviour, IDamageable
         speed = baseSpeed;
         dashingTimer = dashingTime;
 
-        spr = GetComponent<SpriteRenderer>();
+        spr = GetComponentInChildren<SpriteRenderer>();
         rb = GetComponentInChildren<Rigidbody2D>();
-
         anim = GetComponentInChildren<PlayerAnimation>();
 
         for (int i = 0; i < 10; i++)
@@ -164,8 +163,6 @@ public class Player : MonoBehaviour, IDamageable
         // Ground Movement
         if (onGround)
         {
-            spr.color = Color.white; // On-ground debug color
-
             // Lateral movement
             if (input.x != 0)
             {
@@ -195,10 +192,7 @@ public class Player : MonoBehaviour, IDamageable
 
         // Air Movement
         else
-        {
-            spr.color = Color.blue; // In-air debug color
-
-            // Set animation state to Air
+        { // Set animation state to Air
             animState = AnimState.Air;
 
             // Vertical movement
@@ -229,8 +223,6 @@ public class Player : MonoBehaviour, IDamageable
 
     private void UpdateDashing()
     {
-        spr.color = Color.yellow; // Dashing debug color
-
         // Set animation state to Air
         animState = AnimState.Dash;
 
@@ -353,8 +345,6 @@ public class Player : MonoBehaviour, IDamageable
             // If top of player collider is under bottom of platform colllider
             else if (collision.collider.bounds.min.y > collision.otherCollider.bounds.max.y)
             {
-                spr.color = Color.red; // Bumping debug color
-
                 // When bumping head, kill vertical velocity
                 if (vel.y > 0) vel.y = 0;
             }
@@ -365,8 +355,6 @@ public class Player : MonoBehaviour, IDamageable
                 // If air dashing, bonk off of the wall
                 if (!onGround && (state == PlayerState.Dashing))// || Math.Abs(vel.x) >= topSpeed))
                 {
-                    spr.color = Color.red; // Bumping debug color
-
                     speed = baseSpeed * -1;
                     vel.x = speed * (facingRight ? 1 : -1);
 
@@ -406,8 +394,6 @@ public class Player : MonoBehaviour, IDamageable
             {
                 if (!onGround)
                 {
-                    spr.color = Color.red; // Bumping debug color
-
                     // If under platform
                     if (aMaxY <= bMinY)
                     {
@@ -478,13 +464,15 @@ public class Player : MonoBehaviour, IDamageable
     {
         if (collision.gameObject.CompareTag("Enemy"))
         {
+            // When hit, take damage
             if (state != PlayerState.Dashing)
             {
-                TakeDamage();
+                TakeDamage(1);
             }
+            // If dashing, become invincible and deal damage with collisions
             else
             {
-                DealDamage(collision.gameObject);
+                DealDamage(collision.gameObject, 2);
             }
         }
     }
