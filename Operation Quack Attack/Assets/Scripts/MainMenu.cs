@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class MainMenu : MonoBehaviour
 {
@@ -8,6 +9,12 @@ public class MainMenu : MonoBehaviour
     public GameObject difficulty;
     public GameObject options;
     public GameObject credits;
+
+    public GameObject mainMenuFirstOption;
+    public GameObject DifficultyFirstOption;
+    public GameObject OptionsFirstOption;
+    public GameObject CreditsFirstObject;
+
 
     // Start is called before the first frame update
     void Start()
@@ -34,6 +41,9 @@ public class MainMenu : MonoBehaviour
         credits.SetActive(false);
         main.SetActive(false);
         difficulty.SetActive(true);
+
+        EventSystem.current.SetSelectedGameObject(null);
+        EventSystem.current.SetSelectedGameObject(DifficultyFirstOption);
     }
 
     public void MainMenuButton()
@@ -43,6 +53,10 @@ public class MainMenu : MonoBehaviour
         credits.SetActive(false);
         difficulty.SetActive(false);
         main.SetActive(true);
+
+        EventSystem.current.SetSelectedGameObject(null);
+        EventSystem.current.SetSelectedGameObject(mainMenuFirstOption);
+
     }
 
     public void OptionsButton()
@@ -52,6 +66,9 @@ public class MainMenu : MonoBehaviour
         credits.SetActive(false);
         difficulty.SetActive(false);
         options.SetActive(true);
+
+        EventSystem.current.SetSelectedGameObject(null);
+        EventSystem.current.SetSelectedGameObject(OptionsFirstOption);
     }
 
     public void CreditsButton()
@@ -61,5 +78,8 @@ public class MainMenu : MonoBehaviour
         options.SetActive(false);
         difficulty.SetActive(false);
         credits.SetActive(true);
+
+        EventSystem.current.SetSelectedGameObject(null);
+        EventSystem.current.SetSelectedGameObject(CreditsFirstObject);
     }
 }
