@@ -1,8 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Net.Mime;
-//using System.Diagnostics;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -43,7 +41,7 @@ public class Player : MonoBehaviour, IDamageable
     [SerializeField] private float baseSpeed = 5;
     [SerializeField] private float topSpeed = 10;
     [SerializeField] private float accelRate = 10;
-    private const float deccel = 0.75f; // Ground Friction
+    private const float deccel = 0.65f; // Ground Friction
 
     // Dashing
     [Header("Dashing")]
@@ -60,10 +58,11 @@ public class Player : MonoBehaviour, IDamageable
     [SerializeField] private float fallGravity = 15;
     private bool onGround = false;
     [SerializeField] private float driftInfluence = 25;
+    [SerializeField] private float topAirSpeed = 10;
     private const float airDeccel = 0.96f; // Air Resistance
 
     [SerializeField] private int airJumps = 1;
-    private int jumpCount = 0;
+    [SerializeField] private int jumpCount = 0;
     private bool onWall = false;
     [SerializeField] private int wallSide = 0;
 
@@ -86,6 +85,8 @@ public class Player : MonoBehaviour, IDamageable
 
     // Properties
     public int Health { get; set; }
+    public bool OnGround { get { return onGround; } }
+    public Vector2 Velocity { get { return vel; } }
     private Vector2 ProjectilePos {
         get
         {
@@ -115,7 +116,7 @@ public class Player : MonoBehaviour, IDamageable
         dashingTimer = dashingTime;
 
         spr = GetComponent<SpriteRenderer>();
-        rb = GetComponent<Rigidbody2D>();
+        rb = GetComponentInChildren<Rigidbody2D>();
 
         anim = GetComponentInChildren<PlayerAnimation>();
 
@@ -172,7 +173,7 @@ public class Player : MonoBehaviour, IDamageable
                 animState = AnimState.Run;
 
                 // Reset speed when changing directions
-                if (input.x + oldInput.x == 0) { speed = baseSpeed; }
+                if (input.x != oldInput.x) { speed = baseSpeed; }
 
                 // Accelerate speed, clamped from baseSpeed to topSpeed
                 speed = Mathf.Clamp(speed + accelRate * Time.deltaTime, baseSpeed, topSpeed);
@@ -209,7 +210,7 @@ public class Player : MonoBehaviour, IDamageable
             {
                 // Inluence velocity by driftInfluence, clamped at topSpeed
                 Vector2 latVel = new Vector2(vel.x + input.x * driftInfluence * Time.deltaTime, 0);
-                latVel = Vector2.ClampMagnitude(latVel, topSpeed);
+                latVel = Vector2.ClampMagnitude(latVel, topAirSpeed);
 
                 // Update velocity
                 vel.x = latVel.x;
@@ -217,6 +218,7 @@ public class Player : MonoBehaviour, IDamageable
             else
             {
                 // Deccelerate velocity
+                vel.x = Mathf.Min(vel.x, topAirSpeed);
                 vel.x *= airDeccel;
             }
         }
@@ -268,9 +270,11 @@ public class Player : MonoBehaviour, IDamageable
             // Wall jumps if on wall
             if (input.x != 0 && onWall && !onGround)
             {
-                Vector2 wallJump = new Vector2(wallSide * 0.45f, 1);
+                Vector2 wallJump = new Vector2(wallSide, 1);
+                if (input.x + wallSide > 0) wallJump = new Vector2(wallSide * 0.55f, 0.75f);
                 vel = wallJump * jumpStrength;
                 onWall = false;
+                return;
             }
 
             // Jumps if on ground or double jump
@@ -305,20 +309,23 @@ public class Player : MonoBehaviour, IDamageable
 
     private void OnShoot(InputValue value)
     {
-        // Create projectile instance
-        foreach (Projectile bullet in projectileList)
+        if (state == PlayerState.Normal)
         {
-            if (bullet.gameObject.activeSelf)
+            // Create projectile instance
+            foreach (Projectile bullet in projectileList)
             {
-                continue;
-            }
-            else
-            {
-                bullet.transform.position = ProjectilePos;
-                bullet.facingRight = facingRight;
-                bullet.transform.SetParent(projectileManager);
-                bullet.gameObject.SetActive(true);
-                break;
+                if (bullet.gameObject.activeSelf)
+                {
+                    continue;
+                }
+                else
+                {
+                    bullet.transform.position = ProjectilePos;
+                    bullet.facingRight = facingRight;
+                    bullet.transform.SetParent(projectileManager);
+                    bullet.gameObject.SetActive(true);
+                    break;
+                }
             }
         }
     }
@@ -388,7 +395,7 @@ public class Player : MonoBehaviour, IDamageable
             float bMaxY = collision.collider.bounds.max.y;
 
             // If bottom of player collider is over top of platform colllider
-            if (bMaxY < aMinY)
+            if (bMaxY <= aMinY)
             {
                 onGround = true;
                 jumpCount = 0;
@@ -400,6 +407,11 @@ public class Player : MonoBehaviour, IDamageable
                 if (!onGround)
                 {
                     spr.color = Color.red; // Bumping debug color
+
+                    // If under platform
+                    if (aMaxY <= bMinY)
+                    {
+                    }
 
                     // If on wall, allow walljump
                     if (bMinY <= aMaxY)
@@ -443,7 +455,7 @@ public class Player : MonoBehaviour, IDamageable
                     }
 
                     // If rising, reduce vertical velocity
-                    if (vel.y > 0 && Math.Abs(vel.x) >= baseSpeed) vel.y *= deccel;
+                    if (vel.y > 0 && Math.Abs(vel.x) >= baseSpeed) vel.y *= airDeccel;
                 }
             }
         }

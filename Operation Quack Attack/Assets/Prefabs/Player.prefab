@@ -128,10 +128,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 913230022992168070}
-  - component: {fileID: 913230022992168068}
+  - component: {fileID: 1665344785}
+  - component: {fileID: 1665344786}
   m_Layer: 0
-  m_Name: GroundCollider
-  m_TagString: Untagged
+  m_Name: BoundingBox
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -144,15 +145,15 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 913230022992168071}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.95, z: 0}
+  m_LocalPosition: {x: 0, y: -0.875, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 913230024881484954}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!61 &913230022992168068
-BoxCollider2D:
+--- !u!60 &1665344785
+PolygonCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -174,9 +175,26 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  serializedVersion: 2
-  m_Size: {x: 1, y: 0.1}
-  m_EdgeRadius: 0
+  m_Points:
+    m_Paths:
+    - - {x: 0, y: 2.125}
+      - {x: -0.5, y: 1.25}
+      - {x: 0, y: -0.125}
+      - {x: 0.5, y: 1.25}
+--- !u!114 &1665344786
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 913230022992168071}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 971bec604b1f8194a83e2be6fee32a9c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  player: {fileID: 913230024881484953}
+  offset: 0.5
 --- !u!1 &913230024881484956
 GameObject:
   m_ObjectHideFlags: 0
@@ -282,16 +300,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   health: 1
   vel: {x: 0, y: 0}
-  baseSpeed: 10
+  baseSpeed: 8.5
   topSpeed: 20
   accelRate: 15
   dashingSpeed: 30
-  dashingTime: 0.2
+  dashingTime: 0.125
   jumpStrength: 15
   jumpGravity: 40
   fallGravity: 60
   driftInfluence: 60
-  airJumps: 1
+  topAirSpeed: 18.5
+  airJumps: 2
+  jumpCount: 0
   wallSide: 0
   projectile: {fileID: 8125120347618727777, guid: 381eb93ad2ad0ea4697c6c43fabe51a0, type: 3}
   projectileOffset: {x: 0, y: 0.35}
@@ -339,11 +359,11 @@ CapsuleCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0.125}
-  m_Size: {x: 1, y: 2.25}
+  m_Offset: {x: 0, y: 0.375}
+  m_Size: {x: 1, y: 1.75}
   m_Direction: 0
 --- !u!50 &913230024881484950
 Rigidbody2D:
