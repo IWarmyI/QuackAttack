@@ -49,6 +49,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "Restart",
+                    "type": "Button",
+                    "id": "921a6ade-2ee8-4f88-8bae-0cd5e46816dc",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -241,6 +250,17 @@
                 },
                 {
                     "name": "",
+                    "id": "b8eb31f3-d0d0-4203-afbc-4bed688aaa44",
+                    "path": "<Keyboard>/w",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Jump",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "1cb8abb4-7f9d-4084-8964-664a27f5cbd4",
                     "path": "<Keyboard>/x",
                     "interactions": "",
@@ -357,6 +377,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "Quack",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "6d695b11-e01f-4af8-94c4-431e1397dfa6",
+                    "path": "<Keyboard>/r",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Restart",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

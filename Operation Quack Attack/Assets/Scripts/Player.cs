@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour, IDamageable
 {
@@ -355,6 +356,11 @@ public class Player : MonoBehaviour, IDamageable
                 if (value.isPressed) ShootProjectile();
             }
         }
+    }
+
+    public void OnRestart(InputValue value)
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
     // ========================================================================
