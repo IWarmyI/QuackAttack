@@ -2,11 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class DifficultyOptions : MonoBehaviour
 {
-    public Text description;
-    public Text details;
+    public TextMeshProUGUI description;
+    public TextMeshProUGUI details;
 
     // Update diff description based on hover
     public void eggDiff()
