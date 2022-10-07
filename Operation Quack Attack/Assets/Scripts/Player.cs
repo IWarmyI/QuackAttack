@@ -134,8 +134,7 @@ public class Player : MonoBehaviour, IDamageable
         }
     }
 
-    // Update is called once per frame
-    void FixedUpdate()
+    private void FixedUpdate()
     {
         // Get current position
         pos = transform.position;
@@ -489,6 +488,14 @@ public class Player : MonoBehaviour, IDamageable
 
                     // If rising, reduce vertical velocity
                     if (vel.y > 0 && Math.Abs(vel.x) >= baseSpeed) vel.y *= airDeccel;
+                }
+
+                else
+                {
+                    if (aMaxY > bMaxY && aMinY <= bMaxY)
+                    {
+                        onGround = false;
+                    }
                 }
             }
         }
