@@ -1430,7 +1430,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1798227504834552875, guid: f86e547fb4009894c99ef419f1527c6c, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 15.3
+      value: 15.5
       objectReference: {fileID: 0}
     - target: {fileID: 1798227504834552875, guid: f86e547fb4009894c99ef419f1527c6c, type: 3}
       propertyPath: m_LocalPosition.y
@@ -1550,7 +1550,7 @@ Canvas:
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
-  m_AdditionalShaderChannelsFlag: 25
+  m_AdditionalShaderChannelsFlag: 1
   m_SortingLayerID: 0
   m_SortingOrder: 2
   m_TargetDisplay: 0
@@ -2975,8 +2975,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 20, y: 0}
-  m_SizeDelta: {x: 480, y: 200}
+  m_AnchoredPosition: {x: 20, y: -20}
+  m_SizeDelta: {x: 480, y: 180}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1174981996
 MonoBehaviour:
@@ -3005,7 +3005,7 @@ MonoBehaviour:
     m_BestFit: 0
     m_MinSize: 2
     m_MaxSize: 40
-    m_Alignment: 6
+    m_Alignment: 0
     m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 1
@@ -3365,6 +3365,7 @@ MonoBehaviour:
   - {fileID: 692206571}
   - {fileID: 1911892377}
   - {fileID: 1190497843}
+  timers: []
   respawnTime: 5
 --- !u!1 &1403746804
 GameObject:
@@ -4704,11 +4705,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 913230024881484954, guid: 3b0efaa01c9a47e409acaf5e07669ca8, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -8.33
+      value: -8.35
       objectReference: {fileID: 0}
     - target: {fileID: 913230024881484954, guid: 3b0efaa01c9a47e409acaf5e07669ca8, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -3.4
+      value: -3.5
       objectReference: {fileID: 0}
     - target: {fileID: 913230024881484954, guid: 3b0efaa01c9a47e409acaf5e07669ca8, type: 3}
       propertyPath: m_LocalPosition.z

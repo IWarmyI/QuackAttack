@@ -5,13 +5,17 @@ using UnityEngine;
 public class EnemySpawner : MonoBehaviour
 {
     [SerializeField] private GameObject[] enemy;
+    [SerializeField] private float[] timers;
     [SerializeField] private float respawnTime = 10;
-    private float timer = 0;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        timers = new float[enemy.Length];
+        for (int i = 0; i < enemy.Length; i++)
+        {
+            timers[i] = 0;
+        }
     }
 
     // Update is called once per frame
@@ -21,18 +25,17 @@ public class EnemySpawner : MonoBehaviour
         {
             if (enemy[i] == null) return;
 
-        if (!enemy[i].activeInHierarchy)
-        {
-            if (timer > respawnTime)
+            if (!enemy[i].activeInHierarchy)
             {
-                enemy[i].SetActive(true);
-                enemy[i].GetComponent<IDamageable>().Health = 1;
-                timer = 0;
-                return;
-            }
+                if (timers[i] > respawnTime)
+                {
+                    enemy[i].SetActive(true);
+                    timers[i] = 0;
+                    return;
+                }
 
-            timer += Time.deltaTime;
-        }
+                timers[i] += Time.deltaTime;
+            }
         }
     }
 }
