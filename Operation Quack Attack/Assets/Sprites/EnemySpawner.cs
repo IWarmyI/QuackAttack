@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class EnemySpawner : MonoBehaviour
 {
-    [SerializeField] private GameObject enemy;
+    [SerializeField] private GameObject[] enemy;
     [SerializeField] private float respawnTime = 10;
     private float timer = 0;
 
@@ -17,19 +17,22 @@ public class EnemySpawner : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (enemy == null) return;
+        for (int i = 0; i < enemy.Length; i++)
+        {
+            if (enemy[i] == null) return;
 
-        if (!enemy.activeInHierarchy)
+        if (!enemy[i].activeInHierarchy)
         {
             if (timer > respawnTime)
             {
-                enemy.SetActive(true);
-                enemy.GetComponent<IDamageable>().Health = 1;
+                enemy[i].SetActive(true);
+                enemy[i].GetComponent<IDamageable>().Health = 1;
                 timer = 0;
                 return;
             }
 
             timer += Time.deltaTime;
+        }
         }
     }
 }
