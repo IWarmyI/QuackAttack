@@ -7,6 +7,7 @@ TagManager:
   - Projectile
   - Enemy
   - Stage
+  - EndLevel
   layers:
   - Default
   - TransparentFX
