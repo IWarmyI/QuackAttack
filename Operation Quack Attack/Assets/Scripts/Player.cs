@@ -81,7 +81,10 @@ public class Player : MonoBehaviour, IDamageable
     //Sound Effects 
     [Header("Sound")]
     [SerializeField] private AudioClip quack = null;
-    private AudioSource _source = null;
+    AudioSource[] _sources;
+    public AudioSource quackSource;
+    public AudioSource sfxSource;
+    [SerializeField] private AudioClip[] movementSfx = null;
 
     // GameObject Components
     private SpriteRenderer spr;
@@ -107,15 +110,21 @@ public class Player : MonoBehaviour, IDamageable
     // Start is called before the first frame update
     void Start()
     {
-        _source = GetComponent<AudioSource>();
+        _sources = GetComponents<AudioSource>();
+       quackSource = _sources[0];
+        sfxSource = _sources[1];
 
-        if (_source == null)
+        if (quackSource == null)
         {
-            Debug.LogError("Audio Source is empty");
+            Debug.LogError("Quack Source is empty");
+        }
+        else if (sfxSource == null)
+        {
+            Debug.LogError("SFX source is empty");
         }
         else
         {
-            _source.clip = quack;
+            quackSource.clip = quack;
         }
 
         pos = transform.position;
@@ -305,6 +314,7 @@ public class Player : MonoBehaviour, IDamageable
             // Wall jumps if on wall
             if (input.x != 0 && onWall && !onGround)
             {
+                sfxSource.PlayOneShot(movementSfx[0]);
                 Vector2 wallJump = new Vector2(wallSide, 1);
                 if (input.x + wallSide > 0) wallJump = new Vector2(wallSide * 0.55f, 0.75f);
                 vel = wallJump * jumpStrength;
@@ -318,6 +328,7 @@ public class Player : MonoBehaviour, IDamageable
                 vel.y = jumpStrength;
                 onGround = false;
                 jumpCount++;
+                sfxSource.PlayOneShot(movementSfx[1]);
             }
         }
     }
@@ -327,6 +338,7 @@ public class Player : MonoBehaviour, IDamageable
         // Can only dash if in normal state
         if (state == PlayerState.Normal)
         {
+            sfxSource.PlayOneShot(movementSfx[2]);
             // Change state to dashing and reset vertical speed
             state = PlayerState.Dashing;
             vel.y = 0;
@@ -339,7 +351,7 @@ public class Player : MonoBehaviour, IDamageable
     private void OnQuack(InputValue value)
     {
         //Play the quack sound effect when button is pressed
-        _source.PlayOneShot(quack);
+        //quackSource.PlayOneShot(quack);
     }
 
     private void OnShoot(InputValue value)
