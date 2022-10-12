@@ -23,9 +23,14 @@ public class PlayerCamera : MonoBehaviour
     //     transform.position = new Vector3(x, y, transform.position.z);
     // }
 
-    [SerializeField] Transform player;
+    public Transform player;
     [SerializeField] float camSpeed = 10.0f;
     [SerializeField] Vector3 offset;
+
+    void Start()
+    {
+        transform.position = player.position;
+    }
 
     void LateUpdate()
     {
