@@ -89,8 +89,8 @@ public class Player : MonoBehaviour, IDamageable
     [SerializeField]private GameObject gameOverScreen;
 
     // Properties
-    public PlayerState State { get; }
-    public int Health { get; set; }
+    public PlayerState State { get { return state; } }
+    public int Health { get { return health; } set { health = value; } }
     public bool OnGround { get { return onGround; } }
     public Vector2 Velocity { get { return vel; } }
     private Vector2 ProjectilePos {
@@ -514,22 +514,6 @@ public class Player : MonoBehaviour, IDamageable
     // ========================================================================
     // Damageable Methods
     // ========================================================================
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (collision.gameObject.CompareTag("Enemy"))
-        {
-            // When hit, take damage
-            if (state != PlayerState.Dashing)
-            {
-                TakeDamage(1);
-            }
-            // If dashing, become invincible and deal damage with collisions
-            else
-            {
-                DealDamage(collision.gameObject, 2);
-            }
-        }
-    }
 
     public int DealDamage(IDamageable target, int damage = 1)
     {
