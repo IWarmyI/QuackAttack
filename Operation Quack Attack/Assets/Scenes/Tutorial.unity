@@ -1189,7 +1189,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7880359b819334c4783f6f49a71ce6a8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  timer: 3
+  timer: 0
   tutorial: {fileID: 846733469}
 --- !u!61 &283260671
 BoxCollider2D:
@@ -2693,8 +2693,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "You can Dash a short distance with Left Shift or X\n\n\nDouble Jump and
-    Dash \nto cross the gap"
+  m_text: "Spacebar or Z allows you to \nJump/Double Jump\n\n\nYou can Dash a short
+    distance with Left Shift or X\n\n\nCombine Double Jump and \nDash to cross the
+    gap"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -2757,7 +2758,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: -87.44782, w: -97.2848}
+  m_margin: {x: 0, y: 0, z: -87.44782, w: -191.90788}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -2788,7 +2789,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -549.48, y: -265.29}
+  m_AnchoredPosition: {x: -549.48, y: -263.98}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!4 &888762297 stripped
