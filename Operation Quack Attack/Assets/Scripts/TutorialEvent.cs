@@ -37,13 +37,19 @@ public class TutorialEvent : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D col)
     {
-        needHelp = true;
+        if (col.gameObject.CompareTag("Player"))
+        {
+            needHelp = true;
+        }
     }
 
-    void OnTriggerExit2D()
+    void OnTriggerExit2D(Collider2D col)
     {
-       needHelp = false;
-       timer = resetTimer;
-       tutorial.enabled = false;
+        if (col.gameObject.CompareTag("Player"))
+        {
+            needHelp = false;
+            timer = resetTimer;
+            tutorial.enabled = false;
+        }
     }
 }
