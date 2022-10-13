@@ -11,13 +11,14 @@ public class PlayerHitbox : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (player == null) return;
+        Debug.Log($"{collision.name} {player.State}");
 
         if (collision.gameObject.CompareTag("Enemy"))
         {
             // When hit, take damage
             if (player.State != PlayerState.Dashing)
             {
-                if (player.iFramesTimer == 0)
+                if (player.iFramesTimer <= 0)
                 {
                     player.TakeDamage(1);
                 }
