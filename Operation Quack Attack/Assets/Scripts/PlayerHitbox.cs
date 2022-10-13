@@ -17,7 +17,10 @@ public class PlayerHitbox : MonoBehaviour
             // When hit, take damage
             if (player.State != PlayerState.Dashing)
             {
-                player.TakeDamage(1);
+                if (player.iFramesTimer == 0)
+                {
+                    player.TakeDamage(1);
+                }
             }
             // If dashing, become invincible and deal damage with collisions
             else

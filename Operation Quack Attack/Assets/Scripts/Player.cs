@@ -78,6 +78,10 @@ public class Player : MonoBehaviour, IDamageable
     private bool isFiring = false;
     [SerializeField] public List<Projectile> projectileList = new List<Projectile>();
 
+    // I-Frames
+    public float iFrames = 0.07f;
+    public float iFramesTimer = 0;
+
     //Sound Effects 
     [Header("Sound")]
     [SerializeField] private AudioClip quack = null;
@@ -251,6 +255,12 @@ public class Player : MonoBehaviour, IDamageable
 
         // Stores old input
         oldInput = input;
+
+        // I-Frames
+        if (iFramesTimer > 0)
+        {
+            iFramesTimer -= Time.deltaTime;
+        }
     }
 
     private void UpdateDashing()
@@ -269,6 +279,7 @@ public class Player : MonoBehaviour, IDamageable
         {
             isDashing = false;
             dashingTimer = dashingTime;
+            iFramesTimer = iFrames;
             state = PlayerState.Normal;
         }
     }
