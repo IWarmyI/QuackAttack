@@ -3,25 +3,31 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
-public class TutorialEvents : MonoBehaviour
+public class TutorialEvent : MonoBehaviour
 {
-    [SerializeField] float timer;
     private bool needHelp;
-    public TextMeshProUGUI tutorial;
+    private float resetTimer;
+    [SerializeField] float timer;
+    [SerializeField] TextMeshProUGUI tutorial;
 
     // Start is called before the first frame update
     void Start()
     {
-        tutorial.enabled = false;
+       needHelp = false;
+       tutorial.enabled = false;
+       resetTimer = timer;
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         // count down timer before tutorial shows
         if (needHelp)
         {
-            timer -= Time.deltaTime;
+            if (timer != 0.0f)
+            {
+                timer -= Time.deltaTime;
+            }
             if (timer <= 0)
             {
                 tutorial.enabled = true;
@@ -29,15 +35,15 @@ public class TutorialEvents : MonoBehaviour
         }
     }
 
-    void OnTriggerEnter2D()
+    void OnTriggerEnter2D(Collider2D col)
     {
-        // check for collision
         needHelp = true;
     }
 
     void OnTriggerExit2D()
     {
-        needHelp = false;
-        timer = 20.0f;
+       needHelp = false;
+       timer = resetTimer;
+       tutorial.enabled = false;
     }
 }
