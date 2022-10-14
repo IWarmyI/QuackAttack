@@ -67,7 +67,7 @@ public class Projectile : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if ((collision.gameObject.CompareTag("Enemy") || (collision.gameObject.CompareTag("Stage")) && gameObject.activeInHierarchy))
+        if (collision.gameObject.CompareTag("Enemy") && gameObject.activeSelf)
         {
             DealDamage(collision.gameObject);
             this.gameObject.SetActive(false);

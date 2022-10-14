@@ -297,11 +297,16 @@ public class Player : MonoBehaviour, IDamageable
             {
                 bullet.transform.position = ProjectilePos;
                 bullet.facingRight = facingRight;
-                bullet.transform.SetParent(projectileManager);
+                bullet.transform.SetAsLastSibling();
                 bullet.gameObject.SetActive(true);
-                break;
+                return;
             }
         }
+        Projectile first = projectileManager.GetChild(0).GetComponent<Projectile>();
+        first.transform.position = ProjectilePos;
+        first.facingRight = facingRight;
+        first.transform.SetAsLastSibling();
+        first.gameObject.SetActive(true);
     }
 
     // ========================================================================
