@@ -224,7 +224,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: -38.402206, w: 14.667297}
+  m_margin: {x: 0, y: 0, z: 0.003829956, w: 14.667297}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -253,10 +253,10 @@ RectTransform:
   m_Father: {fileID: 1748095276}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -430.2, y: 249}
-  m_SizeDelta: {x: 200, y: 50}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 138.4768, y: -27.1401}
+  m_SizeDelta: {x: 276.9536, y: 54.2803}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &29118140
 GameObject:
@@ -2299,7 +2299,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 34.315125}
+  m_SizeDelta: {x: 0.22229004, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &745030081
 MonoBehaviour:
@@ -5244,8 +5244,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1672946502}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 31.21, y: 12.84, z: 0}
-  m_LocalScale: {x: 5.320626, y: 4.380765, z: 1.5931815}
+  m_LocalPosition: {x: 31.1788, y: 12.84, z: 0}
+  m_LocalScale: {x: 5.3828773, y: 4.380765, z: 1.5931815}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 898726006}
@@ -5721,10 +5721,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_UiScaleMode: 1
+  m_UiScaleMode: 0
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 1100, y: 600}
+  m_ReferenceResolution: {x: 800, y: 600}
   m_ScreenMatchMode: 0
   m_MatchWidthOrHeight: 0
   m_PhysicalUnit: 3
@@ -5741,8 +5741,8 @@ Canvas:
   m_GameObject: {fileID: 1748095275}
   m_Enabled: 1
   serializedVersion: 3
-  m_RenderMode: 1
-  m_Camera: {fileID: 519420031}
+  m_RenderMode: 0
+  m_Camera: {fileID: 0}
   m_PlaneDistance: 100
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
@@ -6295,8 +6295,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 21, y: 0}
-  m_SizeDelta: {x: -247.00012, y: -141.27502}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2086830478
 MonoBehaviour:
