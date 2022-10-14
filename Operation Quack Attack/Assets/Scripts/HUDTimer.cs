@@ -9,6 +9,8 @@ public class HUDTimer : MonoBehaviour
     private TextMeshProUGUI hud;
     private float timer = 0;
 
+    public bool Stop { get; set; }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -23,7 +25,10 @@ public class HUDTimer : MonoBehaviour
 
         if (player.HasStarted)
         {
-            timer += Time.deltaTime;
+            if (!Stop)
+            {
+                timer += Time.deltaTime;
+            }
         }
     }
 
