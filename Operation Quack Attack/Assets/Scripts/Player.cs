@@ -34,6 +34,7 @@ public class Player : MonoBehaviour, IDamageable
     private Vector2 input = Vector2.zero;
     private Vector2 oldInput = Vector2.zero;
     private bool facingRight = true;
+    private bool hasStarted = false;
 
     // Ground Movement
     [Header("Movement")]
@@ -97,6 +98,8 @@ public class Player : MonoBehaviour, IDamageable
 
     // Properties
     public PlayerState State { get { return state; } }
+    public AnimState Animation { get { return animState; } }
+    public bool HasStarted { get { return hasStarted; } }
     public int Health { get { return health; } set { health = value; } }
     public bool OnGround { get { return onGround; } }
     public Vector2 Velocity { get { return vel; } }
@@ -320,6 +323,8 @@ public class Player : MonoBehaviour, IDamageable
         // Only uses x axis of input (x can only be -1, 0, or 1)
         input.y = 0;
         if (input != Vector2.zero) input.Normalize();
+
+        if (input != Vector2.zero) hasStarted = true;
     }
 
     private void OnJump(InputValue value)
@@ -347,6 +352,8 @@ public class Player : MonoBehaviour, IDamageable
                 sfxSource.PlayOneShot(movementSfx[1]);
             }
         }
+
+        hasStarted = true;
     }
 
     private void OnDash(InputValue value)
@@ -362,12 +369,14 @@ public class Player : MonoBehaviour, IDamageable
             // Set dashing speed
             speed = dashingSpeed;
         }
+
+        hasStarted = true;
     }
 
     private void OnQuack(InputValue value)
     {
         //Play the quack sound effect when button is pressed
-        //quackSource.PlayOneShot(quack);
+        quackSource.PlayOneShot(quack);
     }
 
     private void OnShoot(InputValue value)
@@ -383,6 +392,8 @@ public class Player : MonoBehaviour, IDamageable
                 if (value.isPressed) ShootProjectile();
             }
         }
+
+        if (value.isPressed) hasStarted = true;
     }
 
     public void OnRestart(InputValue value)
@@ -564,6 +575,7 @@ public class Player : MonoBehaviour, IDamageable
         {
             gameObject.SetActive(false);
             gameOverScreen.SetActive(true);
+            hasStarted = false;
         }
         return health;
     }
