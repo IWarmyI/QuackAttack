@@ -8,6 +8,7 @@ public class HUDTimer : MonoBehaviour
     [SerializeField] private Player player;
     private TextMeshProUGUI hud;
     private float timer = 0;
+    private int water = 0;
 
     public bool Stop { get; set; }
 
@@ -16,6 +17,7 @@ public class HUDTimer : MonoBehaviour
     {
         hud = GetComponentInChildren<TextMeshProUGUI>();
         timer = 0;
+        water = 0;
     }
 
     // Update is called once per frame
@@ -29,6 +31,8 @@ public class HUDTimer : MonoBehaviour
             {
                 timer += Time.deltaTime;
             }
+
+            water = player.currentWater;
         }
     }
 
@@ -40,6 +44,7 @@ public class HUDTimer : MonoBehaviour
 
         if (mil >= 100) Debug.Log("heck");
 
-        hud.text = $"{min.ToString("00")}:{sec.ToString("00")}.{mil.ToString("00")}";
+        hud.text = $"{min.ToString("00")}:{sec.ToString("00")}.{mil.ToString("00")}\n" +
+            $"Water Counter: {water}";
     }
 }
