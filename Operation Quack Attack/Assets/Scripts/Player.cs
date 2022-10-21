@@ -49,11 +49,12 @@ public class Player : MonoBehaviour, IDamageable
 
     // Dashing
     [Header("Dashing")]
-    private bool canDash = true;
     private bool isDashing = false;
     [SerializeField] private float dashingSpeed = 10f;
     [SerializeField] private float dashingTime = 0.2f;
     private float dashingTimer = 0.2f;
+    [SerializeField]private float dashingCooldown = 0.5f;
+    private float dashingCooldownTimer;
 
     // Jumping and Falling
     [Header("Jumping")]
@@ -84,6 +85,10 @@ public class Player : MonoBehaviour, IDamageable
     // I-Frames
     public float iFrames = 0.07f;
     public float iFramesTimer = 0;
+
+    // Water ammo
+    private int maxWater = 100;
+    [SerializeField] public int currentWater = 0;
 
     //Sound Effects 
     [Header("Sound")]
@@ -141,6 +146,7 @@ public class Player : MonoBehaviour, IDamageable
         speed = baseSpeed;
         dashingTimer = dashingTime;
         fireTimer = FireTime;
+        currentWater = maxWater;
 
         spr = GetComponentInChildren<SpriteRenderer>();
         rb = GetComponentInChildren<Rigidbody2D>();
@@ -264,9 +270,10 @@ public class Player : MonoBehaviour, IDamageable
 
         // I-Frames
         if (iFramesTimer > 0)
-        {
             iFramesTimer -= Time.deltaTime;
-        }
+
+        if (dashingCooldownTimer > 0)
+            dashingCooldownTimer -= Time.deltaTime;
     }
 
     private void UpdateDashing()
@@ -286,33 +293,38 @@ public class Player : MonoBehaviour, IDamageable
             isDashing = false;
             dashingTimer = dashingTime;
             iFramesTimer = iFrames;
+            dashingCooldownTimer = dashingCooldown;
             state = PlayerState.Normal;
         }
     }
 
     private void ShootProjectile()
     {
-        // Create projectile instance
-        foreach (Projectile bullet in projectileList)
+        if(currentWater >= 5)
         {
-            if (bullet.gameObject.activeSelf)
+            currentWater -= 5;   
+            // Create projectile instance
+            foreach (Projectile bullet in projectileList)
             {
-                continue;
+                if (bullet.gameObject.activeSelf)
+                {
+                    continue;
+                }
+                else
+                {
+                    bullet.transform.position = ProjectilePos;
+                    bullet.facingRight = facingRight;
+                    bullet.transform.SetAsLastSibling();
+                    bullet.gameObject.SetActive(true);
+                    return;
+                }
             }
-            else
-            {
-                bullet.transform.position = ProjectilePos;
-                bullet.facingRight = facingRight;
-                bullet.transform.SetAsLastSibling();
-                bullet.gameObject.SetActive(true);
-                return;
-            }
+            Projectile first = projectileManager.GetChild(0).GetComponent<Projectile>();
+            first.transform.position = ProjectilePos;
+            first.facingRight = facingRight;
+            first.transform.SetAsLastSibling();
+            first.gameObject.SetActive(true);
         }
-        Projectile first = projectileManager.GetChild(0).GetComponent<Projectile>();
-        first.transform.position = ProjectilePos;
-        first.facingRight = facingRight;
-        first.transform.SetAsLastSibling();
-        first.gameObject.SetActive(true);
     }
 
     // ========================================================================
@@ -347,12 +359,20 @@ public class Player : MonoBehaviour, IDamageable
             }
 
             // Jumps if on ground or double jump
-            if (jumpCount < airJumps || onGround)
+            if (onGround)
             {
                 vel.y = jumpStrength;
                 onGround = false;
                 jumpCount++;
                 sfxSource.PlayOneShot(movementSfx[1]);
+            }
+            else if (jumpCount < airJumps && currentWater >= 10)
+            {
+                vel.y = jumpStrength;
+                onGround = false;
+                jumpCount++;
+                sfxSource.PlayOneShot(movementSfx[1]);
+                currentWater -= 10;
             }
         }
 
@@ -362,7 +382,7 @@ public class Player : MonoBehaviour, IDamageable
     private void OnDash(InputValue value)
     {
         // Can only dash if in normal state
-        if (state == PlayerState.Normal)
+        if (state == PlayerState.Normal && dashingCooldownTimer <= 0 && currentWater >= 10)
         {
             sfxSource.PlayOneShot(movementSfx[2]);
             // Change state to dashing and reset vertical speed
@@ -371,6 +391,7 @@ public class Player : MonoBehaviour, IDamageable
 
             // Set dashing speed
             speed = dashingSpeed;
+            currentWater -= 10;
         }
 
         hasStarted = true;
