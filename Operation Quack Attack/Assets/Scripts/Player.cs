@@ -1,7 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
@@ -100,6 +102,7 @@ public class Player : MonoBehaviour, IDamageable
     private SpriteRenderer spr;
     private Rigidbody2D rb;
     [SerializeField]private GameObject gameOverScreen;
+   [SerializeField] private GameObject pauseObj;
 
     // Properties
     public PlayerState State { get { return state; } }
@@ -420,6 +423,21 @@ public class Player : MonoBehaviour, IDamageable
     public void OnRestart(InputValue value)
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
+    private void OnPauseToggle(InputValue value)
+    {
+        if (Time.timeScale == 0.0f)
+        {
+            Time.timeScale = 1.0f;
+        }
+        else
+        {
+            Time.timeScale = 0.0f;
+        }
+
+        pauseObj.SetActive(!pauseObj.activeSelf);
+
     }
 
     // ========================================================================
