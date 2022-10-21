@@ -20,6 +20,7 @@ public class MainMenu : MonoBehaviour
     void Start()
     {
         MainMenuButton();
+        Time.timeScale = 1.0f;
     }
 
     public void DifficultyButton()
