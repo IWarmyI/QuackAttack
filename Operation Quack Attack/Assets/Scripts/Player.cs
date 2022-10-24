@@ -92,7 +92,7 @@ public class Player : MonoBehaviour, IDamageable
 
     //Sound Effects 
     [Header("Sound")]
-    [SerializeField] private AudioClip quack = null;
+    [SerializeField] private AudioClip[] quack = null;
     AudioSource[] _sources;
     public AudioSource quackSource;
     public AudioSource sfxSource;
@@ -139,7 +139,7 @@ public class Player : MonoBehaviour, IDamageable
         }
         else
         {
-            quackSource.clip = quack;
+            quackSource.clip = quack[0];
         }
 
         pos = transform.position;
@@ -400,7 +400,16 @@ public class Player : MonoBehaviour, IDamageable
     private void OnQuack(InputValue value)
     {
         //Play the quack sound effect when button is pressed
-        quackSource.PlayOneShot(quack);
+        int deepQuackPercentage = UnityEngine.Random.Range(0, 100);
+
+        if (deepQuackPercentage <= 10)
+        {
+            quackSource.PlayOneShot(quack[1]);
+        }
+        else if (deepQuackPercentage > 10)
+        {
+            quackSource.PlayOneShot(quack[0]);
+        }
     }
 
     private void OnShoot(InputValue value)
@@ -437,6 +446,7 @@ public class Player : MonoBehaviour, IDamageable
         }
 
         pauseObj.SetActive(!pauseObj.activeSelf);
+        gameObject.SetActive(false);
 
     }
 

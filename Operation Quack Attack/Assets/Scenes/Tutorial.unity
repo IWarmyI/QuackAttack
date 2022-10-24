@@ -255,11 +255,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-<<<<<<< HEAD
   m_AnchoredPosition: {x: 138.4768, y: -27.140106}
-=======
-  m_AnchoredPosition: {x: 138.4768, y: -27.140076}
->>>>>>> c64675b1b8e94429a564fc32fbbebd435b9bbb65
   m_SizeDelta: {x: 276.9536, y: 54.2803}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &29118140
@@ -4025,6 +4021,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   FirstOption: {fileID: 2110196249}
   pauseObj: {fileID: 1044116071}
+  player: {fileID: 1830123194}
 --- !u!1 &1050182987
 GameObject:
   m_ObjectHideFlags: 0
@@ -5637,6 +5634,14 @@ PrefabInstance:
       value: 0.4
       objectReference: {fileID: 0}
     - target: {fileID: 913230024881484953, guid: 3b0efaa01c9a47e409acaf5e07669ca8, type: 3}
+      propertyPath: quack.Array.data[0]
+      value: 
+      objectReference: {fileID: 8300000, guid: 8f133431776716f4ea93a7ec5c8ba724, type: 3}
+    - target: {fileID: 913230024881484953, guid: 3b0efaa01c9a47e409acaf5e07669ca8, type: 3}
+      propertyPath: quack.Array.data[1]
+      value: 
+      objectReference: {fileID: 8300000, guid: fa9ef772332ecaa4a8480d9b920b1139, type: 3}
+    - target: {fileID: 913230024881484953, guid: 3b0efaa01c9a47e409acaf5e07669ca8, type: 3}
       propertyPath: movementSfx.Array.size
       value: 3
       objectReference: {fileID: 0}
@@ -5707,6 +5712,10 @@ PrefabInstance:
     - target: {fileID: 3463381780900638049, guid: 3b0efaa01c9a47e409acaf5e07669ca8, type: 3}
       propertyPath: m_Enabled
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3463381780900638049, guid: 3b0efaa01c9a47e409acaf5e07669ca8, type: 3}
+      propertyPath: m_audioClip
+      value: 
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3b0efaa01c9a47e409acaf5e07669ca8, type: 3}
@@ -6544,6 +6553,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   FirstOption: {fileID: 1050182987}
   pauseObj: {fileID: 1044116071}
+  player: {fileID: 1830123194}
 --- !u!1 &1751586721
 GameObject:
   m_ObjectHideFlags: 0
