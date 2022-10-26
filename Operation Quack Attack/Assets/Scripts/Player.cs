@@ -89,6 +89,7 @@ public class Player : MonoBehaviour, IDamageable
     // Water ammo
     private int maxWater = 100;
     [SerializeField] public int currentWater = 0;
+    [SerializeField] public int reFillAmount = 10;
 
     //Sound Effects 
     [Header("Sound")]
@@ -455,6 +456,10 @@ public class Player : MonoBehaviour, IDamageable
     // ========================================================================
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        if ( collision.gameObject.CompareTag("PickUp")) {
+            currentWater += reFillAmount;
+            DestroyObject(collision.gameObject);
+        }
         if (collision.gameObject.CompareTag("Stage"))
         {
             // If bottom of player collider is over top of platform colllider
@@ -497,6 +502,11 @@ public class Player : MonoBehaviour, IDamageable
 
     private void OnCollisionStay2D(Collision2D collision)
     {
+        if (collision.gameObject.CompareTag("PickUp"))
+        {
+            currentWater += reFillAmount;
+            DestroyObject(collision.gameObject);
+        }
         if (collision.gameObject.CompareTag("Stage"))
         {
             // OtherCollider (this)
@@ -591,6 +601,11 @@ public class Player : MonoBehaviour, IDamageable
 
     private void OnCollisionExit2D(Collision2D collision)
     {
+        if (collision.gameObject.CompareTag("PickUp"))
+        {
+            currentWater += reFillAmount;
+            DestroyObject(collision.gameObject);
+        }
         if (collision.gameObject.CompareTag("Stage"))
         {
             onGround = false;
