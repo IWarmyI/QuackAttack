@@ -89,10 +89,11 @@ public class Player : MonoBehaviour, IDamageable
     // Water ammo
     private int maxWater = 100;
     [SerializeField] public int currentWater = 0;
+    [SerializeField] public int reFillAmount = 10;
 
     //Sound Effects 
     [Header("Sound")]
-    [SerializeField] private AudioClip quack = null;
+    [SerializeField] private AudioClip[] quack = null;
     AudioSource[] _sources;
     public AudioSource quackSource;
     public AudioSource sfxSource;
@@ -139,7 +140,7 @@ public class Player : MonoBehaviour, IDamageable
         }
         else
         {
-            quackSource.clip = quack;
+            quackSource.clip = quack[0];
         }
 
         pos = transform.position;
@@ -400,7 +401,16 @@ public class Player : MonoBehaviour, IDamageable
     private void OnQuack(InputValue value)
     {
         //Play the quack sound effect when button is pressed
-        quackSource.PlayOneShot(quack);
+        int deepQuackPercentage = UnityEngine.Random.Range(0, 100);
+
+        if (deepQuackPercentage <= 10)
+        {
+            quackSource.PlayOneShot(quack[1]);
+        }
+        else if (deepQuackPercentage > 10)
+        {
+            quackSource.PlayOneShot(quack[0]);
+        }
     }
 
     private void OnShoot(InputValue value)
@@ -437,6 +447,7 @@ public class Player : MonoBehaviour, IDamageable
         }
 
         pauseObj.SetActive(!pauseObj.activeSelf);
+        gameObject.SetActive(false);
 
     }
 
@@ -445,6 +456,10 @@ public class Player : MonoBehaviour, IDamageable
     // ========================================================================
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        if ( collision.gameObject.CompareTag("PickUp")) {
+            currentWater += reFillAmount;
+            DestroyObject(collision.gameObject);
+        }
         if (collision.gameObject.CompareTag("Stage"))
         {
             // If bottom of player collider is over top of platform colllider
@@ -487,6 +502,11 @@ public class Player : MonoBehaviour, IDamageable
 
     private void OnCollisionStay2D(Collision2D collision)
     {
+        if (collision.gameObject.CompareTag("PickUp"))
+        {
+            currentWater += reFillAmount;
+            DestroyObject(collision.gameObject);
+        }
         if (collision.gameObject.CompareTag("Stage"))
         {
             // OtherCollider (this)
@@ -581,6 +601,11 @@ public class Player : MonoBehaviour, IDamageable
 
     private void OnCollisionExit2D(Collision2D collision)
     {
+        if (collision.gameObject.CompareTag("PickUp"))
+        {
+            currentWater += reFillAmount;
+            DestroyObject(collision.gameObject);
+        }
         if (collision.gameObject.CompareTag("Stage"))
         {
             onGround = false;

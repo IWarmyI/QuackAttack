@@ -9,6 +9,7 @@ public class pauseManager : MonoBehaviour
 {
     public GameObject FirstOption;
     public GameObject pauseObj;
+    public GameObject player;
 
     void Start()
     {
@@ -23,12 +24,15 @@ public class pauseManager : MonoBehaviour
 
     public void Restart()
     {
+        Time.timeScale = 1.0f;
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        player.SetActive(true);
     }
 
     public void ReturnToGane()
     {
         Time.timeScale = 1.0f;
+        player.SetActive(true);
         pauseObj.SetActive(false);
 
     }
