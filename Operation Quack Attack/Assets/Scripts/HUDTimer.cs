@@ -31,9 +31,9 @@ public class HUDTimer : MonoBehaviour
             {
                 timer += Time.deltaTime;
             }
-
-            water = player.currentWater;
         }
+
+        water = player.currentWater;
     }
 
     private void LateUpdate()
@@ -45,6 +45,6 @@ public class HUDTimer : MonoBehaviour
         if (mil >= 100) Debug.Log("heck");
 
         hud.text = $"{min.ToString("00")}:{sec.ToString("00")}.{mil.ToString("00")}\n" +
-            $"Water Counter: {water}";
+            $"Water Counter: {water}\n" + $"Speed: {player.Speed.ToString("00.00")}";
     }
 }
