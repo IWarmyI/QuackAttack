@@ -1,3 +1,5 @@
+using Newtonsoft.Json.Linq;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -13,11 +15,10 @@ public class PlayerAnimation : MonoBehaviour
     private bool _isTopSpeed = false;
     [SerializeField] private float speedMultiplier = 1.25f;
 
-    private Color high = new Color(0, 2.0f / 3.0f, 1);
-
     private Animator anim;
     private SpriteRenderer spr;
     private TrailRenderer trail;
+    private Dictionary<AnimState, bool> complete = new();
 
     void Start()
     {
@@ -55,5 +56,25 @@ public class PlayerAnimation : MonoBehaviour
         _isTopSpeed = isTopSpeed;
         _facing = facing;
         Animate();
+    }
+
+    public bool IsComplete(AnimState animState)
+    {
+        if (complete.TryGetValue(animState, out bool value))
+        {
+            if (value) complete[animState] = false;
+            return value;
+        }
+        return false;
+    }
+
+    public void OnAnimEnter(AnimState animState)
+    {
+        //complete[animState] = false;
+    }
+    public void OnAnimExit(AnimState animState)
+    {
+        complete[animState] = true;
+        Debug.Log($"End!");
     }
 }

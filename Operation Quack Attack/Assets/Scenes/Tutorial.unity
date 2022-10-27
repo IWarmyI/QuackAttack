@@ -5645,6 +5645,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1515305077, guid: 3b0efaa01c9a47e409acaf5e07669ca8, type: 3}
+      propertyPath: animTimed.Array.size
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 913230024881484953, guid: 3b0efaa01c9a47e409acaf5e07669ca8, type: 3}
       propertyPath: pauseObj
       value: 
@@ -5707,7 +5711,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 913230024881484954, guid: 3b0efaa01c9a47e409acaf5e07669ca8, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -3.5
+      value: -3.556
       objectReference: {fileID: 0}
     - target: {fileID: 913230024881484954, guid: 3b0efaa01c9a47e409acaf5e07669ca8, type: 3}
       propertyPath: m_LocalPosition.z

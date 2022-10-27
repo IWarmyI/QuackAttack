@@ -11,8 +11,10 @@ public class Player : MonoBehaviour, IDamageable
 {
     public enum PlayerState
     {
+        Stopped,
         Normal,
-        Dashing
+        Dashing,
+        Dead
     }
 
     public enum AnimState
@@ -20,7 +22,8 @@ public class Player : MonoBehaviour, IDamageable
         Idle,
         Run,
         Air,
-        Dash
+        Dash,
+        Intro
     }
 
     // Player State
@@ -30,13 +33,14 @@ public class Player : MonoBehaviour, IDamageable
     // Animation
     private AnimState animState = AnimState.Idle;
     private PlayerAnimation anim;
+    private bool hasStarted = false;
+    private static bool isIntro = true;
 
     // Position and Input
     private Vector2 pos;
     private Vector2 input = Vector2.zero;
     private Vector2 oldInput = Vector2.zero;
     private bool facingRight = true;
-    private bool hasStarted = false;
 
     // Ground Movement
     [Header("Movement")]
@@ -56,12 +60,16 @@ public class Player : MonoBehaviour, IDamageable
     [SerializeField]private float dashingCooldown = 0.5f;
     private float dashingCooldownTimer;
 
+    // I-Frames
+    public float iFrames = 0.07f;
+    public float iFramesTimer = 0;
+
     // Jumping and Falling
     [Header("Jumping")]
     [SerializeField] private float jumpStrength = 10;
     [SerializeField] private float jumpGravity = 10;
     [SerializeField] private float fallGravity = 15;
-    private bool onGround = false;
+    private bool onGround = true;
     [SerializeField] private float driftInfluence = 25;
     [SerializeField] private float topAirSpeed = 10;
     private const float airDeccel = 0.96f; // Air Resistance
@@ -82,10 +90,6 @@ public class Player : MonoBehaviour, IDamageable
     private bool isFiring = false;
     [SerializeField] public List<Projectile> projectileList = new List<Projectile>();
 
-    // I-Frames
-    public float iFrames = 0.07f;
-    public float iFramesTimer = 0;
-
     // Water ammo
     private int maxWater = 100;
     [SerializeField] public int currentWater = 0;
@@ -102,12 +106,12 @@ public class Player : MonoBehaviour, IDamageable
     // GameObject Components
     private SpriteRenderer spr;
     private Rigidbody2D rb;
-    [SerializeField]private GameObject gameOverScreen;
-   [SerializeField] private GameObject pauseObj;
+    [SerializeField] private GameObject gameOverScreen;
+    [SerializeField] private GameObject pauseObj;
 
     // Properties
     public PlayerState State { get { return state; } }
-    public AnimState Animation { get { return animState; } }
+    public AnimState Animation { get { return animState; } set { animState = value; } }
     public bool HasStarted { get { return hasStarted; } }
     public int Health { get { return health; } set { health = value; } }
     public bool OnGround { get { return onGround; } }
@@ -158,6 +162,12 @@ public class Player : MonoBehaviour, IDamageable
             projectileList.Add(Instantiate(projectile, ProjectilePos, Quaternion.identity, projectileManager));
             projectileList[projectileList.Count - 1].gameObject.SetActive(false);
         }
+
+        if (isIntro)
+        {
+            state = PlayerState.Stopped;
+            animState = AnimState.Intro;
+        }
     }
 
     private void FixedUpdate()
@@ -168,6 +178,10 @@ public class Player : MonoBehaviour, IDamageable
         // Determine update based on playerstate
         switch (state)
         {
+            // Paused/Unactionable (Intro)
+            case PlayerState.Stopped:
+                UpdateStopped();
+                break;
             // Normal/Actionable (Idle, Running, Jumping)
             case PlayerState.Normal:
                 UpdateNormal();
@@ -189,7 +203,10 @@ public class Player : MonoBehaviour, IDamageable
         {
             fireTimer += Time.deltaTime;
         }
+    }
 
+    private void LateUpdate()
+    {
         // Animate
         anim.Animate(animState, onGround, vel.y <= 0, speed >= topSpeed, facingRight);
     }
@@ -266,15 +283,15 @@ public class Player : MonoBehaviour, IDamageable
             }
         }
 
-        // Stores old input
-        oldInput = input;
-
         // I-Frames
         if (iFramesTimer > 0)
             iFramesTimer -= Time.deltaTime;
 
         if (dashingCooldownTimer > 0)
             dashingCooldownTimer -= Time.deltaTime;
+
+        // Stores old input
+        oldInput = input;
     }
 
     private void UpdateDashing()
@@ -299,9 +316,27 @@ public class Player : MonoBehaviour, IDamageable
         }
     }
 
+    private void UpdateStopped()
+    {
+        if (isIntro)
+        {
+            if (anim.IsComplete(animState))
+            {
+                isIntro = false;
+                state = PlayerState.Normal;
+                animState = AnimState.Idle;
+            }
+        }
+        else
+        {
+            state = PlayerState.Normal;
+            animState = AnimState.Idle;
+        }
+    }
+
     private void ShootProjectile()
     {
-        if(currentWater >= 5)
+        if (currentWater >= 5)
         {
             currentWater -= 5;   
             // Create projectile instance
@@ -353,7 +388,7 @@ public class Player : MonoBehaviour, IDamageable
             {
                 sfxSource.PlayOneShot(movementSfx[0]);
                 Vector2 wallJump = new Vector2(wallSide, 1);
-                if (input.x + wallSide > 0) wallJump = new Vector2(wallSide * 0.55f, 0.75f);
+                if (input.x + wallSide > 0) wallJump = new Vector2(wallSide * 0.6f, 0.75f);
                 vel = wallJump * jumpStrength;
                 onWall = false;
                 return;
@@ -458,7 +493,7 @@ public class Player : MonoBehaviour, IDamageable
     {
         if ( collision.gameObject.CompareTag("PickUp")) {
             currentWater += reFillAmount;
-            DestroyObject(collision.gameObject);
+            Destroy(collision.gameObject);
         }
         if (collision.gameObject.CompareTag("Stage"))
         {
@@ -505,7 +540,7 @@ public class Player : MonoBehaviour, IDamageable
         if (collision.gameObject.CompareTag("PickUp"))
         {
             currentWater += reFillAmount;
-            DestroyObject(collision.gameObject);
+            Destroy(collision.gameObject);
         }
         if (collision.gameObject.CompareTag("Stage"))
         {
@@ -604,7 +639,7 @@ public class Player : MonoBehaviour, IDamageable
         if (collision.gameObject.CompareTag("PickUp"))
         {
             currentWater += reFillAmount;
-            DestroyObject(collision.gameObject);
+            Destroy(collision.gameObject);
         }
         if (collision.gameObject.CompareTag("Stage"))
         {
