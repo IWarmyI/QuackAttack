@@ -724,8 +724,8 @@ public class Player : MonoBehaviour, IDamageable
             {
                 state = PlayerState.Dead;
 
-                Vector2 knockback = new Vector2(facingRight ? -1 : 1, 0.35f);
-                vel += knockback * jumpStrength * 1.5f;
+                Vector2 knockback = new Vector2(facingRight ? -1 : 1, 0.5f);
+                vel = knockback * jumpStrength;
             }
         }
         return health;

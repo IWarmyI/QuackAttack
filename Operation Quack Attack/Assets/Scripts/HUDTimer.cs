@@ -42,8 +42,6 @@ public class HUDTimer : MonoBehaviour
         int sec = Mathf.FloorToInt(timer - min * 60);
         int mil = Mathf.FloorToInt((timer - (min * 60 + sec)) * 100);
 
-        if (mil >= 100) Debug.Log("heck");
-
         hud.text = $"{min.ToString("00")}:{sec.ToString("00")}.{mil.ToString("00")}\n" +
             $"Water Counter: {water}\n";
     }
