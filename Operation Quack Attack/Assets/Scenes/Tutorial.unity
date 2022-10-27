@@ -1591,7 +1591,7 @@ TrailRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 292420917}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -7701,10 +7701,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Water PickUP
       objectReference: {fileID: 0}
-    - target: {fileID: 2596592861356296152, guid: 580d9ac4b30a81b4bbb541f302398424, type: 3}
-      propertyPath: m_TagString
-      value: PickUp
-      objectReference: {fileID: 0}
     - target: {fileID: 5565615756713855204, guid: 580d9ac4b30a81b4bbb541f302398424, type: 3}
       propertyPath: m_RootOrder
       value: 8
@@ -7748,10 +7744,6 @@ PrefabInstance:
     - target: {fileID: 5565615756713855204, guid: 580d9ac4b30a81b4bbb541f302398424, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6908870326808005057, guid: 580d9ac4b30a81b4bbb541f302398424, type: 3}
-      propertyPath: m_IsTrigger
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 580d9ac4b30a81b4bbb541f302398424, type: 3}

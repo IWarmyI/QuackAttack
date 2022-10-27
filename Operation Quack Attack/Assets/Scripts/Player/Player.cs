@@ -24,7 +24,8 @@ public class Player : MonoBehaviour, IDamageable
         Air,
         Dash,
         Intro,
-        Wall
+        Wall,
+        Dead
     }
 
     // Player State
@@ -193,6 +194,10 @@ public class Player : MonoBehaviour, IDamageable
             case PlayerState.Dashing:
                 UpdateDashing();
                 break;
+            // Dying
+            case PlayerState.Dead:
+                UpdateDead();
+                break;
             default:
                 break;
         }
@@ -354,7 +359,34 @@ public class Player : MonoBehaviour, IDamageable
             state = PlayerState.Normal;
             animState = AnimState.Idle;
         }
+
+        vel = Vector2.zero;
     }
+
+    private void UpdateDead()
+    {
+        animState = AnimState.Dead;
+        hasStarted = false;
+
+        speed = baseSpeed;
+        if (onGround)
+        {
+            vel.x *= deccel;
+            if (Mathf.Abs(vel.x) < baseSpeed * 0.1f) vel.x = 0;
+        }
+        else
+        {
+            vel.y -= (vel.y > 0 ? jumpGravity : fallGravity) * Time.deltaTime;
+            vel.x = Mathf.Min(vel.x, topAirSpeed);
+            vel.x *= airDeccel;
+        }
+
+        if (anim.IsComplete(animState))
+        {
+            //gameObject.SetActive(false);
+            gameOverScreen.SetActive(true);
+        }
+    }    
 
     private void ShootProjectile()
     {
@@ -408,8 +440,8 @@ public class Player : MonoBehaviour, IDamageable
             // Wall jumps if on wall
             if (input.x != 0 && onWall && !onGround)
             {
-                Vector2 wallJump = new Vector2(wallSide, 1);
-                if (input.x + wallSide > 0) wallJump = new Vector2(wallSide * 0.6f, 0.75f);
+                Vector2 wallJump = new Vector2(wallSide * 1.1f, 1);
+                if (input.x + wallSide > 0) wallJump = new Vector2(wallSide * 0.65f, 0.75f);
                 vel = wallJump * jumpStrength;
                 onWall = false;
 
@@ -685,12 +717,16 @@ public class Player : MonoBehaviour, IDamageable
 
     public int TakeDamage(int damage = 1)
     {
-        health -= damage;
-        if (health <= 0)
+        if (state != PlayerState.Dead)
         {
-            gameObject.SetActive(false);
-            gameOverScreen.SetActive(true);
-            hasStarted = false;
+            health -= damage;
+            if (health <= 0)
+            {
+                state = PlayerState.Dead;
+
+                Vector2 knockback = new Vector2(facingRight ? -1 : 1, 0.35f);
+                vel += knockback * jumpStrength * 1.5f;
+            }
         }
         return health;
     }
