@@ -45,6 +45,6 @@ public class HUDTimer : MonoBehaviour
         if (mil >= 100) Debug.Log("heck");
 
         hud.text = $"{min.ToString("00")}:{sec.ToString("00")}.{mil.ToString("00")}\n" +
-            $"Water Counter: {water}\n" + $"Speed: {player.Speed.ToString("00.00")}";
+            $"Water Counter: {water}\n";
     }
 }
