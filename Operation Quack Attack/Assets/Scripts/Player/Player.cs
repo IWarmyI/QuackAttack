@@ -11,8 +11,10 @@ public class Player : MonoBehaviour, IDamageable
 {
     public enum PlayerState
     {
+        Stopped,
         Normal,
-        Dashing
+        Dashing,
+        Dead
     }
 
     public enum AnimState
@@ -20,7 +22,10 @@ public class Player : MonoBehaviour, IDamageable
         Idle,
         Run,
         Air,
-        Dash
+        Dash,
+        Intro,
+        Wall,
+        Dead
     }
 
     // Player State
@@ -30,13 +35,14 @@ public class Player : MonoBehaviour, IDamageable
     // Animation
     private AnimState animState = AnimState.Idle;
     private PlayerAnimation anim;
+    private bool hasStarted = false;
+    private static bool isIntro = true;
 
     // Position and Input
     private Vector2 pos;
     private Vector2 input = Vector2.zero;
     private Vector2 oldInput = Vector2.zero;
     private bool facingRight = true;
-    private bool hasStarted = false;
 
     // Ground Movement
     [Header("Movement")]
@@ -49,19 +55,22 @@ public class Player : MonoBehaviour, IDamageable
 
     // Dashing
     [Header("Dashing")]
-    private bool isDashing = false;
     [SerializeField] private float dashingSpeed = 10f;
     [SerializeField] private float dashingTime = 0.2f;
     private float dashingTimer = 0.2f;
     [SerializeField]private float dashingCooldown = 0.5f;
     private float dashingCooldownTimer;
 
+    // I-Frames
+    public float iFrames = 0.07f;
+    public float iFramesTimer = 0;
+
     // Jumping and Falling
     [Header("Jumping")]
     [SerializeField] private float jumpStrength = 10;
     [SerializeField] private float jumpGravity = 10;
     [SerializeField] private float fallGravity = 15;
-    private bool onGround = false;
+    private bool onGround = true;
     [SerializeField] private float driftInfluence = 25;
     [SerializeField] private float topAirSpeed = 10;
     private const float airDeccel = 0.96f; // Air Resistance
@@ -70,6 +79,7 @@ public class Player : MonoBehaviour, IDamageable
     [SerializeField] private int jumpCount = 0;
     private bool onWall = false;
     [SerializeField] private int wallSide = 0;
+    private const float wallDeccel = 0.85f; // Wall Friction
 
     // Shooting
     [Header("Shooting")]
@@ -81,10 +91,6 @@ public class Player : MonoBehaviour, IDamageable
     private float fireTimer = 0.2f;
     private bool isFiring = false;
     [SerializeField] public List<Projectile> projectileList = new List<Projectile>();
-
-    // I-Frames
-    public float iFrames = 0.07f;
-    public float iFramesTimer = 0;
 
     // Water ammo
     private int maxWater = 100;
@@ -100,15 +106,17 @@ public class Player : MonoBehaviour, IDamageable
     [SerializeField] private AudioClip[] movementSfx = null;
 
     // GameObject Components
+    [Header("UI")]
     private SpriteRenderer spr;
     private Rigidbody2D rb;
-    [SerializeField]private GameObject gameOverScreen;
-   [SerializeField] private GameObject pauseObj;
+    [SerializeField] private GameObject gameOverScreen;
+    [SerializeField] private GameObject pauseObj;
 
     // Properties
     public PlayerState State { get { return state; } }
-    public AnimState Animation { get { return animState; } }
+    public AnimState Animation { get { return animState; } set { animState = value; } }
     public bool HasStarted { get { return hasStarted; } }
+    public float Speed { get { return speed; } }
     public int Health { get { return health; } set { health = value; } }
     public bool OnGround { get { return onGround; } }
     public Vector2 Velocity { get { return vel; } }
@@ -158,6 +166,12 @@ public class Player : MonoBehaviour, IDamageable
             projectileList.Add(Instantiate(projectile, ProjectilePos, Quaternion.identity, projectileManager));
             projectileList[projectileList.Count - 1].gameObject.SetActive(false);
         }
+
+        if (isIntro)
+        {
+            state = PlayerState.Stopped;
+            animState = AnimState.Intro;
+        }
     }
 
     private void FixedUpdate()
@@ -168,6 +182,10 @@ public class Player : MonoBehaviour, IDamageable
         // Determine update based on playerstate
         switch (state)
         {
+            // Paused/Unactionable (Intro)
+            case PlayerState.Stopped:
+                UpdateStopped();
+                break;
             // Normal/Actionable (Idle, Running, Jumping)
             case PlayerState.Normal:
                 UpdateNormal();
@@ -175,6 +193,10 @@ public class Player : MonoBehaviour, IDamageable
             // Dashing
             case PlayerState.Dashing:
                 UpdateDashing();
+                break;
+            // Dying
+            case PlayerState.Dead:
+                UpdateDead();
                 break;
             default:
                 break;
@@ -189,9 +211,19 @@ public class Player : MonoBehaviour, IDamageable
         {
             fireTimer += Time.deltaTime;
         }
+    }
 
+    private void LateUpdate()
+    {
         // Animate
-        anim.Animate(animState, onGround, vel.y <= 0, speed >= topSpeed, facingRight);
+        anim.Animate(
+            animState,
+            onGround,
+            onWall,
+            vel.y <= 0,
+            speed >= topSpeed,
+            facingRight
+        );
     }
 
     private void UpdateNormal()
@@ -255,6 +287,19 @@ public class Player : MonoBehaviour, IDamageable
                 vel.x = Mathf.Min(vel.x, topAirSpeed);
                 vel.x *= airDeccel;
             }
+
+            // Wall sliding
+            if (onWall && input.x != 0 && input.x == wallSide * -1)
+            {
+                animState = AnimState.Wall;
+
+                if (vel.y < 0)
+                {
+                    vel.y *= wallDeccel;
+                    //float slow = Mathf.Max(Mathf.Abs(vel.y) - wallDeccel * Time.deltaTime, 0);
+                    //vel.y = slow * Mathf.Sign(vel.y);
+                }
+            }
         }
 
         if (autoShoot && isFiring)
@@ -266,15 +311,15 @@ public class Player : MonoBehaviour, IDamageable
             }
         }
 
-        // Stores old input
-        oldInput = input;
-
         // I-Frames
         if (iFramesTimer > 0)
             iFramesTimer -= Time.deltaTime;
 
         if (dashingCooldownTimer > 0)
             dashingCooldownTimer -= Time.deltaTime;
+
+        // Stores old input
+        oldInput = input;
     }
 
     private void UpdateDashing()
@@ -291,7 +336,6 @@ public class Player : MonoBehaviour, IDamageable
         // When counter is over, go back to Normal state and reset dash timer
         if (dashingTimer <= 0)
         {
-            isDashing = false;
             dashingTimer = dashingTime;
             iFramesTimer = iFrames;
             dashingCooldownTimer = dashingCooldown;
@@ -299,9 +343,54 @@ public class Player : MonoBehaviour, IDamageable
         }
     }
 
+    private void UpdateStopped()
+    {
+        if (isIntro)
+        {
+            if (anim.IsComplete(animState))
+            {
+                isIntro = false;
+                state = PlayerState.Normal;
+                animState = AnimState.Idle;
+            }
+        }
+        else
+        {
+            state = PlayerState.Normal;
+            animState = AnimState.Idle;
+        }
+
+        vel = Vector2.zero;
+    }
+
+    private void UpdateDead()
+    {
+        animState = AnimState.Dead;
+        hasStarted = false;
+
+        speed = baseSpeed;
+        if (onGround)
+        {
+            vel.x *= deccel;
+            if (Mathf.Abs(vel.x) < baseSpeed * 0.1f) vel.x = 0;
+        }
+        else
+        {
+            vel.y -= (vel.y > 0 ? jumpGravity : fallGravity) * Time.deltaTime;
+            vel.x = Mathf.Min(vel.x, topAirSpeed);
+            vel.x *= airDeccel;
+        }
+
+        if (anim.IsComplete(animState))
+        {
+            //gameObject.SetActive(false);
+            gameOverScreen.SetActive(true);
+        }
+    }    
+
     private void ShootProjectile()
     {
-        if(currentWater >= 5)
+        if (currentWater >= 5)
         {
             currentWater -= 5;   
             // Create projectile instance
@@ -351,20 +440,20 @@ public class Player : MonoBehaviour, IDamageable
             // Wall jumps if on wall
             if (input.x != 0 && onWall && !onGround)
             {
-                sfxSource.PlayOneShot(movementSfx[0]);
-                Vector2 wallJump = new Vector2(wallSide, 1);
-                if (input.x + wallSide > 0) wallJump = new Vector2(wallSide * 0.55f, 0.75f);
+                Vector2 wallJump = new Vector2(wallSide * 1.1f, 1);
+                if (input.x + wallSide > 0) wallJump = new Vector2(wallSide * 0.65f, 0.75f);
                 vel = wallJump * jumpStrength;
                 onWall = false;
-                return;
-            }
 
+                sfxSource.PlayOneShot(movementSfx[0]);
+            }
             // Jumps if on ground or double jump
-            if (onGround)
+            else if (onGround)
             {
                 vel.y = jumpStrength;
                 onGround = false;
                 jumpCount++;
+
                 sfxSource.PlayOneShot(movementSfx[1]);
             }
             else if (jumpCount < airJumps && currentWater >= 10)
@@ -372,8 +461,9 @@ public class Player : MonoBehaviour, IDamageable
                 vel.y = jumpStrength;
                 onGround = false;
                 jumpCount++;
-                sfxSource.PlayOneShot(movementSfx[1]);
                 currentWater -= 10;
+
+                sfxSource.PlayOneShot(movementSfx[1]);
             }
         }
 
@@ -456,10 +546,6 @@ public class Player : MonoBehaviour, IDamageable
     // ========================================================================
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if ( collision.gameObject.CompareTag("PickUp")) {
-            currentWater += reFillAmount;
-            DestroyObject(collision.gameObject);
-        }
         if (collision.gameObject.CompareTag("Stage"))
         {
             // If bottom of player collider is over top of platform colllider
@@ -492,7 +578,6 @@ public class Player : MonoBehaviour, IDamageable
                     vel.x = speed * (facingRight ? 1 : -1);
 
                     // Cancel dash
-                    isDashing = false;
                     dashingTimer = dashingTime;
                     state = PlayerState.Normal;
                 }
@@ -502,11 +587,6 @@ public class Player : MonoBehaviour, IDamageable
 
     private void OnCollisionStay2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("PickUp"))
-        {
-            currentWater += reFillAmount;
-            DestroyObject(collision.gameObject);
-        }
         if (collision.gameObject.CompareTag("Stage"))
         {
             // OtherCollider (this)
@@ -570,7 +650,6 @@ public class Player : MonoBehaviour, IDamageable
                                 vel.x = -1 * speed * (facingRight ? 1 : -1);
 
                                 // Cancel dash
-                                isDashing = false;
                                 dashingTimer = dashingTime;
                                 state = PlayerState.Normal;
                             }
@@ -601,16 +680,20 @@ public class Player : MonoBehaviour, IDamageable
 
     private void OnCollisionExit2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("PickUp"))
-        {
-            currentWater += reFillAmount;
-            DestroyObject(collision.gameObject);
-        }
         if (collision.gameObject.CompareTag("Stage"))
         {
             onGround = false;
             onWall = false;
             wallSide = 0;
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("PickUp"))
+        {
+            currentWater += reFillAmount;
+            Destroy(collision.gameObject);
         }
     }
 
@@ -634,12 +717,16 @@ public class Player : MonoBehaviour, IDamageable
 
     public int TakeDamage(int damage = 1)
     {
-        health -= damage;
-        if (health <= 0)
+        if (state != PlayerState.Dead)
         {
-            gameObject.SetActive(false);
-            gameOverScreen.SetActive(true);
-            hasStarted = false;
+            health -= damage;
+            if (health <= 0)
+            {
+                state = PlayerState.Dead;
+
+                Vector2 knockback = new Vector2(facingRight ? -1 : 1, 0.5f);
+                vel = knockback * jumpStrength;
+            }
         }
         return health;
     }

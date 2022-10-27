@@ -7,7 +7,7 @@ public class HUDTimer : MonoBehaviour
 {
     [SerializeField] private Player player;
     private TextMeshProUGUI hud;
-    private float timer = 0;
+    private static float timer = 0;
     private int water = 0;
 
     public bool Stop { get; set; }
@@ -31,9 +31,9 @@ public class HUDTimer : MonoBehaviour
             {
                 timer += Time.deltaTime;
             }
-
-            water = player.currentWater;
         }
+
+        water = player.currentWater;
     }
 
     private void LateUpdate()
@@ -42,9 +42,7 @@ public class HUDTimer : MonoBehaviour
         int sec = Mathf.FloorToInt(timer - min * 60);
         int mil = Mathf.FloorToInt((timer - (min * 60 + sec)) * 100);
 
-        if (mil >= 100) Debug.Log("heck");
-
         hud.text = $"{min.ToString("00")}:{sec.ToString("00")}.{mil.ToString("00")}\n" +
-            $"Water Counter: {water}";
+            $"Water Counter: {water}\n";
     }
 }

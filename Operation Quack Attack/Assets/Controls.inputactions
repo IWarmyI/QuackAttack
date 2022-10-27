@@ -183,7 +183,7 @@
                 {
                     "name": "",
                     "id": "59cb496e-c550-48c9-b153-02b089652c8c",
-                    "path": "<Gamepad>/start",
+                    "path": "<Gamepad>/buttonNorth",
                     "interactions": "",
                     "processors": "",
                     "groups": "Gamepad",
@@ -352,6 +352,17 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard",
+                    "action": "PauseToggle",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "7af8518e-8b02-4438-a4f9-0a29c52e7d02",
+                    "path": "<Gamepad>/start",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
                     "action": "PauseToggle",
                     "isComposite": false,
                     "isPartOfComposite": false

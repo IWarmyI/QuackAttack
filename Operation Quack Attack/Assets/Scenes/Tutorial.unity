@@ -1702,6 +1702,7 @@ GameObject:
   - component: {fileID: 321114734}
   - component: {fileID: 321114736}
   - component: {fileID: 321114735}
+  - component: {fileID: 321114737}
   m_Layer: 5
   m_Name: Image
   m_TagString: Untagged
@@ -1724,10 +1725,10 @@ RectTransform:
   m_Father: {fileID: 1044116072}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -1.6104, y: 0}
-  m_SizeDelta: {x: 1095.2128, y: 531.5809}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0.00024414062, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &321114735
 MonoBehaviour:
@@ -1767,6 +1768,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 321114733}
   m_CullTransparentMesh: 1
+--- !u!114 &321114737
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 321114733}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86710e43de46f6f4bac7c8e50813a599, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_AspectMode: 4
+  m_AspectRatio: 1.7774144
 --- !u!1001 &340422745
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2156,22 +2171,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 2596592861356296152, guid: 580d9ac4b30a81b4bbb541f302398424, type: 3}
   m_PrefabInstance: {fileID: 922087316820194483}
   m_PrefabAsset: {fileID: 0}
---- !u!70 &403253334
-CapsuleCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 403253331}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  m_Size: {x: 5.1199994, y: 5.12}
-  m_Direction: 0
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -4012,7 +4011,7 @@ RectTransform:
   m_GameObject: {fileID: 1044116071}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.8344244, y: 0.8356963, z: 1.4537009}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 321114734}
@@ -5630,6 +5629,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1515305077, guid: 3b0efaa01c9a47e409acaf5e07669ca8, type: 3}
+      propertyPath: animTimed.Array.size
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 913230024881484953, guid: 3b0efaa01c9a47e409acaf5e07669ca8, type: 3}
       propertyPath: pauseObj
       value: 
@@ -5692,7 +5695,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 913230024881484954, guid: 3b0efaa01c9a47e409acaf5e07669ca8, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -3.5
+      value: -3.556
       objectReference: {fileID: 0}
     - target: {fileID: 913230024881484954, guid: 3b0efaa01c9a47e409acaf5e07669ca8, type: 3}
       propertyPath: m_LocalPosition.z
@@ -7697,10 +7700,6 @@ PrefabInstance:
     - target: {fileID: 2596592861356296152, guid: 580d9ac4b30a81b4bbb541f302398424, type: 3}
       propertyPath: m_Name
       value: Water PickUP
-      objectReference: {fileID: 0}
-    - target: {fileID: 2596592861356296152, guid: 580d9ac4b30a81b4bbb541f302398424, type: 3}
-      propertyPath: m_TagString
-      value: PickUp
       objectReference: {fileID: 0}
     - target: {fileID: 5565615756713855204, guid: 580d9ac4b30a81b4bbb541f302398424, type: 3}
       propertyPath: m_RootOrder
