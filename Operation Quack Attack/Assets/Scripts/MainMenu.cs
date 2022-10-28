@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
 
 public class MainMenu : MonoBehaviour
 {
@@ -26,13 +27,13 @@ public class MainMenu : MonoBehaviour
     public void DifficultyButton()
     {
         // Play Game
-        UnityEngine.SceneManagement.SceneManager.LoadScene("Game");
+        SceneManager.LoadScene("Game");
     }
 
     public void TutorialButton()
     {
         //Play Tutorial
-        UnityEngine.SceneManagement.SceneManager.LoadScene("Tutorial");
+        SceneManager.LoadScene("Tutorial");
     }
 
     public void StartButton()
