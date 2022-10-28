@@ -20,12 +20,32 @@ public class PlayerAnimation : MonoBehaviour
     private SpriteRenderer spr;
     private TrailRenderer trail;
     private Dictionary<AnimState, bool> complete = new();
+    [SerializeField] private Material defaultMat;
+    [SerializeField] private Material flashMat;
+    [SerializeField] private Color flashColor = new Color(0.5f, 0.5f, 0.5f);
+    private const float flashTime = 0.2f;
+    private float flashTimer = 0.2f;
 
     void Start()
     {
         anim = GetComponent<Animator>();
         spr = GetComponent<SpriteRenderer>();
         trail = GetComponentInChildren<TrailRenderer>();
+    }
+
+    private void Update()
+    {
+        if (flashTimer < flashTime)
+        {
+            flashTimer += Time.deltaTime;
+
+            if (flashTimer >= flashTime)
+            {
+                spr.material = defaultMat;
+                spr.material.color = Color.white;
+            }
+        }
+
     }
 
     public void Animate()
@@ -82,5 +102,12 @@ public class PlayerAnimation : MonoBehaviour
     public void OnAnimExit(AnimState animState)
     {
         complete[animState] = true;
+    }
+
+    public void PlayFlash()
+    {
+        spr.material = flashMat;
+        spr.material.color = flashColor;
+        flashTimer = 0;
     }
 }

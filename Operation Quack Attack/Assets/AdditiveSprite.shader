@@ -1,16 +1,14 @@
 // Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
 
+// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
+
 Shader "Sprites/Additive"
 {
     Properties
     {
         [PerRendererData] _MainTex ("Sprite Texture", 2D) = "white" {}
-        _Color ("Tint", Color) = (1,1,1,1)
+        [MainColor] _Color ("Tint", Color) = (1,1,1,1)
         [MaterialToggle] PixelSnap ("Pixel snap", Float) = 0
-        [HideInInspector] _RendererColor ("RendererColor", Color) = (1,1,1,1)
-        [HideInInspector] _Flip ("Flip", Vector) = (1,1,1,1)
-        [PerRendererData] _AlphaTex ("External Alpha", 2D) = "white" {}
-        [PerRendererData] _EnableExternalAlpha ("Enable External Alpha", Float) = 0
     }
 
     SubShader
@@ -27,6 +25,7 @@ Shader "Sprites/Additive"
         Cull Off
         Lighting Off
         ZWrite Off
+		// Blend SrcAlpha One
         Blend One OneMinusSrcAlpha
 
         Pass
@@ -53,7 +52,6 @@ Shader "Sprites/Additive"
                 float2 texcoord : TEXCOORD0;
             };
 
-            sampler2D _MainTex; // texture to sample
             fixed4 _Color; // color to add
 
             // vertex shader
@@ -61,11 +59,10 @@ Shader "Sprites/Additive"
             {
                 v2f o;
                 // transform position to clip space
-                // (multiply with model*view*projection matrix)
                 o.vertex = UnityObjectToClipPos(v.vertex);
                 // just pass the texture coordinate and color
                 o.texcoord = v.texcoord;
-                o.color = v.color;
+                o.color = v.color;// * _Color;
 
                 // pixel snap
                 #ifdef PIXELSNAP_ON
@@ -74,6 +71,8 @@ Shader "Sprites/Additive"
 
                 return o;
             }
+
+            sampler2D _MainTex; // texture to sample
 
             fixed4 frag(v2f i) : SV_Target
             {

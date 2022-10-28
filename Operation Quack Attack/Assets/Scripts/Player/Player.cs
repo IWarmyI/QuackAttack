@@ -321,8 +321,16 @@ public class Player : MonoBehaviour, IDamageable
         if (iFramesTimer > 0)
             iFramesTimer -= Time.deltaTime;
 
+        // Dashing
         if (dashingCooldownTimer > 0)
+        {
             dashingCooldownTimer -= Time.deltaTime;
+
+            if (dashingCooldownTimer <= 0)
+            {
+                anim.PlayFlash();
+            }
+        }
 
         // Stores old input
         oldInput = input;
