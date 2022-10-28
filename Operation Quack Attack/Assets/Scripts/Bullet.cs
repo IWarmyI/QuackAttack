@@ -89,7 +89,7 @@ public class Bullet : MonoBehaviour, IDamageable
     {
         if (owner == null) gameObject.SetActive(false);
 
-        if (!collision.gameObject.CompareTag(owner.tag))
+        if (!collision.gameObject.CompareTag(owner.tag) && !collision.gameObject.CompareTag("Player"))
         {
             gameObject.SetActive(false);
         }
