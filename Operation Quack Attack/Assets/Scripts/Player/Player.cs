@@ -562,6 +562,17 @@ public class Player : MonoBehaviour, IDamageable
     {
         if (collision.gameObject.CompareTag("Stage"))
         {
+            // OtherCollider (this)
+            float aMinX = collision.otherCollider.bounds.min.x;
+            float aMaxX = collision.otherCollider.bounds.max.x;
+            float aMinY = collision.otherCollider.bounds.min.y;
+            float aMaxY = collision.otherCollider.bounds.max.y;
+            // Collider
+            float bMinX = collision.collider.bounds.min.x;
+            float bMaxX = collision.collider.bounds.max.x;
+            float bMinY = collision.collider.bounds.min.y;
+            float bMaxY = collision.collider.bounds.max.y;
+
             // If bottom of player collider is over top of platform colllider
             if (collision.collider.bounds.max.y < collision.otherCollider.bounds.min.y)
             {
@@ -585,6 +596,19 @@ public class Player : MonoBehaviour, IDamageable
             // If player bumps into wall/side of a platform
             else if (collision.collider.bounds.min.y <= collision.otherCollider.bounds.max.y)
             {
+                // If on wall, allow walljump
+                if (!onGround)
+                {
+                    onWall = true;
+
+                    // Determine which side the wall is on
+                    float deltaX = vel.x * Time.deltaTime;
+                    if (aMaxX + deltaX >= bMinX && aMinX < bMinX) // Rightside Wall
+                        wallSide = -1;
+                    else if (aMinX + deltaX <= bMaxX && aMaxX > bMaxX) // Leftside Wall
+                        wallSide = 1;
+                }
+
                 // If air dashing, bonk off of the wall
                 if (!onGround && (state == PlayerState.Dashing))// || Math.Abs(vel.x) >= topSpeed))
                 {
