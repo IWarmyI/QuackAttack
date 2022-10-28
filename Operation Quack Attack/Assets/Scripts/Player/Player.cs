@@ -131,6 +131,12 @@ public class Player : MonoBehaviour, IDamageable
     }
     private float FireTime { get { return 1.0f / fireRate; } }
 
+    public static void Initialize()
+    {
+        Player.isIntro = true;
+    }
+
+
     // Start is called before the first frame update
     void Start()
     {

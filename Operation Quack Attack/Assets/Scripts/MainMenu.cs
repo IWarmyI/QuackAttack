@@ -27,12 +27,14 @@ public class MainMenu : MonoBehaviour
     public void DifficultyButton()
     {
         // Play Game
+        Player.Initialize();
         SceneManager.LoadScene("Game");
     }
 
     public void TutorialButton()
     {
         //Play Tutorial
+        Player.Initialize();
         SceneManager.LoadScene("Tutorial");
     }
 
