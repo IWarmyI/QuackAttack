@@ -287,7 +287,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &99657352
 GameObject:
@@ -1261,7 +1261,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &278563393
 MonoBehaviour:
@@ -2369,7 +2369,7 @@ RectTransform:
   - {fileID: 1605068148}
   - {fileID: 99657353}
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -4574,7 +4574,7 @@ Transform:
   - {fileID: 1652638955}
   - {fileID: 1798227503849341506}
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1211622951
 MonoBehaviour:
@@ -4899,9 +4899,8 @@ Transform:
   - {fileID: 1327637235}
   - {fileID: 1420525628}
   - {fileID: 1121634476}
-  - {fileID: 1748095276}
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1385016659
 GameObject:
@@ -5650,6 +5649,26 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
     - target: {fileID: 1515305077, guid: 3b0efaa01c9a47e409acaf5e07669ca8, type: 3}
+      propertyPath: flashMat
+      value: 
+      objectReference: {fileID: 2100000, guid: 3df439dfe2986ff409e0768cc9ff0cac, type: 2}
+    - target: {fileID: 1515305077, guid: 3b0efaa01c9a47e409acaf5e07669ca8, type: 3}
+      propertyPath: defaultMat
+      value: 
+      objectReference: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+    - target: {fileID: 1515305077, guid: 3b0efaa01c9a47e409acaf5e07669ca8, type: 3}
+      propertyPath: flashColor.b
+      value: 0.29803923
+      objectReference: {fileID: 0}
+    - target: {fileID: 1515305077, guid: 3b0efaa01c9a47e409acaf5e07669ca8, type: 3}
+      propertyPath: flashColor.g
+      value: 0.101960786
+      objectReference: {fileID: 0}
+    - target: {fileID: 1515305077, guid: 3b0efaa01c9a47e409acaf5e07669ca8, type: 3}
+      propertyPath: flashColor.r
+      value: 0.050980393
+      objectReference: {fileID: 0}
+    - target: {fileID: 1515305077, guid: 3b0efaa01c9a47e409acaf5e07669ca8, type: 3}
       propertyPath: animTimed.Array.size
       value: 1
       objectReference: {fileID: 0}
@@ -5707,7 +5726,7 @@ PrefabInstance:
       objectReference: {fileID: 8300000, guid: 8fd7d62adcf1eec4b9ccf5b608805872, type: 3}
     - target: {fileID: 913230024881484954, guid: 3b0efaa01c9a47e409acaf5e07669ca8, type: 3}
       propertyPath: m_RootOrder
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 913230024881484954, guid: 3b0efaa01c9a47e409acaf5e07669ca8, type: 3}
       propertyPath: m_LocalPosition.x
@@ -6518,8 +6537,8 @@ RectTransform:
   - {fileID: 2086830477}
   - {fileID: 357810078}
   - {fileID: 704013705}
-  m_Father: {fileID: 1356740669}
-  m_RootOrder: 12
+  m_Father: {fileID: 0}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -7773,7 +7792,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5565615756713855204, guid: 580d9ac4b30a81b4bbb541f302398424, type: 3}
       propertyPath: m_RootOrder
-      value: 4
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 5565615756713855204, guid: 580d9ac4b30a81b4bbb541f302398424, type: 3}
       propertyPath: m_LocalPosition.x
