@@ -84,6 +84,6 @@ public class Projectile : MonoBehaviour
         {
             return DealDamage(damageable, damage);
         }
-        return 0;
+        return -1;
     }
 }

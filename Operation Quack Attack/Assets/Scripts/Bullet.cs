@@ -1,8 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Burst.Intrinsics;
 using UnityEngine;
-using static UnityEngine.ParticleSystem;
 
 public class Bullet : MonoBehaviour, IDamageable
 {
@@ -10,6 +10,7 @@ public class Bullet : MonoBehaviour, IDamageable
     public Vector2 dir;
     [SerializeField] private float speed = 20;
     private GameObject owner;
+    private GameObject player;
     private int id;
 
     // GameObject Components
@@ -24,12 +25,6 @@ public class Bullet : MonoBehaviour, IDamageable
         set { owner = value; IgnoreCollision(); }
     }
 
-    private void OnEnable()
-    {
-        if (owner == null) return;
-        IgnoreCollision();
-    }
-
     // Start is called before the first frame update
     void Start()
     {
@@ -37,9 +32,6 @@ public class Bullet : MonoBehaviour, IDamageable
 
         spr = GetComponent<SpriteRenderer>();
         rb = GetComponent<Rigidbody2D>();
-
-        if (owner == null) return;
-        IgnoreCollision();
     }
 
     // Update is called once per frame
@@ -75,12 +67,21 @@ public class Bullet : MonoBehaviour, IDamageable
     {
         Collider2D[] colliders = GetComponentsInChildren<Collider2D>();
         Collider2D[] ownerCols = owner.GetComponentsInChildren<Collider2D>();
+        Collider2D[] playerCols = GameObject.FindWithTag("Player").GetComponentsInChildren<Collider2D>();
 
         foreach (Collider2D col in colliders)
         {
             foreach (Collider2D col2 in ownerCols)
             {
                 Physics2D.IgnoreCollision(col, col2);
+            }
+
+            foreach (Collider2D col3 in playerCols)
+            {
+                if (!col3.isTrigger)
+                {
+                    Physics2D.IgnoreCollision(col, col3);
+                }
             }
         }
     }
@@ -89,7 +90,7 @@ public class Bullet : MonoBehaviour, IDamageable
     {
         if (owner == null) gameObject.SetActive(false);
 
-        if (!collision.gameObject.CompareTag(owner.tag) && !collision.gameObject.CompareTag("Player"))
+        if (collision.gameObject.CompareTag("Stage"))
         {
             gameObject.SetActive(false);
         }
@@ -99,8 +100,10 @@ public class Bullet : MonoBehaviour, IDamageable
     {
         if (collision.gameObject.CompareTag("Player") && gameObject.activeSelf)
         {
-            DealDamage(collision.gameObject);
-            gameObject.SetActive(false);
+            if (DealDamage(collision.gameObject) != -1)
+            {
+                gameObject.SetActive(false);
+            }
         }
     }
 
@@ -114,11 +117,16 @@ public class Bullet : MonoBehaviour, IDamageable
         {
             return DealDamage(damageable, damage);
         }
-        return 0;
+        return -1;
     }
 
     public int TakeDamage(int damage = 1)
     {
-        return 0;
+        if (damage >= 2)
+        {
+            gameObject.SetActive(false);
+            return 0;
+        }
+        return -1;
     }
 }

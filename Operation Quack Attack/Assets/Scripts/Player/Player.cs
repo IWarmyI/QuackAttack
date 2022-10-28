@@ -719,13 +719,19 @@ public class Player : MonoBehaviour, IDamageable
     {
         if (state != PlayerState.Dead)
         {
-            health -= damage;
-            if (health <= 0)
+            if (state != PlayerState.Dashing)
             {
-                state = PlayerState.Dead;
+                if (iFramesTimer <= 0)
+                {
+                    health -= damage;
+                    if (health <= 0)
+                    {
+                        state = PlayerState.Dead;
 
-                Vector2 knockback = new Vector2(facingRight ? -1 : 1, 0.5f);
-                vel = knockback * jumpStrength;
+                        Vector2 knockback = new Vector2(facingRight ? -1 : 1, 0.5f);
+                        vel = knockback * jumpStrength;
+                    }
+                }
             }
         }
         return health;
