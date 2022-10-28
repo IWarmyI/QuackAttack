@@ -4,14 +4,28 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour, IDamageable
 {
-    [SerializeField] private int maxHealth = 1;
-    [SerializeField] private int health = 1;
-    private SpriteRenderer spr;
-    private Color color;
+    [Header("Enemy")]
+    [SerializeField] protected int maxHealth = 1;
+    [SerializeField] protected int health = 1;
+
+    protected Vector2 pos = Vector2.zero;
+    protected Vector2 spawn = Vector2.zero;
+    protected bool facingRight = false;
+
+    protected SpriteRenderer spr;
+    [SerializeField] protected Color color;
 
     public int Health { get; set; }
 
-    void OnEnable()
+    protected virtual void Start()
+    {
+        pos = transform.position;
+        spawn = transform.position;
+        spr = GetComponent<SpriteRenderer>();
+        color = spr.color;
+    }
+
+    protected virtual void OnEnable()
     {
         health = maxHealth;
 
@@ -24,12 +38,12 @@ public class Enemy : MonoBehaviour, IDamageable
         {
             spr.color = color;
         }
-    }
 
-    // Update is called once per frame
-    void Update()
-    {
-
+        if (pos != spawn)
+        {
+            pos = spawn;
+            transform.position = pos;
+        }
     }
 
     public int DealDamage(IDamageable target, int damage = 1)
