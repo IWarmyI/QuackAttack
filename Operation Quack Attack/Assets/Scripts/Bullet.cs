@@ -122,11 +122,7 @@ public class Bullet : MonoBehaviour, IDamageable
 
     public int TakeDamage(int damage = 1)
     {
-        if (damage >= 2)
-        {
-            gameObject.SetActive(false);
-            return 0;
-        }
-        return -1;
+        gameObject.SetActive(false);
+        return 0;
     }
 }
