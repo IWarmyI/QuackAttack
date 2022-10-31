@@ -91,7 +91,6 @@ public class Player : MonoBehaviour, IDamageable
     [SerializeField] public Projectile projectile;
     [SerializeField] private Transform projectileManager;
     [SerializeField] private Vector2 projectileOffset = Vector2.zero;
-    [SerializeField] private bool autoShoot = true;
     [SerializeField] private float fireRate = 0.2f;
     private float fireTimer = 0.2f;
     private bool isFiring = false;
@@ -332,7 +331,8 @@ public class Player : MonoBehaviour, IDamageable
             }
         }
 
-        if (autoShoot && isFiring)
+        // Firing
+        if (isFiring)
         {
             if (fireTimer >= FireTime)
             {
@@ -383,6 +383,7 @@ public class Player : MonoBehaviour, IDamageable
 
     private void UpdateStopped()
     {
+        // If intro animation is playing, wait for it to complete
         if (isIntro)
         {
             if (anim.IsComplete(animState))
@@ -392,20 +393,24 @@ public class Player : MonoBehaviour, IDamageable
                 animState = AnimState.Idle;
             }
         }
+        // Else, return to normal
         else
         {
             state = PlayerState.Normal;
             animState = AnimState.Idle;
         }
 
+        // Don't move when stopped
         vel = Vector2.zero;
     }
 
     private void UpdateDead()
     {
+        // Set animation state to Dead
         animState = AnimState.Dead;
         hasStarted = false;
 
+        // Move as if there is no input
         speed = baseSpeed;
         if (onGround)
         {
@@ -419,6 +424,7 @@ public class Player : MonoBehaviour, IDamageable
             vel.x *= airDeccel;
         }
 
+        // Once complete, activate game over screen
         if (anim.IsComplete(animState))
         {
             //gameObject.SetActive(false);
@@ -507,7 +513,8 @@ public class Player : MonoBehaviour, IDamageable
             }
         }
 
-        hasStarted = true;
+        if (state != PlayerState.Stopped && state == PlayerState.Dead)
+            hasStarted = true;
     }
 
     private void OnDash(InputValue value)
@@ -525,7 +532,8 @@ public class Player : MonoBehaviour, IDamageable
             currentWater -= 10;
         }
 
-        hasStarted = true;
+        if (state != PlayerState.Stopped && state == PlayerState.Dead)
+            hasStarted = true;
     }
 
     private void OnQuack(InputValue value)
@@ -545,19 +553,9 @@ public class Player : MonoBehaviour, IDamageable
 
     private void OnShoot(InputValue value)
     {
-        if (autoShoot)
-        {
-            isFiring = value.isPressed;
-        }
-        else
-        {
-            if (state == PlayerState.Normal)
-            {
-                if (value.isPressed) ShootProjectile();
-            }
-        }
-
-        if (value.isPressed) hasStarted = true;
+        isFiring = value.isPressed;
+        if (state != PlayerState.Stopped && state == PlayerState.Dead)
+            if (value.isPressed) hasStarted = true;
     }
 
     public void OnRestart(InputValue value)
