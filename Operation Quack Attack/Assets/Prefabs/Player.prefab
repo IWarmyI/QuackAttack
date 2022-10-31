@@ -397,20 +397,17 @@ MonoBehaviour:
   accelRate: 15
   dashingSpeed: 30
   dashingTime: 0.15
-  dashingCooldown: 0.5
-  iFrames: 0.07
-  iFramesTimer: 0
+  dashingCooldown: 0.3
   jumpStrength: 15
   jumpGravity: 40
   fallGravity: 65
   driftInfluence: 60
   topAirSpeed: 18.5
   jumpCoyote:
-    time: 0.3
+    time: 0.2
     currentTime: 0
     isPaused: 0
   airJumps: 1
-  wallSide: 0
   wallCoyote:
     time: 0.25
     currentTime: 0

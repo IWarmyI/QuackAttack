@@ -13,7 +13,7 @@ public class Timer
     private TimerCallback timerCallback;
     [SerializeField] private bool isPaused = false;
 
-    public bool IsReady
+    public bool IsComplete
     {
         get
         {
@@ -22,7 +22,7 @@ public class Timer
     }
     public bool IsRunning
     {
-        get { return !isPaused && !IsReady; }
+        get { return !isPaused && !IsComplete; }
     }
 
     public Timer(float time, TimerCallback timerCallback)
@@ -38,12 +38,15 @@ public class Timer
     {
         if (isPaused) return;
 
-        if (!IsReady)
+        if (!IsComplete)
         {
             currentTime -= Time.deltaTime;
 
-            if (IsReady)
+            if (IsComplete)
+            {
                 timerCallback?.Invoke();
+                currentTime = 0;
+            }
         }
     }
 

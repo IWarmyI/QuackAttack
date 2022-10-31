@@ -62,8 +62,9 @@ public class Player : MonoBehaviour, IDamageable
     private float dashingCooldownTimer;
 
     // I-Frames
-    public float iFrames = 0.07f;
-    public float iFramesTimer = 0;
+    private float iFrames = 0.07f;
+    private float iFramesTimer = 0;
+    private int hitSide = 0;
 
     // Jumping and Falling
     [Header("Jumping")]
@@ -81,7 +82,7 @@ public class Player : MonoBehaviour, IDamageable
     private int jumpCount = 0;
 
     private bool onWall = false;
-    [SerializeField] private int wallSide = 0;
+    private int wallSide = 0;
     [SerializeField] private Timer wallCoyote = new Timer(0.2f);
     private const float wallDeccel = 0.85f; // Wall Friction
 
@@ -123,6 +124,7 @@ public class Player : MonoBehaviour, IDamageable
     public float Speed { get { return speed; } }
     public int Health { get { return health; } set { health = value; } }
     public bool OnGround { get { return onGround; } }
+    public int HitSide { get { return hitSide; } set { hitSide = value; } }
     public Vector2 Velocity { get { return vel; } }
     private Vector2 ProjectilePos {
         get
@@ -135,11 +137,11 @@ public class Player : MonoBehaviour, IDamageable
     }
     private float FireTime { get { return 1.0f / fireRate; } }
 
+
     public static void Initialize()
     {
         Player.isIntro = true;
     }
-
 
     // Start is called before the first frame update
     void Start()
@@ -485,7 +487,7 @@ public class Player : MonoBehaviour, IDamageable
             }
 
             // Jumps if on ground
-            else if (onGround || jumpCoyote.IsRunning)
+            else if (onGround || !jumpCoyote.IsComplete)
             {
                 vel.y = jumpStrength;
                 onGround = false;
@@ -725,7 +727,7 @@ public class Player : MonoBehaviour, IDamageable
         {
             onGround = false;
             onWall = false;
-            wallSide = 0;
+            //wallSide = 0;
         }
     }
 
@@ -758,23 +760,26 @@ public class Player : MonoBehaviour, IDamageable
 
     public int TakeDamage(int damage = 1)
     {
-        if (state != PlayerState.Dead)
-        {
-            if (state != PlayerState.Dashing)
-            {
-                if (iFramesTimer <= 0)
-                {
-                    health -= damage;
-                    if (health <= 0)
-                    {
-                        state = PlayerState.Dead;
+        if (state == PlayerState.Dead) return 0;
 
-                        Vector2 knockback = new Vector2(facingRight ? -1 : 1, 0.5f);
-                        vel = knockback * jumpStrength;
-                    }
-                }
+        if (state != PlayerState.Dashing)
+        {
+            if (iFramesTimer <= 0)
+            {
+                health -= damage;
+
+                if (health <= 0)
+                    Die();
             }
         }
+
         return health;
+    }
+
+    private void Die()
+    {
+        state = PlayerState.Dead;
+        Vector2 knockback = new Vector2(hitSide, 0.5f);
+        vel = knockback * jumpStrength;
     }
 }
