@@ -86,4 +86,9 @@ public class MainMenu : MonoBehaviour
         EventSystem.current.SetSelectedGameObject(null);
         EventSystem.current.SetSelectedGameObject(CreditsFirstObject);
     }
+
+    public void SecondTutorialButton()
+    {
+        SceneManager.LoadScene("TutorialChallenge");
+    }
 }

@@ -31,7 +31,7 @@ public class Stats : MonoBehaviour
         EventSystem.current.SetSelectedGameObject(mainmenuButton);
     }
 
-    public void BackMainMenuButton()
+    public void MainMenuButton()
     {
         SceneManager.LoadScene("MainMenu");
     }
