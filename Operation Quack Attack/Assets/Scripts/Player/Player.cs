@@ -70,15 +70,19 @@ public class Player : MonoBehaviour, IDamageable
     [SerializeField] private float jumpStrength = 10;
     [SerializeField] private float jumpGravity = 10;
     [SerializeField] private float fallGravity = 15;
-    private bool onGround = true;
     [SerializeField] private float driftInfluence = 25;
     [SerializeField] private float topAirSpeed = 10;
+
+    private bool onGround = true;
+    [SerializeField] private Timer jumpCoyote = new Timer(0.2f);
     private const float airDeccel = 0.96f; // Air Resistance
 
     [SerializeField] private int airJumps = 1;
-    [SerializeField] private int jumpCount = 0;
+    private int jumpCount = 0;
+
     private bool onWall = false;
     [SerializeField] private int wallSide = 0;
+    [SerializeField] private Timer wallCoyote = new Timer(0.2f);
     private const float wallDeccel = 0.85f; // Wall Friction
 
     // Shooting
@@ -141,7 +145,7 @@ public class Player : MonoBehaviour, IDamageable
     void Start()
     {
         _sources = GetComponents<AudioSource>();
-       quackSource = _sources[0];
+        quackSource = _sources[0];
         sfxSource = _sources[1];
 
         if (quackSource == null)
@@ -217,6 +221,9 @@ public class Player : MonoBehaviour, IDamageable
         {
             fireTimer += Time.deltaTime;
         }
+
+        jumpCoyote.Update();
+        wallCoyote.Update();
     }
 
     private void LateUpdate()
@@ -237,9 +244,16 @@ public class Player : MonoBehaviour, IDamageable
         // Get facing
         if (input.x != 0) facingRight = input.x > 0;
 
+        // Resume coyote time
+        jumpCoyote.Resume();
+        wallCoyote.Resume();
+
         // Ground Movement
         if (onGround)
         {
+            // Restart coyote time
+            jumpCoyote.Start(true);
+
             // Lateral movement
             if (input.x != 0)
             {
@@ -269,7 +283,8 @@ public class Player : MonoBehaviour, IDamageable
 
         // Air Movement
         else
-        { // Set animation state to Air
+        {
+            // Set animation state to Air
             animState = AnimState.Air;
 
             // Vertical movement
@@ -295,15 +310,22 @@ public class Player : MonoBehaviour, IDamageable
             }
 
             // Wall sliding
-            if (onWall && input.x != 0 && input.x == wallSide * -1)
+            if (onWall && input.x != 0)
             {
-                animState = AnimState.Wall;
+                // Restart coyote time
+                wallCoyote.Start(true);
 
-                if (vel.y < 0)
+                // If pressing against wall, wallslide
+                if (input.x == wallSide * -1)
                 {
-                    vel.y *= wallDeccel;
-                    //float slow = Mathf.Max(Mathf.Abs(vel.y) - wallDeccel * Time.deltaTime, 0);
-                    //vel.y = slow * Mathf.Sign(vel.y);
+                    animState = AnimState.Wall;
+
+                    if (vel.y < 0)
+                    {
+                        vel.y *= wallDeccel;
+                        //float slow = Mathf.Max(Mathf.Abs(vel.y) - wallDeccel * Time.deltaTime, 0);
+                        //vel.y = slow * Mathf.Sign(vel.y);
+                    }
                 }
             }
         }
@@ -452,7 +474,7 @@ public class Player : MonoBehaviour, IDamageable
         if (state == PlayerState.Normal)
         {
             // Wall jumps if on wall
-            if (input.x != 0 && onWall && !onGround)
+            if (input.x != 0 && !onGround && (onWall || wallCoyote.IsRunning))
             {
                 Vector2 wallJump = new Vector2(wallSide * 1.1f, 1);
                 if (input.x + wallSide > 0) wallJump = new Vector2(wallSide * 0.65f, 0.75f);
@@ -461,15 +483,17 @@ public class Player : MonoBehaviour, IDamageable
 
                 sfxSource.PlayOneShot(movementSfx[0]);
             }
-            // Jumps if on ground or double jump
-            else if (onGround)
+
+            // Jumps if on ground
+            else if (onGround || jumpCoyote.IsRunning)
             {
                 vel.y = jumpStrength;
                 onGround = false;
-                jumpCount++;
 
                 sfxSource.PlayOneShot(movementSfx[1]);
             }
+
+            // Double jump
             else if (jumpCount < airJumps && currentWater >= 10)
             {
                 vel.y = jumpStrength;
@@ -562,55 +586,40 @@ public class Player : MonoBehaviour, IDamageable
     {
         if (collision.gameObject.CompareTag("Stage"))
         {
-            // OtherCollider (this)
+            // OtherCollider (Player)
             float aMinX = collision.otherCollider.bounds.min.x;
             float aMaxX = collision.otherCollider.bounds.max.x;
             float aMinY = collision.otherCollider.bounds.min.y;
             float aMaxY = collision.otherCollider.bounds.max.y;
-            // Collider
+            // Collider (Wall)
             float bMinX = collision.collider.bounds.min.x;
             float bMaxX = collision.collider.bounds.max.x;
             float bMinY = collision.collider.bounds.min.y;
             float bMaxY = collision.collider.bounds.max.y;
 
             // If bottom of player collider is over top of platform colllider
-            if (collision.collider.bounds.max.y < collision.otherCollider.bounds.min.y)
+            if (bMaxY < aMinY)
             {
                 onGround = true;
                 jumpCount = 0;
 
                 // Resets vertical velocity
                 if (vel.y < 0)
-                {
                     vel.y = 0;
-                }
             }
 
             // If top of player collider is under bottom of platform colllider
-            else if (collision.collider.bounds.min.y > collision.otherCollider.bounds.max.y)
+            else if (bMinY > aMaxY)
             {
                 // When bumping head, kill vertical velocity
                 if (vel.y > 0) vel.y = 0;
             }
 
             // If player bumps into wall/side of a platform
-            else if (collision.collider.bounds.min.y <= collision.otherCollider.bounds.max.y)
+            else if (bMinY <= aMaxY)
             {
-                // If on wall, allow walljump
-                if (!onGround)
-                {
-                    onWall = true;
-
-                    // Determine which side the wall is on
-                    float deltaX = vel.x * Time.deltaTime;
-                    if (aMaxX + deltaX >= bMinX && aMinX < bMinX) // Rightside Wall
-                        wallSide = -1;
-                    else if (aMinX + deltaX <= bMaxX && aMaxX > bMaxX) // Leftside Wall
-                        wallSide = 1;
-                }
-
                 // If air dashing, bonk off of the wall
-                if (!onGround && (state == PlayerState.Dashing))// || Math.Abs(vel.x) >= topSpeed))
+                if (!onGround && (state == PlayerState.Dashing))
                 {
                     speed = baseSpeed * -1;
                     vel.x = speed * (facingRight ? 1 : -1);
@@ -627,12 +636,12 @@ public class Player : MonoBehaviour, IDamageable
     {
         if (collision.gameObject.CompareTag("Stage"))
         {
-            // OtherCollider (this)
+            // OtherCollider (Player)
             float aMinX = collision.otherCollider.bounds.min.x;
             float aMaxX = collision.otherCollider.bounds.max.x;
             float aMinY = collision.otherCollider.bounds.min.y;
             float aMaxY = collision.otherCollider.bounds.max.y;
-            // Collider
+            // Collider (Wall)
             float bMinX = collision.collider.bounds.min.x;
             float bMaxX = collision.collider.bounds.max.x;
             float bMinY = collision.collider.bounds.min.y;
@@ -646,21 +655,15 @@ public class Player : MonoBehaviour, IDamageable
 
                 // Resets vertical velocity
                 if (vel.y < 0)
-                {
                     vel.y = 0;
-                }
             }
 
             // If player bumps into wall/side of a platform
             else
             {
+                // If in the air...
                 if (!onGround)
                 {
-                    // If under platform
-                    if (aMaxY <= bMinY)
-                    {
-                    }
-
                     // If on wall, allow walljump
                     if (bMinY <= aMaxY)
                     {
@@ -704,7 +707,7 @@ public class Player : MonoBehaviour, IDamageable
                     // If rising, reduce vertical velocity
                     if (vel.y > 0 && Math.Abs(vel.x) >= baseSpeed) vel.y *= airDeccel;
                 }
-
+                // If on the ground, 
                 else
                 {
                     if (aMaxY > bMaxY && aMinY <= bMaxY)

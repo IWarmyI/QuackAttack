@@ -2845,7 +2845,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 5.25
+  orthographic size: 6
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -7805,6 +7805,14 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 2086830476}
     - target: {fileID: 913230024881484953, guid: 3b0efaa01c9a47e409acaf5e07669ca8, type: 3}
+      propertyPath: wallCoyoteTime
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 913230024881484953, guid: 3b0efaa01c9a47e409acaf5e07669ca8, type: 3}
+      propertyPath: wallCoyote.time
+      value: 0.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 913230024881484953, guid: 3b0efaa01c9a47e409acaf5e07669ca8, type: 3}
       propertyPath: projectileManager
       value: 
       objectReference: {fileID: 29118141}
@@ -7820,6 +7828,10 @@ PrefabInstance:
       propertyPath: quack.Array.data[1]
       value: 
       objectReference: {fileID: 8300000, guid: fa9ef772332ecaa4a8480d9b920b1139, type: 3}
+    - target: {fileID: 913230024881484953, guid: 3b0efaa01c9a47e409acaf5e07669ca8, type: 3}
+      propertyPath: wallCoyoteTimer.time
+      value: 0.2
+      objectReference: {fileID: 0}
     - target: {fileID: 913230024881484953, guid: 3b0efaa01c9a47e409acaf5e07669ca8, type: 3}
       propertyPath: movementSfx.Array.size
       value: 3
