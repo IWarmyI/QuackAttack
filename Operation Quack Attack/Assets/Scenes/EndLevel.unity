@@ -1016,7 +1016,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1994394901}
         m_TargetAssemblyTypeName: Stats, Assembly-CSharp
-        m_MethodName: BackMainMenuButton
+        m_MethodName: MainMenuButton
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

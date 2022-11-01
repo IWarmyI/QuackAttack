@@ -23,7 +23,7 @@ public class GameOverScript : MonoBehaviour
 
     public void Restart()
     {
-        SceneManager.LoadScene("Tutorial");
+        SceneManager.LoadScene("TutorialChallenge");
     }
 
     public void BacktoMainMenu()

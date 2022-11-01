@@ -35,7 +35,7 @@ public class MainMenu : MonoBehaviour
     {
         //Play Tutorial
         Player.Initialize();
-        SceneManager.LoadScene("Tutorial");
+        SceneManager.LoadScene("TutorialChallenge");
     }
 
     public void StartButton()

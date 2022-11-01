@@ -113,8 +113,8 @@ public class Player : MonoBehaviour, IDamageable
     [Header("UI")]
     private SpriteRenderer spr;
     private Rigidbody2D rb;
-    [SerializeField] private GameObject gameOverScreen;
     [SerializeField] private GameObject pauseObj;
+    [SerializeField] private GameObject HUD;
 
     // Properties
     public PlayerState State { get { return state; } }
@@ -428,7 +428,7 @@ public class Player : MonoBehaviour, IDamageable
         if (anim.IsComplete(animState))
         {
             //gameObject.SetActive(false);
-            gameOverScreen.SetActive(true);
+            SceneManager.LoadScene("GameOver");
         }
     }    
 
@@ -561,6 +561,7 @@ public class Player : MonoBehaviour, IDamageable
     public void OnRestart(InputValue value)
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        Time.timeScale = 1.0f;
     }
 
     private void OnPauseToggle(InputValue value)
@@ -575,6 +576,7 @@ public class Player : MonoBehaviour, IDamageable
         }
 
         pauseObj.SetActive(!pauseObj.activeSelf);
+        HUD.SetActive(!HUD.activeSelf);
         gameObject.SetActive(false);
 
     }
