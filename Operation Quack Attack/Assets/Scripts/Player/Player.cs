@@ -28,6 +28,14 @@ public class Player : MonoBehaviour, IDamageable
         Dead
     }
 
+    public enum Difficulty
+    {
+        Easy,
+        Medium,
+        Hard,
+        VeryHard
+    }
+
     // Player State
     private PlayerState state = PlayerState.Normal;
     [SerializeField] private int health = 1;

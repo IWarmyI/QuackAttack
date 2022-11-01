@@ -16,12 +16,20 @@ public class MainMenu : MonoBehaviour
     public GameObject OptionsFirstOption;
     public GameObject CreditsFirstObject;
 
+    public Animator animator;
+    public float transitionDelayTime = 1.0f;
+
 
     // Start is called before the first frame update
     void Start()
     {
         MainMenuButton();
         Time.timeScale = 1.0f;
+    }
+
+    void Awake()
+    {
+        animator = GameObject.Find("Transition").GetComponent<Animator>();
     }
 
     public void DifficultyButton()
@@ -35,7 +43,8 @@ public class MainMenu : MonoBehaviour
     {
         //Play Tutorial
         Player.Initialize();
-        SceneManager.LoadScene("TutorialChallenge");
+        //SceneManager.LoadScene("TutorialChallenge");
+        StartCoroutine(DelayLoadLevel("TutorialChallenge"));
     }
 
     public void StartButton()
@@ -90,5 +99,12 @@ public class MainMenu : MonoBehaviour
     public void SecondTutorialButton()
     {
         SceneManager.LoadScene("TutorialChallenge");
+    }
+
+    IEnumerator DelayLoadLevel(string sceneName)
+    {
+        animator.SetTrigger("TriggerTransition");
+        yield return new WaitForSeconds(transitionDelayTime);
+        SceneManager.LoadScene(sceneName);
     }
 }
