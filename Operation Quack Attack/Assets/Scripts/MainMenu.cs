@@ -98,7 +98,7 @@ public class MainMenu : MonoBehaviour
 
     public void SecondTutorialButton()
     {
-        SceneManager.LoadScene("TutorialChallenge");
+        StartCoroutine(DelayLoadLevel("TutorialChallenge"));
     }
 
     IEnumerator DelayLoadLevel(string sceneName)
