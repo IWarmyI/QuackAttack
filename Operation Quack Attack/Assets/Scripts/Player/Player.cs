@@ -105,9 +105,9 @@ public class Player : MonoBehaviour, IDamageable
     [SerializeField] public List<Projectile> projectileList = new List<Projectile>();
 
     // Water ammo
-    private int maxWater = 100;
-    [SerializeField] public int currentWater = 0;
-    [SerializeField] public int reFillAmount = 10;
+    private float maxWater = 100;
+    [SerializeField] public float currentWater = 0;
+    [SerializeField] public float reFillAmount = 10;
 
     //Sound Effects 
     [Header("Sound")]
@@ -123,6 +123,7 @@ public class Player : MonoBehaviour, IDamageable
     private Rigidbody2D rb;
     [SerializeField] private GameObject pauseObj;
     [SerializeField] private GameObject HUD;
+    [SerializeField] private GameObject waterGauge;
 
     // Properties
     public PlayerState State { get { return state; } }
@@ -444,7 +445,8 @@ public class Player : MonoBehaviour, IDamageable
     {
         if (currentWater >= 5)
         {
-            currentWater -= 5;   
+            currentWater -= 5;
+            waterGauge.GetComponent<WaterGauge>().UpdateBar(currentWater, maxWater);
             // Create projectile instance
             foreach (Projectile bullet in projectileList)
             {
@@ -516,6 +518,7 @@ public class Player : MonoBehaviour, IDamageable
                 onGround = false;
                 jumpCount++;
                 currentWater -= 10;
+                waterGauge.GetComponent<WaterGauge>().UpdateBar(currentWater, maxWater);
 
                 sfxSource.PlayOneShot(movementSfx[1]);
             }
@@ -538,6 +541,7 @@ public class Player : MonoBehaviour, IDamageable
             // Set dashing speed
             speed = dashingSpeed;
             currentWater -= 10;
+            waterGauge.GetComponent<WaterGauge>().UpdateBar(currentWater, maxWater);
         }
 
         if (state != PlayerState.Stopped && state == PlayerState.Dead)
@@ -744,6 +748,7 @@ public class Player : MonoBehaviour, IDamageable
         if (collision.gameObject.CompareTag("PickUp"))
         {
             currentWater += reFillAmount;
+            waterGauge.GetComponent<WaterGauge>().UpdateBar(currentWater, maxWater);
             Destroy(collision.gameObject);
         }
     }

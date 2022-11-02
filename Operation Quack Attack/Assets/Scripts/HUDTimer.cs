@@ -8,7 +8,7 @@ public class HUDTimer : MonoBehaviour
     [SerializeField] private Player player;
     private TextMeshProUGUI hud;
     public static float timer = 0;
-    private int water = 0;
+    private float water = 0;
 
     public bool Stop { get; set; }
 
