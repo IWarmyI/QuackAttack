@@ -151,7 +151,7 @@ RectTransform:
   m_GameObject: {fileID: 130363013}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.8412625, y: 1.1630455, z: 1.0354}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1432955997}
@@ -605,7 +605,7 @@ RectTransform:
   m_GameObject: {fileID: 661660606}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.75, y: 1, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 547655470}
@@ -744,7 +744,7 @@ RectTransform:
   m_GameObject: {fileID: 879186052}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: -5}
-  m_LocalScale: {x: 1.0040668, y: 0.78641903, z: 0.87310165}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 313326781}
@@ -799,7 +799,7 @@ RectTransform:
   m_GameObject: {fileID: 1018383529}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.9, y: 1, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 879186053}
@@ -1052,7 +1052,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1569409801}
   - component: {fileID: 1569409800}
-  - component: {fileID: 1569409799}
+  - component: {fileID: 1569409802}
   m_Layer: 0
   m_Name: EventSystem
   m_TagString: Untagged
@@ -1060,26 +1060,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1569409799
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1569409798}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4f231c4fb786f3946a6b90b886c48677, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_SendPointerHoverToParent: 1
-  m_HorizontalAxis: Horizontal
-  m_VerticalAxis: Vertical
-  m_SubmitButton: Submit
-  m_CancelButton: Cancel
-  m_InputActionsPerSecond: 10
-  m_RepeatDelay: 0.5
-  m_ForceModuleActive: 0
 --- !u!114 &1569409800
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1110,6 +1090,36 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1569409802
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1569409798}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 01614664b831546d2ae94a42149d80ac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SendPointerHoverToParent: 1
+  m_MoveRepeatDelay: 0.5
+  m_MoveRepeatRate: 0.1
+  m_XRTrackingOrigin: {fileID: 0}
+  m_ActionsAsset: {fileID: -944628639613478452, guid: 9eab2b5560fcb974aa5192b9d3f8b5c7, type: 3}
+  m_PointAction: {fileID: -5776015489018764314, guid: 9eab2b5560fcb974aa5192b9d3f8b5c7, type: 3}
+  m_MoveAction: {fileID: -2088818750936684382, guid: 9eab2b5560fcb974aa5192b9d3f8b5c7, type: 3}
+  m_SubmitAction: {fileID: -8803943733301992939, guid: 9eab2b5560fcb974aa5192b9d3f8b5c7, type: 3}
+  m_CancelAction: {fileID: -7546700113612437795, guid: 9eab2b5560fcb974aa5192b9d3f8b5c7, type: 3}
+  m_LeftClickAction: {fileID: 3202356009510869223, guid: 9eab2b5560fcb974aa5192b9d3f8b5c7, type: 3}
+  m_MiddleClickAction: {fileID: -3429838703717402466, guid: 9eab2b5560fcb974aa5192b9d3f8b5c7, type: 3}
+  m_RightClickAction: {fileID: -2096971508036585681, guid: 9eab2b5560fcb974aa5192b9d3f8b5c7, type: 3}
+  m_ScrollWheelAction: {fileID: 4516568969636049270, guid: 9eab2b5560fcb974aa5192b9d3f8b5c7, type: 3}
+  m_TrackedDevicePositionAction: {fileID: 2171121390669059736, guid: 9eab2b5560fcb974aa5192b9d3f8b5c7, type: 3}
+  m_TrackedDeviceOrientationAction: {fileID: -1331382327669376552, guid: 9eab2b5560fcb974aa5192b9d3f8b5c7, type: 3}
+  m_DeselectOnBackgroundClick: 1
+  m_PointerBehavior: 0
+  m_CursorLockBehavior: 0
 --- !u!1 &1832971391
 GameObject:
   m_ObjectHideFlags: 0

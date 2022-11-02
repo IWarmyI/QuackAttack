@@ -5488,6 +5488,14 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 913230024881484953, guid: 3b0efaa01c9a47e409acaf5e07669ca8, type: 3}
+      propertyPath: HUD
+      value: 
+      objectReference: {fileID: 357810077}
+    - target: {fileID: 913230024881484953, guid: 3b0efaa01c9a47e409acaf5e07669ca8, type: 3}
+      propertyPath: pauseObj
+      value: 
+      objectReference: {fileID: 1044116071}
+    - target: {fileID: 913230024881484953, guid: 3b0efaa01c9a47e409acaf5e07669ca8, type: 3}
       propertyPath: projectileManager
       value: 
       objectReference: {fileID: 29118141}
