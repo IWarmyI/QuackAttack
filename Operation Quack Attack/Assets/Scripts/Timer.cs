@@ -13,17 +13,19 @@ public class Timer
     private TimerCallback timerCallback;
     [SerializeField] private bool isPaused = false;
 
+    public bool IsReady
+    {
+        get { return currentTime == time; }
+    }
     public bool IsComplete
     {
-        get
-        {
-            return currentTime <= 0;
-        }
+        get { return currentTime <= 0; }
     }
     public bool IsRunning
     {
         get { return !isPaused && !IsComplete; }
     }
+    public bool IsPaused { get { return isPaused; } }
 
     public Timer(float time, TimerCallback timerCallback)
     {
@@ -48,6 +50,11 @@ public class Timer
                 currentTime = 0;
             }
         }
+    }
+
+    public void Ready()
+    {
+        Start(true);
     }
 
     public void Start(bool pause = false)

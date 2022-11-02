@@ -90,6 +90,7 @@ public class Player : MonoBehaviour, IDamageable
     private int jumpCount = 0;
 
     private bool onWall = false;
+    private bool isWallJumping = false;
     private int wallSide = 0;
     [SerializeField] private Timer wallCoyote = new Timer(0.2f);
     private const float wallDeccel = 0.85f; // Wall Friction
@@ -321,8 +322,7 @@ public class Player : MonoBehaviour, IDamageable
             // Wall sliding
             if (onWall && input.x != 0)
             {
-                // Restart coyote time
-                wallCoyote.Start(true);
+                wallCoyote.Ready();
 
                 // If pressing against wall, wallslide
                 if (input.x == wallSide * -1)
@@ -481,7 +481,8 @@ public class Player : MonoBehaviour, IDamageable
         input.y = 0;
         if (input != Vector2.zero) input.Normalize();
 
-        if (input != Vector2.zero) hasStarted = true;
+        if (state != PlayerState.Stopped && state != PlayerState.Dead)
+            if (input != Vector2.zero) hasStarted = true;
     }
 
     private void OnJump(InputValue value)
@@ -490,12 +491,15 @@ public class Player : MonoBehaviour, IDamageable
         if (state == PlayerState.Normal)
         {
             // Wall jumps if on wall
-            if (input.x != 0 && !onGround && (onWall || wallCoyote.IsRunning))
+            if (input.x != 0 && !onGround && (onWall || !wallCoyote.IsComplete))
             {
                 Vector2 wallJump = new Vector2(wallSide * 1.1f, 1);
                 if (input.x + wallSide > 0) wallJump = new Vector2(wallSide * 0.65f, 0.75f);
                 vel = wallJump * jumpStrength;
+
                 onWall = false;
+                isWallJumping = true;
+                wallCoyote.Stop();
 
                 sfxSource.PlayOneShot(movementSfx[0]);
             }
@@ -505,6 +509,7 @@ public class Player : MonoBehaviour, IDamageable
             {
                 vel.y = jumpStrength;
                 onGround = false;
+                jumpCoyote.Stop();
 
                 sfxSource.PlayOneShot(movementSfx[1]);
             }
@@ -521,7 +526,7 @@ public class Player : MonoBehaviour, IDamageable
             }
         }
 
-        if (state != PlayerState.Stopped && state == PlayerState.Dead)
+        if (state != PlayerState.Stopped && state != PlayerState.Dead)
             hasStarted = true;
     }
 
@@ -540,7 +545,7 @@ public class Player : MonoBehaviour, IDamageable
             currentWater -= 10;
         }
 
-        if (state != PlayerState.Stopped && state == PlayerState.Dead)
+        if (state != PlayerState.Stopped && state != PlayerState.Dead)
             hasStarted = true;
     }
 
@@ -562,7 +567,7 @@ public class Player : MonoBehaviour, IDamageable
     private void OnShoot(InputValue value)
     {
         isFiring = value.isPressed;
-        if (state != PlayerState.Stopped && state == PlayerState.Dead)
+        if (state != PlayerState.Stopped && state != PlayerState.Dead)
             if (value.isPressed) hasStarted = true;
     }
 
@@ -594,6 +599,8 @@ public class Player : MonoBehaviour, IDamageable
     // ========================================================================
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        if (collision.otherCollider.isTrigger) return;
+
         if (collision.gameObject.CompareTag("Stage"))
         {
             // OtherCollider (Player)
@@ -644,6 +651,8 @@ public class Player : MonoBehaviour, IDamageable
 
     private void OnCollisionStay2D(Collision2D collision)
     {
+        if (collision.otherCollider.isTrigger) return;
+
         if (collision.gameObject.CompareTag("Stage"))
         {
             // OtherCollider (Player)
@@ -675,7 +684,7 @@ public class Player : MonoBehaviour, IDamageable
                 if (!onGround)
                 {
                     // If on wall, allow walljump
-                    if (bMinY <= aMaxY)
+                    if (bMinY <= aMaxY && !isWallJumping)
                     {
                         onWall = true;
 
@@ -731,10 +740,35 @@ public class Player : MonoBehaviour, IDamageable
 
     private void OnCollisionExit2D(Collision2D collision)
     {
+        if (collision.otherCollider.isTrigger) return;
+
         if (collision.gameObject.CompareTag("Stage"))
         {
+            // OtherCollider (Player)
+            float aMinX = collision.otherCollider.bounds.min.x;
+            float aMaxX = collision.otherCollider.bounds.max.x;
+            float aMinY = collision.otherCollider.bounds.min.y;
+            float aMaxY = collision.otherCollider.bounds.max.y;
+            // Collider (Wall)
+            float bMinX = collision.collider.bounds.min.x;
+            float bMaxX = collision.collider.bounds.max.x;
+            float bMinY = collision.collider.bounds.min.y;
+            float bMaxY = collision.collider.bounds.max.y;
+
+            if (bMaxY < aMinY)
+            {
+                onGround = false;
+            }
+            else if (!onGround)
+            {
+                if (bMinY <= aMaxY)
+                {
+                    onWall = false;
+                }
+            }
+
             onGround = false;
-            onWall = false;
+            isWallJumping = false;
             //wallSide = 0;
         }
     }
