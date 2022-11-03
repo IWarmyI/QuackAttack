@@ -146,6 +146,9 @@ public class Player : MonoBehaviour, IDamageable
     }
     private float FireTime { get { return 1.0f / fireRate; } }
 
+    public Animator animator;
+    public float transitionDelayTime = 1.0f;
+
 
     public static void Initialize()
     {
@@ -193,6 +196,11 @@ public class Player : MonoBehaviour, IDamageable
             state = PlayerState.Stopped;
             animState = AnimState.Intro;
         }
+    }
+
+    void Awake()
+    {
+        animator = GameObject.Find("Transition").GetComponent<Animator>();
     }
 
     private void FixedUpdate()
@@ -437,7 +445,7 @@ public class Player : MonoBehaviour, IDamageable
         if (anim.IsComplete(animState))
         {
             //gameObject.SetActive(false);
-            SceneManager.LoadScene("GameOver");
+            StartCoroutine(DelayLoadLevel(("GameOver")));
         }
     }    
 
@@ -830,5 +838,12 @@ public class Player : MonoBehaviour, IDamageable
         state = PlayerState.Dead;
         Vector2 knockback = new Vector2(hitSide, 0.5f);
         vel = knockback * jumpStrength;
+    }
+
+    IEnumerator DelayLoadLevel(string sceneName)
+    {
+        animator.SetTrigger("TriggerTransition");
+        yield return new WaitForSeconds(transitionDelayTime);
+        SceneManager.LoadScene(sceneName);
     }
 }
