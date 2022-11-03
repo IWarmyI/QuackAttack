@@ -27,13 +27,14 @@ public class pauseManager : MonoBehaviour
 
     public void BackToMain()
     {
+        Time.timeScale = 1.0f;
         StartCoroutine(DelayLoadLevel("MainMenu"));
     }
 
     public void Restart()
     {
         Time.timeScale = 1.0f;
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        StartCoroutine(DelayLoadLevelNum((SceneManager.GetActiveScene().buildIndex)));
         player.SetActive(true);
     }
 
@@ -50,5 +51,12 @@ public class pauseManager : MonoBehaviour
         animator.SetTrigger("TriggerTransition");
         yield return new WaitForSeconds(transitionDelayTime);
         SceneManager.LoadScene(sceneName);
+    }
+
+    IEnumerator DelayLoadLevelNum(int levelNum)
+    {
+        animator.SetTrigger("TriggerTransition");
+        yield return new WaitForSeconds(transitionDelayTime);
+        SceneManager.LoadScene(levelNum);
     }
 }

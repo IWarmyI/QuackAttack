@@ -16,6 +16,9 @@ public class Stats : MonoBehaviour
 
     public int levelNum;
 
+    public Animator animator;
+    public float transitionDelayTime = 1.0f;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -31,9 +34,14 @@ public class Stats : MonoBehaviour
         EventSystem.current.SetSelectedGameObject(mainmenuButton);
     }
 
+    void Awake()
+    {
+        animator = GameObject.Find("Transition").GetComponent<Animator>();
+    }
+
     public void MainMenuButton()
     {
-        SceneManager.LoadScene("MainMenu");
+        StartCoroutine(DelayLoadLevel("MainMenu"));
     }
 
     public void NextLevelButton()
@@ -41,7 +49,21 @@ public class Stats : MonoBehaviour
         levelNum++;
         levelNum.ToString();
         Player.Initialize();
-        SceneManager.LoadScene(levelNum);
+        StartCoroutine(DelayLoadNextLevel(levelNum));
         Debug.Log("Loading Next Level");
+    }
+
+    IEnumerator DelayLoadNextLevel(int levelNum)
+    {
+        animator.SetTrigger("TriggerTransition");
+        yield return new WaitForSeconds(transitionDelayTime);
+        SceneManager.LoadScene(levelNum);
+    }
+
+    IEnumerator DelayLoadLevel(string levelName)
+    {
+        animator.SetTrigger("TriggerTransition");
+        yield return new WaitForSeconds(transitionDelayTime);
+        SceneManager.LoadScene(levelName);
     }
 }
