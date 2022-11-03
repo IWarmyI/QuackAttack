@@ -67,6 +67,6 @@ public class BulletManager : MonoBehaviour
     public void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.cyan;
-        Gizmos.DrawWireCube(bounds.center, bounds.size);
+        Gizmos.DrawWireCube(transform.position, bounds.size);
     }
 }

@@ -660,25 +660,26 @@ public class Player : MonoBehaviour, IDamageable
         if (collision.gameObject.CompareTag("Stage"))
         {
             // OtherCollider (Player)
-            float aMinX = collision.otherCollider.bounds.min.x;
-            float aMaxX = collision.otherCollider.bounds.max.x;
-            float aMinY = collision.otherCollider.bounds.min.y;
-            float aMaxY = collision.otherCollider.bounds.max.y;
+            float aLeft = collision.otherCollider.bounds.min.x;
+            float aRight = collision.otherCollider.bounds.max.x;
+            float aBottom = collision.otherCollider.bounds.min.y;
+            float aTop = collision.otherCollider.bounds.max.y;
             // Collider (Wall)
-            float bMinX = collision.collider.bounds.min.x;
-            float bMaxX = collision.collider.bounds.max.x;
-            float bMinY = collision.collider.bounds.min.y;
-            float bMaxY = collision.collider.bounds.max.y;
+            float bLeft = collision.collider.bounds.min.x;
+            float bRight = collision.collider.bounds.max.x;
+            float bBottom = collision.collider.bounds.min.y;
+            float bTop = collision.collider.bounds.max.y;
 
             // If bottom of player collider is over top of platform colllider
-            if (bMaxY <= aMinY)
+            if (bTop <= aBottom)
             {
                 onGround = true;
+                isWallJumping = false;
                 jumpCount = 0;
 
-                // Resets vertical velocity
-                if (vel.y < 0)
-                    vel.y = 0;
+                //// Resets vertical velocity
+                //if (vel.y < 0)
+                //    vel.y = 0;
             }
 
             // If player bumps into wall/side of a platform
@@ -688,27 +689,27 @@ public class Player : MonoBehaviour, IDamageable
                 if (!onGround)
                 {
                     // If on wall, allow walljump
-                    if (bMinY <= aMaxY && !isWallJumping)
+                    if (bBottom <= aTop && !isWallJumping)
                     {
                         onWall = true;
 
                         // Determine which side the wall is on
                         float deltaX = vel.x * Time.deltaTime;
-                        if (aMaxX + deltaX >= bMinX && aMinX < bMinX) // Rightside Wall
+                        if (aRight + deltaX >= bLeft && aLeft < bLeft) // Rightside Wall
                             wallSide = -1;
-                        else if (aMinX + deltaX <= bMaxX && aMaxX > bMaxX) // Leftside Wall
+                        else if (aLeft + deltaX <= bRight && aRight > bRight) // Leftside Wall
                             wallSide = 1;
                     }
 
                     // If air dashing, bonk off of the wall
                     if (state == PlayerState.Dashing)// || Math.Abs(vel.x) >= topSpeed))
                     {
-                        if (bMinY <= aMaxY)
+                        if (bBottom <= aTop)
                         {
                             // Only trigger when dashing into wall
                             float deltaX = vel.x * Time.deltaTime;
-                            if ((aMaxX + deltaX >= deltaX && aMinX < bMinX) ||
-                                (aMinX + deltaX <= bMaxX && aMaxX > bMaxX))
+                            if ((aRight + deltaX >= deltaX && aLeft < bLeft) ||
+                                (aLeft + deltaX <= bRight && aRight > bRight))
                             {
                                 speed = baseSpeed;
                                 vel.x = -1 * speed * (facingRight ? 1 : -1);
@@ -730,10 +731,11 @@ public class Player : MonoBehaviour, IDamageable
                     // If rising, reduce vertical velocity
                     if (vel.y > 0 && Math.Abs(vel.x) >= baseSpeed) vel.y *= airDeccel;
                 }
-                // If on the ground, 
+
+                // If on the ground, but not 100% on top, slide down
                 else
                 {
-                    if (aMaxY > bMaxY && aMinY <= bMaxY)
+                    if (aTop > bTop && aBottom <= bTop)
                     {
                         onGround = false;
                     }
@@ -768,11 +770,11 @@ public class Player : MonoBehaviour, IDamageable
                 if (bMinY <= aMaxY)
                 {
                     onWall = false;
+                    isWallJumping = false;
                 }
             }
 
-            onGround = false;
-            isWallJumping = false;
+            //onGround = false;
             //wallSide = 0;
         }
     }
