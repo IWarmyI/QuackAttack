@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -93,7 +94,7 @@ public class Player : MonoBehaviour, IDamageable
     private bool isWallJumping = false;
     private int wallSide = 0;
     [SerializeField] private Timer wallCoyote = new Timer(0.2f);
-    private const float wallDeccel = 0.85f; // Wall Friction
+    private const float wallDeccel = 0.8f; // Wall Friction
 
     // Shooting
     [Header("Shooting")]
@@ -114,12 +115,12 @@ public class Player : MonoBehaviour, IDamageable
     [Header("Sound")]
     [SerializeField] private AudioClip[] quack = null;
     AudioSource[] _sources;
-    public AudioSource quackSource;
-    public AudioSource sfxSource;
+    private AudioSource quackSource;
+    private AudioSource sfxSource;
     [SerializeField] private AudioClip[] movementSfx = null;
 
     // GameObject Components
-    [Header("UI")]
+    [Header("Interface")]
     private SpriteRenderer spr;
     private Rigidbody2D rb;
     [SerializeField] private GameObject pauseObj;
@@ -263,7 +264,7 @@ public class Player : MonoBehaviour, IDamageable
         if (onGround)
         {
             // Restart coyote time
-            jumpCoyote.Start(true);
+            jumpCoyote.Ready();
 
             // Lateral movement
             if (input.x != 0)
@@ -493,9 +494,9 @@ public class Player : MonoBehaviour, IDamageable
         if (state == PlayerState.Normal)
         {
             // Wall jumps if on wall
-            if (input.x != 0 && !onGround && (onWall || !wallCoyote.IsComplete))
+            if (input.x != 0 && !onGround && !isWallJumping && (onWall || !wallCoyote.IsComplete))
             {
-                Vector2 wallJump = new Vector2(wallSide * 1.1f, 1);
+                Vector2 wallJump = new Vector2(wallSide * 0.75f, 1);
                 if (input.x + wallSide > 0) wallJump = new Vector2(wallSide * 0.65f, 0.75f);
                 vel = wallJump * jumpStrength;
 
@@ -608,20 +609,21 @@ public class Player : MonoBehaviour, IDamageable
         if (collision.gameObject.CompareTag("Stage"))
         {
             // OtherCollider (Player)
-            float aMinX = collision.otherCollider.bounds.min.x;
-            float aMaxX = collision.otherCollider.bounds.max.x;
-            float aMinY = collision.otherCollider.bounds.min.y;
-            float aMaxY = collision.otherCollider.bounds.max.y;
+            float aLeft = collision.otherCollider.bounds.min.x;
+            float aRight = collision.otherCollider.bounds.max.x;
+            float aBottom = collision.otherCollider.bounds.min.y;
+            float aTop = collision.otherCollider.bounds.max.y;
             // Collider (Wall)
-            float bMinX = collision.collider.bounds.min.x;
-            float bMaxX = collision.collider.bounds.max.x;
-            float bMinY = collision.collider.bounds.min.y;
-            float bMaxY = collision.collider.bounds.max.y;
+            float bLeft = collision.collider.bounds.min.x;
+            float bRight = collision.collider.bounds.max.x;
+            float bBottom = collision.collider.bounds.min.y;
+            float bTop = collision.collider.bounds.max.y;
 
             // If bottom of player collider is over top of platform colllider
-            if (bMaxY < aMinY)
+            if (bTop <= aBottom)
             {
                 onGround = true;
+                isWallJumping = false;
                 jumpCount = 0;
 
                 // Resets vertical velocity
@@ -630,14 +632,14 @@ public class Player : MonoBehaviour, IDamageable
             }
 
             // If top of player collider is under bottom of platform colllider
-            else if (bMinY > aMaxY)
+            else if (bBottom > aTop)
             {
                 // When bumping head, kill vertical velocity
                 if (vel.y > 0) vel.y = 0;
             }
 
             // If player bumps into wall/side of a platform
-            else if (bMinY <= aMaxY)
+            else if (bBottom <= aTop)
             {
                 // If air dashing, bonk off of the wall
                 if (!onGround && (state == PlayerState.Dashing))
@@ -648,6 +650,7 @@ public class Player : MonoBehaviour, IDamageable
                     // Cancel dash
                     dashingTimer = dashingTime;
                     state = PlayerState.Normal;
+                    isWallJumping = false;
                 }
             }
         }
@@ -671,7 +674,7 @@ public class Player : MonoBehaviour, IDamageable
             float bTop = collision.collider.bounds.max.y;
 
             // If bottom of player collider is over top of platform colllider
-            if (bTop <= aBottom)
+            if (bTop <= aBottom )
             {
                 onGround = true;
                 isWallJumping = false;
@@ -689,9 +692,10 @@ public class Player : MonoBehaviour, IDamageable
                 if (!onGround)
                 {
                     // If on wall, allow walljump
-                    if (bBottom <= aTop && !isWallJumping)
+                    if (bBottom <= aTop)
                     {
-                        onWall = true;
+                        if (!jumpCoyote.IsRunning) isWallJumping = false;
+                        if (!isWallJumping) onWall = true;
 
                         // Determine which side the wall is on
                         float deltaX = vel.x * Time.deltaTime;
@@ -701,15 +705,15 @@ public class Player : MonoBehaviour, IDamageable
                             wallSide = 1;
                     }
 
-                    // If air dashing, bonk off of the wall
-                    if (state == PlayerState.Dashing)// || Math.Abs(vel.x) >= topSpeed))
+                    // When going agsint wall...
+                    float delta = vel.x * Time.deltaTime;
+                    if ((aRight + delta >= bLeft && aLeft < bLeft) ||
+                        (aLeft + delta <= bRight && aRight > bRight))
                     {
-                        if (bBottom <= aTop)
+                        // If air dashing, bonk off of the wall
+                        if (state == PlayerState.Dashing)// || Math.Abs(vel.x) >= topSpeed))
                         {
-                            // Only trigger when dashing into wall
-                            float deltaX = vel.x * Time.deltaTime;
-                            if ((aRight + deltaX >= deltaX && aLeft < bLeft) ||
-                                (aLeft + deltaX <= bRight && aRight > bRight))
+                            if (bBottom <= aTop)
                             {
                                 speed = baseSpeed;
                                 vel.x = -1 * speed * (facingRight ? 1 : -1);
@@ -717,15 +721,16 @@ public class Player : MonoBehaviour, IDamageable
                                 // Cancel dash
                                 dashingTimer = dashingTime;
                                 state = PlayerState.Normal;
+                                isWallJumping = false;
                             }
                         }
-                    }
-                    // Otherwise, if in the air, reduces lateral velocity as if on the ground
-                    else
-                    {
-                        speed = baseSpeed;
-                        vel.x *= deccel;
-                        if (Mathf.Abs(vel.x) < baseSpeed * 0.1f) vel.x = 0; ;
+                        else
+                        {
+                            // Otherwise, if in the air, reduces lateral velocity as if on the ground
+                            speed = baseSpeed;
+                            vel.x *= deccel;
+                            if (Mathf.Abs(vel.x) < baseSpeed * 0.1f) vel.x = 0;
+                        }
                     }
 
                     // If rising, reduce vertical velocity
@@ -737,6 +742,7 @@ public class Player : MonoBehaviour, IDamageable
                 {
                     if (aTop > bTop && aBottom <= bTop)
                     {
+                        Debug.Log("Sliding");
                         onGround = false;
                     }
                 }
@@ -751,27 +757,24 @@ public class Player : MonoBehaviour, IDamageable
         if (collision.gameObject.CompareTag("Stage"))
         {
             // OtherCollider (Player)
-            float aMinX = collision.otherCollider.bounds.min.x;
-            float aMaxX = collision.otherCollider.bounds.max.x;
-            float aMinY = collision.otherCollider.bounds.min.y;
-            float aMaxY = collision.otherCollider.bounds.max.y;
+            float aLeft = collision.otherCollider.bounds.min.x;
+            float aRight = collision.otherCollider.bounds.max.x;
+            float aBottom = collision.otherCollider.bounds.min.y;
+            float aTop = collision.otherCollider.bounds.max.y;
             // Collider (Wall)
-            float bMinX = collision.collider.bounds.min.x;
-            float bMaxX = collision.collider.bounds.max.x;
-            float bMinY = collision.collider.bounds.min.y;
-            float bMaxY = collision.collider.bounds.max.y;
+            float bLeft = collision.collider.bounds.min.x;
+            float bRight = collision.collider.bounds.max.x;
+            float bBottom = collision.collider.bounds.min.y;
+            float bTop = collision.collider.bounds.max.y;
 
-            if (bMaxY < aMinY)
+            if (bTop < aBottom)
             {
                 onGround = false;
             }
-            else if (!onGround)
+            else if (bBottom <= aTop)
             {
-                if (bMinY <= aMaxY)
-                {
-                    onWall = false;
-                    isWallJumping = false;
-                }
+                onWall = false;
+                isWallJumping = false;
             }
 
             //onGround = false;
