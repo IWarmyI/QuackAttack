@@ -702,7 +702,7 @@ public class Player : MonoBehaviour, IDamageable
                     // If on wall, allow walljump
                     if (bBottom <= aTop)
                     {
-                        if (!jumpCoyote.IsRunning) isWallJumping = false;
+                        if (jumpCoyote.IsReady) isWallJumping = false;
                         if (!isWallJumping) onWall = true;
 
                         // Determine which side the wall is on
