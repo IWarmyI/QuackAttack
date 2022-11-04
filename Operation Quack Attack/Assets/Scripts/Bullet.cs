@@ -24,6 +24,7 @@ public class Bullet : MonoBehaviour, IDamageable
         get { return owner; }
         set { owner = value; IgnoreCollision(); }
     }
+    private Vector2 Vel { get { return dir * speed; } }
 
     // Start is called before the first frame update
     void Start()
@@ -38,10 +39,13 @@ public class Bullet : MonoBehaviour, IDamageable
     void Update()
     {
         pos = transform.position;
+        pos += Vel * Time.deltaTime;
+    }
 
-        Vector2 vel = dir * speed;
-        pos += vel * Time.deltaTime;
-        rb.velocity = vel;
+    void FixedUpdate()
+    {
+        rb.velocity = Vel;
+        rb.rotation = Vector2.SignedAngle(Vector2.left, dir);
     }
 
     public void Reinstantiate(Vector2 pos, Vector2 dir, float speed)

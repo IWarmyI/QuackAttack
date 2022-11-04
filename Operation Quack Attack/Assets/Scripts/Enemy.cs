@@ -13,7 +13,8 @@ public class Enemy : MonoBehaviour, IDamageable
     protected bool facingRight = false;
 
     protected SpriteRenderer spr;
-    [SerializeField] protected Color color;
+    protected Color color;
+    [SerializeField] protected Color damageColor;
 
     public int Health { get; set; }
 
@@ -21,7 +22,7 @@ public class Enemy : MonoBehaviour, IDamageable
     {
         pos = transform.position;
         spawn = transform.position;
-        spr = GetComponent<SpriteRenderer>();
+        spr = GetComponentInChildren<SpriteRenderer>();
         color = spr.color;
     }
 
@@ -31,7 +32,7 @@ public class Enemy : MonoBehaviour, IDamageable
 
         if (spr == null)
         {
-            spr = GetComponent<SpriteRenderer>();
+            spr = GetComponentInChildren<SpriteRenderer>();
             color = spr.color;
         }
         else
@@ -54,7 +55,7 @@ public class Enemy : MonoBehaviour, IDamageable
     public int TakeDamage(int damage = 1)
     {
         health -= damage;
-        spr.color = Color.red;
+        spr.color = damageColor;
         if (health <= 0) gameObject.SetActive(false); 
         return health;
     }
