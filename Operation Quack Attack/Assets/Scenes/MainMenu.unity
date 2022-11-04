@@ -5843,7 +5843,7 @@ RectTransform:
   m_GameObject: {fileID: 1560890698}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 2.3435, y: 2.3435, z: 2.3435}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1130371286}
@@ -5852,7 +5852,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 116}
-  m_SizeDelta: {x: 100, y: 100}
+  m_SizeDelta: {x: 234.35, y: 234.35}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1560890700
 MonoBehaviour:
@@ -8593,7 +8593,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1413094895158535983, guid: c818be162face5248a2d1eaa474b30fb, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 337.5027
+      value: -1437.5
       objectReference: {fileID: 0}
     - target: {fileID: 1413094895158535983, guid: c818be162face5248a2d1eaa474b30fb, type: 3}
       propertyPath: m_AnchoredPosition.y
