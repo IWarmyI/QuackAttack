@@ -851,7 +851,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Next Level
+  m_text: 'Restart Level
 
 '
   m_isRightToLeft: 0
@@ -1075,6 +1075,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Transition
       objectReference: {fileID: 0}
+    - target: {fileID: 1413094895158535980, guid: c818be162face5248a2d1eaa474b30fb, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1413094895158535983, guid: c818be162face5248a2d1eaa474b30fb, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -1089,7 +1093,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1413094895158535983, guid: c818be162face5248a2d1eaa474b30fb, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 1
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 1413094895158535983, guid: c818be162face5248a2d1eaa474b30fb, type: 3}
       propertyPath: m_AnchorMax.y
@@ -1097,7 +1101,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1413094895158535983, guid: c818be162face5248a2d1eaa474b30fb, type: 3}
       propertyPath: m_AnchorMin.x
-      value: 0
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 1413094895158535983, guid: c818be162face5248a2d1eaa474b30fb, type: 3}
       propertyPath: m_AnchorMin.y
@@ -1105,7 +1109,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1413094895158535983, guid: c818be162face5248a2d1eaa474b30fb, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 0
+      value: 1100
       objectReference: {fileID: 0}
     - target: {fileID: 1413094895158535983, guid: c818be162face5248a2d1eaa474b30fb, type: 3}
       propertyPath: m_SizeDelta.y
