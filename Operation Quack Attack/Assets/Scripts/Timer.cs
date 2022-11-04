@@ -26,6 +26,7 @@ public class Timer
         get { return !isPaused && !IsComplete; }
     }
     public bool IsPaused { get { return isPaused; } }
+    public float MaxTime { get { return time; } }
 
     public Timer(float time, TimerCallback timerCallback)
     {

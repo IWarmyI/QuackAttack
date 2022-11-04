@@ -91,9 +91,9 @@ public class Player : MonoBehaviour, IDamageable
     private int jumpCount = 0;
 
     private bool onWall = false;
-    private bool isWallJumping = false;
     private int wallSide = 0;
     [SerializeField] private Timer wallCoyote = new Timer(0.2f);
+    [SerializeField] private Timer wallCooldown;
     private const float wallDeccel = 0.8f; // Wall Friction
 
     // Shooting
@@ -181,6 +181,7 @@ public class Player : MonoBehaviour, IDamageable
         dashingTimer = dashingTime;
         fireTimer = FireTime;
         currentWater = maxWater;
+        wallCooldown = new Timer(wallCoyote.MaxTime);
 
         spr = GetComponentInChildren<SpriteRenderer>();
         rb = GetComponentInChildren<Rigidbody2D>();
@@ -244,6 +245,7 @@ public class Player : MonoBehaviour, IDamageable
 
         jumpCoyote.Update();
         wallCoyote.Update();
+        wallCooldown.Update();
     }
 
     private void LateUpdate()
@@ -502,15 +504,15 @@ public class Player : MonoBehaviour, IDamageable
         if (state == PlayerState.Normal)
         {
             // Wall jumps if on wall
-            if (input.x != 0 && !onGround && !isWallJumping && (onWall || !wallCoyote.IsComplete))
+            if (input.x != 0 && !onGround && (onWall || (!wallCoyote.IsComplete && wallCooldown.IsComplete)))
             {
                 Vector2 wallJump = new Vector2(wallSide * 0.75f, 1);
                 if (input.x + wallSide > 0) wallJump = new Vector2(wallSide * 0.65f, 0.75f);
                 vel = wallJump * jumpStrength;
 
                 onWall = false;
-                isWallJumping = true;
                 wallCoyote.Stop();
+                wallCooldown.Start();
 
                 sfxSource.PlayOneShot(movementSfx[0]);
             }
@@ -631,7 +633,6 @@ public class Player : MonoBehaviour, IDamageable
             if (bTop <= aBottom)
             {
                 onGround = true;
-                isWallJumping = false;
                 jumpCount = 0;
 
                 // Resets vertical velocity
@@ -658,7 +659,6 @@ public class Player : MonoBehaviour, IDamageable
                     // Cancel dash
                     dashingTimer = dashingTime;
                     state = PlayerState.Normal;
-                    isWallJumping = false;
                 }
             }
         }
@@ -685,12 +685,12 @@ public class Player : MonoBehaviour, IDamageable
             if (bTop <= aBottom )
             {
                 onGround = true;
-                isWallJumping = false;
                 jumpCount = 0;
+                onWall = false;
 
-                //// Resets vertical velocity
-                //if (vel.y < 0)
-                //    vel.y = 0;
+                // Resets vertical velocity
+                if (vel.y < 0)
+                    vel.y = 0;
             }
 
             // If player bumps into wall/side of a platform
@@ -702,8 +702,7 @@ public class Player : MonoBehaviour, IDamageable
                     // If on wall, allow walljump
                     if (bBottom <= aTop)
                     {
-                        if (jumpCoyote.IsReady) isWallJumping = false;
-                        if (!isWallJumping) onWall = true;
+                        onWall = true;
 
                         // Determine which side the wall is on
                         float deltaX = vel.x * Time.deltaTime;
@@ -729,7 +728,6 @@ public class Player : MonoBehaviour, IDamageable
                                 // Cancel dash
                                 dashingTimer = dashingTime;
                                 state = PlayerState.Normal;
-                                isWallJumping = false;
                             }
                         }
                         else
@@ -777,15 +775,13 @@ public class Player : MonoBehaviour, IDamageable
 
             if (bTop < aBottom)
             {
-                onGround = false;
             }
             else if (bBottom <= aTop)
             {
-                onWall = false;
-                isWallJumping = false;
             }
 
-            //onGround = false;
+            onGround = false;
+            onWall = false;
             //wallSide = 0;
         }
     }
