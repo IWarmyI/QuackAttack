@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
+using static PlayerCollision;
 
 public class Player : MonoBehaviour, IDamageable
 {
@@ -628,17 +629,14 @@ public class Player : MonoBehaviour, IDamageable
 
     private void ComputeCollisions()
     {
-        PlayerCollision.CollisionData data = col.CalculateCollision();
+        Dictionary<CollisionEvent, bool> events = col.CalculateCollision();
 
         // If on ground
-        if (data.land)
+        if (events[CollisionEvent.Land])
         {
             onGround = true;
             jumpCount = 0;
-
-            // Resets vertical velocity
-            if (vel.y < 0)
-                vel.y = 0;
+            if (vel.y < 0) vel.y = 0;
         }
         else
         {
@@ -646,10 +644,10 @@ public class Player : MonoBehaviour, IDamageable
         }
 
         // If on wall
-        if (data.wall)
+        if (events[CollisionEvent.Wall])
         {
             onWall = true;
-            wallSide = data.wallSide;
+            wallSide = events[CollisionEvent.WallSide] ? 1 : -1;
         }
         else
         {
@@ -657,39 +655,39 @@ public class Player : MonoBehaviour, IDamageable
         }
 
         // When bumping head, kill vertical velocity
-        if (data.roof)
-        {
+        if (events[CollisionEvent.Roof])
             if (vel.y > 0) vel.y = 0;
-        }
+
         // When on ground but not 100% on, slide off
-        if (data.slide)
-        {
-            Debug.Log("Sliding");
+        if (events[CollisionEvent.Slide])
             onGround = false;
-        }
+
         // When dashing against wall, bonk off
-        if (data.wallBonk)
+        if (events[CollisionEvent.WallBonk])
         {
             speed = baseSpeed * -1;
             vel.x = speed * (facingRight ? 1 : -1);
 
             // Cancel dash
             dashingTimer = dashingTime;
+            iFramesTimer = iFrames;
+            dashingCooldownTimer = dashingCooldown;
             state = PlayerState.Normal;
         }
+
         // When drifting against wall, reduce lateral velocity
-        if (data.wallLat)
+        if (events[CollisionEvent.WallLat])
         {
-            if (wallCooldown.IsComplete)
+            if (wallCooldown.IsComplete && state != PlayerState.Dashing)
             {
                 speed = baseSpeed;
                 vel.x *= Mathf.Pow(deccel, 50 * Time.deltaTime);
                 if (Mathf.Abs(vel.x) < baseSpeed * 0.1f) vel.x = 0;
-                //Debug.Log("Later " + vel);
             }
         }
+
         // When rising against wall, reduce vertical velocity
-        if (data.wallVert)
+        if (events[CollisionEvent.WallVert])
         {
             if (vel.y > 0 && Math.Abs(vel.x) >= baseSpeed)
                 vel.y *= Mathf.Pow(airDeccel, 50 * Time.deltaTime);

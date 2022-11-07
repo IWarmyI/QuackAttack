@@ -1,36 +1,36 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using static Player;
 
 public class PlayerCollision : MonoBehaviour
 {
-    public struct CollisionData
+    public enum CollisionEvent
     {
-        public bool land;
-        public bool roof;
-        public bool slide;
-
-        public bool wall;
-        public bool wallBonk;
-        public bool wallLat;
-        public bool wallVert;
-
-        public int wallSide;
+        Land,
+        Roof,
+        Slide,
+        Wall,
+        WallSide,
+        WallBonk,
+        WallLat,
+        WallVert
     }
 
     [SerializeField] private Player player;
     [SerializeField] private Rigidbody2D rb;
-
-    private int _wallSide = 0;
-
-    public int _land = 0;
-    public int _roof = 0;
-    public int _slide = 0;
-    public int _wall = 0;
-    public int _wallBonk = 0;
-    public int _wallLat = 0;
-    public int _wallVert = 0;
+    private Dictionary<CollisionEvent, int> events = new()
+    {
+        { CollisionEvent.Land, 0},
+        { CollisionEvent.Roof, 0},
+        { CollisionEvent.Slide, 0},
+        { CollisionEvent.Wall, 0},
+        { CollisionEvent.WallSide, 0},
+        { CollisionEvent.WallBonk, 0},
+        { CollisionEvent.WallLat, 0},
+        { CollisionEvent.WallVert, 0},
+    };
 
     private void Start()
     {
@@ -38,29 +38,19 @@ public class PlayerCollision : MonoBehaviour
         rb = player.GetComponent<Rigidbody2D>();
     }
 
-    public CollisionData CalculateCollision()
+    public Dictionary<CollisionEvent, bool> CalculateCollision()
     {
-        CollisionData data = new()
+        Dictionary<CollisionEvent, bool> data = new();
+
+        foreach(CollisionEvent ce in events.Keys)
         {
-            land = _land > 0,
-            roof = _roof > 0,
-            slide = _slide > 0,
+            data.Add(ce, events[ce] > 0);
+        }
 
-            wall = _wall > 0,
-            wallBonk = _wallBonk > 0,
-            wallLat = _wallLat > 0,
-            wallVert = _wallVert > 0,
-
-            wallSide = _wallSide
-        };
-
-        _land = 0;
-        _roof = 0;
-        _slide = 0;
-        _wall = 0;
-        _wallBonk = 0;
-        _wallLat = 0;
-        _wallVert = 0;
+        foreach (CollisionEvent key in events.Keys.ToList())
+        {
+            events[key] = 0;
+        }
 
         return data;
     }
@@ -85,14 +75,14 @@ public class PlayerCollision : MonoBehaviour
             // If bottom of player collider is over top of platform colllider
             if (bTop <= aBottom)
             {
-                _land++;
+                events[CollisionEvent.Land]++;
             }
 
             // If top of player collider is under bottom of platform colllider
             else if (bBottom > aTop)
             {
                 // When bumping head, kill vertical velocity
-                _roof++;
+                events[CollisionEvent.Roof]++;
             }
 
             // If player bumps into wall/side of a platform
@@ -101,7 +91,7 @@ public class PlayerCollision : MonoBehaviour
                 // If air dashing, bonk off of the wall
                 if (!player.OnGround && (player.State == PlayerState.Dashing))
                 {
-                    _wallBonk++;
+                    events[CollisionEvent.WallBonk]++;
                 }
             }
         }
@@ -129,7 +119,7 @@ public class PlayerCollision : MonoBehaviour
             // If bottom of player collider is over top of platform colllider
             if (aBottom >= bTop)
             {
-                _land++;
+                events[CollisionEvent.Land]++;
             }
 
             // If player bumps into wall/side of a platform
@@ -141,13 +131,13 @@ public class PlayerCollision : MonoBehaviour
                     // If on wall, allow walljump
                     if (bBottom <= aTop)
                     {
-                        _wall++;
+                        events[CollisionEvent.Wall]++;
 
                         // Determine which side the wall is on
                         if (cp.point.x > rb.position.x) // Rightside Wall
-                            _wallSide = -1;
+                            events[CollisionEvent.WallSide] = -1;
                         else if (cp.point.x < rb.position.x) // Leftside Wall
-                            _wallSide = 1;
+                            events[CollisionEvent.WallSide] = 1;
                     }
 
                     // When going agsint wall...
@@ -160,18 +150,18 @@ public class PlayerCollision : MonoBehaviour
                         {
                             if (bBottom <= aTop)
                             {
-                                _wallBonk++;
+                                events[CollisionEvent.WallBonk]++;
                             }
                         }
                         else
                         {
                             // Otherwise, if in the air, reduces lateral velocity as if on the ground
-                            _wallLat++;
+                            events[CollisionEvent.WallLat]++;
                         }
                     }
 
                     // If rising, reduce vertical velocity
-                    _wallVert++;
+                    events[CollisionEvent.WallVert]++;
                 }
 
                 // If on the ground, but not 100% on top, slide down
@@ -179,7 +169,7 @@ public class PlayerCollision : MonoBehaviour
                 {
                     if (aTop > bTop && aBottom <= bTop)
                     {
-                        _slide++;
+                        events[CollisionEvent.Slide]++;
                     }
                 }
             }
