@@ -55,6 +55,7 @@ public class Player : MonoBehaviour, IDamageable
 
     // Ground Movement
     [Header("Movement")]
+    private PlayerCollision col;
     [SerializeField] private Vector2 vel = Vector2.zero;
     private float speed = 0;
     [SerializeField] private float baseSpeed = 5;
@@ -185,6 +186,7 @@ public class Player : MonoBehaviour, IDamageable
 
         spr = GetComponentInChildren<SpriteRenderer>();
         rb = GetComponentInChildren<Rigidbody2D>();
+        col = gameObject.GetOrAddComponent<PlayerCollision>();
         anim = GetComponentInChildren<PlayerAnimation>();
 
         for (int i = 0; i < 10; i++)
@@ -209,6 +211,9 @@ public class Player : MonoBehaviour, IDamageable
     {
         // Get current position
         pos = transform.position;
+
+        // Compute collisions
+        ComputeCollisions();
 
         // Determine update based on playerstate
         switch (state)
@@ -612,177 +617,69 @@ public class Player : MonoBehaviour, IDamageable
     // ========================================================================
     // Collision Messages
     // ========================================================================
-    private void OnCollisionEnter2D(Collision2D collision)
+
+    private void ComputeCollisions()
     {
-        if (collision.otherCollider.isTrigger) return;
+        PlayerCollision.CollisionData data = col.CalculateCollision();
 
-        if (collision.gameObject.CompareTag("Stage"))
+        // If on ground
+        if (data.land)
         {
-            // OtherCollider (Player)
-            float aLeft = collision.otherCollider.bounds.min.x;
-            float aRight = collision.otherCollider.bounds.max.x;
-            float aBottom = collision.otherCollider.bounds.min.y;
-            float aTop = collision.otherCollider.bounds.max.y;
-            // Collider (Wall)
-            float bLeft = collision.collider.bounds.min.x;
-            float bRight = collision.collider.bounds.max.x;
-            float bBottom = collision.collider.bounds.min.y;
-            float bTop = collision.collider.bounds.max.y;
+            onGround = true;
+            jumpCount = 0;
 
-            // If bottom of player collider is over top of platform colllider
-            if (bTop <= aBottom)
-            {
-                onGround = true;
-                jumpCount = 0;
-
-                // Resets vertical velocity
-                if (vel.y < 0)
-                    vel.y = 0;
-            }
-
-            // If top of player collider is under bottom of platform colllider
-            else if (bBottom > aTop)
-            {
-                // When bumping head, kill vertical velocity
-                if (vel.y > 0) vel.y = 0;
-            }
-
-            // If player bumps into wall/side of a platform
-            else if (bBottom <= aTop)
-            {
-                // If air dashing, bonk off of the wall
-                if (!onGround && (state == PlayerState.Dashing))
-                {
-                    speed = baseSpeed * -1;
-                    vel.x = speed * (facingRight ? 1 : -1);
-
-                    // Cancel dash
-                    dashingTimer = dashingTime;
-                    state = PlayerState.Normal;
-                }
-            }
+            // Resets vertical velocity
+            if (vel.y < 0)
+                vel.y = 0;
         }
-    }
-
-    private void OnCollisionStay2D(Collision2D collision)
-    {
-        if (collision.otherCollider.isTrigger) return;
-
-        if (collision.gameObject.CompareTag("Stage"))
+        else
         {
-            // OtherCollider (Player)
-            float aLeft = collision.otherCollider.bounds.min.x;
-            float aRight = collision.otherCollider.bounds.max.x;
-            float aBottom = collision.otherCollider.bounds.min.y;
-            float aTop = collision.otherCollider.bounds.max.y;
-            // Collider (Wall)
-            float bLeft = collision.collider.bounds.min.x;
-            float bRight = collision.collider.bounds.max.x;
-            float bBottom = collision.collider.bounds.min.y;
-            float bTop = collision.collider.bounds.max.y;
-
-            // If bottom of player collider is over top of platform colllider
-            if (bTop <= aBottom )
-            {
-                onGround = true;
-                jumpCount = 0;
-                onWall = false;
-
-                // Resets vertical velocity
-                if (vel.y < 0)
-                    vel.y = 0;
-            }
-
-            // If player bumps into wall/side of a platform
-            else
-            {
-                // If in the air...
-                if (!onGround)
-                {
-                    // If on wall, allow walljump
-                    if (bBottom <= aTop)
-                    {
-                        onWall = true;
-
-                        // Determine which side the wall is on
-                        float deltaX = vel.x * Time.deltaTime;
-                        if (aRight + deltaX >= bLeft && aLeft < bLeft) // Rightside Wall
-                            wallSide = -1;
-                        else if (aLeft + deltaX <= bRight && aRight > bRight) // Leftside Wall
-                            wallSide = 1;
-                    }
-
-                    // When going agsint wall...
-                    float delta = vel.x * Time.deltaTime;
-                    if ((aRight + delta >= bLeft && aLeft < bLeft) ||
-                        (aLeft + delta <= bRight && aRight > bRight))
-                    {
-                        // If air dashing, bonk off of the wall
-                        if (state == PlayerState.Dashing)// || Math.Abs(vel.x) >= topSpeed))
-                        {
-                            if (bBottom <= aTop)
-                            {
-                                speed = baseSpeed;
-                                vel.x = -1 * speed * (facingRight ? 1 : -1);
-
-                                // Cancel dash
-                                dashingTimer = dashingTime;
-                                state = PlayerState.Normal;
-                            }
-                        }
-                        else
-                        {
-                            // Otherwise, if in the air, reduces lateral velocity as if on the ground
-                            speed = baseSpeed;
-                            vel.x *= deccel;
-                            if (Mathf.Abs(vel.x) < baseSpeed * 0.1f) vel.x = 0;
-                        }
-                    }
-
-                    // If rising, reduce vertical velocity
-                    if (vel.y > 0 && Math.Abs(vel.x) >= baseSpeed) vel.y *= airDeccel;
-                }
-
-                // If on the ground, but not 100% on top, slide down
-                else
-                {
-                    if (aTop > bTop && aBottom <= bTop)
-                    {
-                        Debug.Log("Sliding");
-                        onGround = false;
-                    }
-                }
-            }
-        }
-    }
-
-    private void OnCollisionExit2D(Collision2D collision)
-    {
-        if (collision.otherCollider.isTrigger) return;
-
-        if (collision.gameObject.CompareTag("Stage"))
-        {
-            // OtherCollider (Player)
-            float aLeft = collision.otherCollider.bounds.min.x;
-            float aRight = collision.otherCollider.bounds.max.x;
-            float aBottom = collision.otherCollider.bounds.min.y;
-            float aTop = collision.otherCollider.bounds.max.y;
-            // Collider (Wall)
-            float bLeft = collision.collider.bounds.min.x;
-            float bRight = collision.collider.bounds.max.x;
-            float bBottom = collision.collider.bounds.min.y;
-            float bTop = collision.collider.bounds.max.y;
-
-            if (bTop < aBottom)
-            {
-            }
-            else if (bBottom <= aTop)
-            {
-            }
-
             onGround = false;
+        }
+
+        // If on wall
+        if (data.wallHit)
+        {
+            onWall = true;
+            wallSide = data.wallSide;
+        }
+        else
+        {
             onWall = false;
-            //wallSide = 0;
+        }
+
+        // When bumping head, kill vertical velocity
+        if (data.roof)
+        {
+            if (vel.y > 0) vel.y = 0;
+        }
+        // When on ground but not 100% on, slide off
+        if (data.slide)
+        {
+            Debug.Log("Sliding");
+            onGround = false;
+        }
+        // When dashing against wall, bonk off
+        if (data.wallBonk)
+        {
+            speed = baseSpeed * -1;
+            vel.x = speed * (facingRight ? 1 : -1);
+
+            // Cancel dash
+            dashingTimer = dashingTime;
+            state = PlayerState.Normal;
+        }
+        // When drifting against wall, reduce lateral velocity
+        if (data.wallLat)
+        {
+            speed = baseSpeed;
+            vel.x *= deccel;
+            if (Mathf.Abs(vel.x) < baseSpeed * 0.1f) vel.x = 0;
+        }
+        // When rising against wall, reduce vertical velocity
+        if (data.wallVert)
+        {
+            if (vel.y > 0 && Math.Abs(vel.x) >= baseSpeed) vel.y *= airDeccel;
         }
     }
 
