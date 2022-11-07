@@ -11,34 +11,31 @@ public class PlayerCollision : MonoBehaviour
         public bool roof;
         public bool slide;
 
-        public bool wallHit;
+        public bool wall;
         public bool wallBonk;
         public bool wallLat;
         public bool wallVert;
 
         public int wallSide;
-
-        public bool exitLand;
-        public bool exitWall;
     }
 
     [SerializeField] private Player player;
+    [SerializeField] private Rigidbody2D rb;
 
     private int _wallSide = 0;
 
-    private int _land = 0;
-    private int _roof = 0;
-    private int _slide = 0;
-    private int _wallHit = 0;
-    private int _wallBonk = 0;
-    private int _wallLat = 0;
-    private int _wallVert = 0;
-    private int _exitLand = 0;
-    private int _exitWall = 0;
+    public int _land = 0;
+    public int _roof = 0;
+    public int _slide = 0;
+    public int _wall = 0;
+    public int _wallBonk = 0;
+    public int _wallLat = 0;
+    public int _wallVert = 0;
 
     private void Start()
     {
         if (player == null) player = GetComponentInParent<Player>();
+        rb = player.GetComponent<Rigidbody2D>();
     }
 
     public CollisionData CalculateCollision()
@@ -49,7 +46,7 @@ public class PlayerCollision : MonoBehaviour
             roof = _roof > 0,
             slide = _slide > 0,
 
-            wallHit = _wallHit > 0,
+            wall = _wall > 0,
             wallBonk = _wallBonk > 0,
             wallLat = _wallLat > 0,
             wallVert = _wallVert > 0,
@@ -60,19 +57,17 @@ public class PlayerCollision : MonoBehaviour
         _land = 0;
         _roof = 0;
         _slide = 0;
-        _wallHit = 0;
+        _wall = 0;
         _wallBonk = 0;
         _wallLat = 0;
         _wallVert = 0;
-        _exitLand = 0;
-        _exitWall = 0;
 
         return data;
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        //if (collision.otherCollider.isTrigger) return;
+        if (collision.otherCollider.isTrigger) return;
 
         if (collision.gameObject.CompareTag("Stage"))
         {
@@ -114,7 +109,7 @@ public class PlayerCollision : MonoBehaviour
 
     private void OnCollisionStay2D(Collision2D collision)
     {
-        //if (collision.otherCollider.isTrigger) return;
+        if (collision.otherCollider.isTrigger) return;
 
         if (collision.gameObject.CompareTag("Stage"))
         {
@@ -129,8 +124,10 @@ public class PlayerCollision : MonoBehaviour
             float bBottom = collision.collider.bounds.min.y;
             float bTop = collision.collider.bounds.max.y;
 
+            ContactPoint2D cp = collision.GetContact(0);
+
             // If bottom of player collider is over top of platform colllider
-            if (bTop <= aBottom)
+            if (aBottom >= bTop)
             {
                 _land++;
             }
@@ -144,13 +141,12 @@ public class PlayerCollision : MonoBehaviour
                     // If on wall, allow walljump
                     if (bBottom <= aTop)
                     {
-                        _wallHit++;
+                        _wall++;
 
                         // Determine which side the wall is on
-                        float deltaX = player.Velocity.x * Time.deltaTime;
-                        if (aRight + deltaX >= bLeft && aLeft < bLeft) // Rightside Wall
+                        if (cp.point.x > rb.position.x) // Rightside Wall
                             _wallSide = -1;
-                        else if (aLeft + deltaX <= bRight && aRight > bRight) // Leftside Wall
+                        else if (cp.point.x < rb.position.x) // Leftside Wall
                             _wallSide = 1;
                     }
 
@@ -192,12 +188,10 @@ public class PlayerCollision : MonoBehaviour
 
     private void OnCollisionExit2D(Collision2D collision)
     {
-        //if (collision.otherCollider.isTrigger) return;
+        if (collision.otherCollider.isTrigger) return;
 
         if (collision.gameObject.CompareTag("Stage"))
         {
-            _exitWall++;
-            _exitLand++;
         }
     }
 }

@@ -192,7 +192,7 @@ public class Player : MonoBehaviour, IDamageable
         for (int i = 0; i < 10; i++)
         {
             projectileList.Add(Instantiate(projectile, ProjectilePos, Quaternion.identity, projectileManager));
-            projectileList[projectileList.Count - 1].gameObject.SetActive(false);
+            projectileList[i].gameObject.SetActive(false);
         }
 
         if (isIntro)
@@ -209,11 +209,17 @@ public class Player : MonoBehaviour, IDamageable
 
     private void FixedUpdate()
     {
-        // Get current position
-        pos = transform.position;
-
         // Compute collisions
         ComputeCollisions();
+
+        // Apply rigidbody velocity
+        rb.velocity = vel;
+    }
+
+    public void Update()
+    {
+        // Get current position
+        pos = transform.position;
 
         // Determine update based on playerstate
         switch (state)
@@ -240,7 +246,6 @@ public class Player : MonoBehaviour, IDamageable
 
         // Apply velocity
         pos += vel * Time.deltaTime;
-        rb.velocity = vel;
 
         // Update Shooting Timer
         if (fireTimer < FireTime)
@@ -303,7 +308,7 @@ public class Player : MonoBehaviour, IDamageable
 
                 // Reset speed and deccelerate velocity
                 speed = baseSpeed;
-                vel.x *= deccel;
+                vel.x *= Mathf.Pow(deccel, 50 * Time.deltaTime);
                 if (Mathf.Abs(vel.x) < baseSpeed * 0.1f) vel.x = 0;
             }
         }
@@ -333,7 +338,7 @@ public class Player : MonoBehaviour, IDamageable
             {
                 // Deccelerate velocity
                 vel.x = Mathf.Min(vel.x, topAirSpeed);
-                vel.x *= airDeccel;
+                vel.x *= Mathf.Pow(airDeccel, 50 * Time.deltaTime);
             }
 
             // Wall sliding
@@ -348,7 +353,8 @@ public class Player : MonoBehaviour, IDamageable
 
                     if (vel.y < 0)
                     {
-                        vel.y *= wallDeccel;
+                        //vel.y *= wallDeccel;
+                        vel.y *= Mathf.Pow(wallDeccel, 50 * Time.deltaTime);
                         //float slow = Mathf.Max(Mathf.Abs(vel.y) - wallDeccel * Time.deltaTime, 0);
                         //vel.y = slow * Mathf.Sign(vel.y);
                     }
@@ -439,14 +445,14 @@ public class Player : MonoBehaviour, IDamageable
         speed = baseSpeed;
         if (onGround)
         {
-            vel.x *= deccel;
+            vel.x *= Mathf.Pow(deccel, 50 * Time.deltaTime);
             if (Mathf.Abs(vel.x) < baseSpeed * 0.1f) vel.x = 0;
         }
         else
         {
             vel.y -= (vel.y > 0 ? jumpGravity : fallGravity) * Time.deltaTime;
             vel.x = Mathf.Min(vel.x, topAirSpeed);
-            vel.x *= airDeccel;
+            vel.x *= Mathf.Pow(airDeccel, 50 * Time.deltaTime);
         }
 
         // Once complete, activate game over screen
@@ -520,6 +526,8 @@ public class Player : MonoBehaviour, IDamageable
                 wallCooldown.Start();
 
                 sfxSource.PlayOneShot(movementSfx[0]);
+
+                //Debug.Log("Jump");
             }
 
             // Jumps if on ground
@@ -638,7 +646,7 @@ public class Player : MonoBehaviour, IDamageable
         }
 
         // If on wall
-        if (data.wallHit)
+        if (data.wall)
         {
             onWall = true;
             wallSide = data.wallSide;
@@ -672,14 +680,19 @@ public class Player : MonoBehaviour, IDamageable
         // When drifting against wall, reduce lateral velocity
         if (data.wallLat)
         {
-            speed = baseSpeed;
-            vel.x *= deccel;
-            if (Mathf.Abs(vel.x) < baseSpeed * 0.1f) vel.x = 0;
+            if (wallCooldown.IsComplete)
+            {
+                speed = baseSpeed;
+                vel.x *= Mathf.Pow(deccel, 50 * Time.deltaTime);
+                if (Mathf.Abs(vel.x) < baseSpeed * 0.1f) vel.x = 0;
+                //Debug.Log("Later " + vel);
+            }
         }
         // When rising against wall, reduce vertical velocity
         if (data.wallVert)
         {
-            if (vel.y > 0 && Math.Abs(vel.x) >= baseSpeed) vel.y *= airDeccel;
+            if (vel.y > 0 && Math.Abs(vel.x) >= baseSpeed)
+                vel.y *= Mathf.Pow(airDeccel, 50 * Time.deltaTime);
         }
     }
 
