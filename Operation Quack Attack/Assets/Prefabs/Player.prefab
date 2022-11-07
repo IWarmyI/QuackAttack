@@ -417,8 +417,9 @@ MonoBehaviour:
   projectileOffset: {x: 0.4, y: 0.35}
   fireRate: 5
   projectileList: []
+  maxWater: 100
   currentWater: 0
-  reFillAmount: 10
+  waterRegen: 2
   quack:
   - {fileID: 8300000, guid: 8f133431776716f4ea93a7ec5c8ba724, type: 3}
   - {fileID: 8300000, guid: fa9ef772332ecaa4a8480d9b920b1139, type: 3}

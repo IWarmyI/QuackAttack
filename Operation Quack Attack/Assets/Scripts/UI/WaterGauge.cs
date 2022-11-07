@@ -5,17 +5,33 @@ using UnityEngine.UI;
 
 public class WaterGauge : MonoBehaviour
 {
-    public GameObject player;
-    public float currWater;
-    public Image image;
+    [SerializeField] private Player player;
+    [SerializeField] private Image image;
+    [SerializeField] private float speed = 10;
+
+    float toFill = 100;
+
     void Start()
     {
-        currWater = player.GetComponent<Player>().currentWater;
+        toFill = player.maxWater;
     }
 
-    public void UpdateBar(float currentWater,float maxWater)
+    private void LateUpdate()
     {
-        image.fillAmount = Mathf.Clamp(currentWater / maxWater, 0, 1f);
+        UpdateBar(player.currentWater, player.maxWater);
+
+        if (image.fillAmount != toFill)
+        {
+            image.fillAmount = Mathf.Lerp(image.fillAmount, toFill, speed * Time.deltaTime);
+
+            if (Mathf.Abs(image.fillAmount - toFill) < 0.01)
+                image.fillAmount = toFill;
+        }
+    }
+
+    public void UpdateBar(float currentWater, float maxWater)
+    {
+        toFill = Mathf.Clamp(currentWater / maxWater, 0, 1f);
     }
 
   

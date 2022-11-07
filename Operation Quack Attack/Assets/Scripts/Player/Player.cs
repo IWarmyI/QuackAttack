@@ -110,9 +110,9 @@ public class Player : MonoBehaviour, IDamageable
     [SerializeField] public List<Projectile> projectileList = new List<Projectile>();
 
     // Water ammo
-    private float maxWater = 100;
-    [SerializeField] public float currentWater = 0;
-    [SerializeField] public float reFillAmount = 10;
+    [SerializeField] public float maxWater = 100;
+    public float currentWater = 0;
+    [SerializeField] private float waterRegen = 5;
 
     //Sound Effects 
     [Header("Sound")]
@@ -126,7 +126,7 @@ public class Player : MonoBehaviour, IDamageable
     [Header("UI")]
     [SerializeField] private GameObject pauseObj;
     [SerializeField] private GameObject HUD;
-    [SerializeField] private GameObject waterGauge;
+    [SerializeField] private WaterGauge waterGauge;
     private SpriteRenderer spr;
     private Rigidbody2D rb;
 
@@ -251,6 +251,13 @@ public class Player : MonoBehaviour, IDamageable
         {
             fireTimer += Time.deltaTime;
         }
+
+        if (currentWater < maxWater)
+        {
+            currentWater += waterRegen * Time.deltaTime;
+            waterGauge.UpdateBar(currentWater, maxWater);
+        }
+        if (currentWater > maxWater) currentWater = maxWater;
 
         jumpCoyote.Update();
         wallCoyote.Update();
@@ -389,15 +396,6 @@ public class Player : MonoBehaviour, IDamageable
 
     private void UpdateDashing()
     {
-        // Set animation state to Air
-        animState = AnimState.Dash;
-
-        // Dashing timer counting
-        dashingTimer -= Time.deltaTime;
-
-        // Apply dashing speed
-        vel.x = speed * (facingRight ? 1 : -1);
-
         // When counter is over, go back to Normal state and reset dash timer
         if (dashingTimer <= 0)
         {
@@ -406,6 +404,15 @@ public class Player : MonoBehaviour, IDamageable
             dashingCooldownTimer = dashingCooldown;
             state = PlayerState.Normal;
         }
+
+        // Set animation state to Air
+        animState = AnimState.Dash;
+
+        // Dashing timer counting
+        dashingTimer -= Time.deltaTime;
+
+        // Apply dashing speed
+        vel.x = speed * (facingRight ? 1 : -1);
     }
 
     private void UpdateStopped()
@@ -464,7 +471,7 @@ public class Player : MonoBehaviour, IDamageable
         if (currentWater >= 5)
         {
             currentWater -= 5;
-            waterGauge.GetComponent<WaterGauge>().UpdateBar(currentWater, maxWater);
+            waterGauge.UpdateBar(currentWater, maxWater);
             // Create projectile instance
             foreach (Projectile bullet in projectileList)
             {
@@ -543,7 +550,7 @@ public class Player : MonoBehaviour, IDamageable
                 onGround = false;
                 jumpCount++;
                 currentWater -= 10;
-                waterGauge.GetComponent<WaterGauge>().UpdateBar(currentWater, maxWater);
+                waterGauge.UpdateBar(currentWater, maxWater);
 
                 sfxSource.PlayOneShot(movementSfx[1]);
             }
@@ -566,7 +573,7 @@ public class Player : MonoBehaviour, IDamageable
             // Set dashing speed
             speed = dashingSpeed;
             currentWater -= 10;
-            waterGauge.GetComponent<WaterGauge>().UpdateBar(currentWater, maxWater);
+            waterGauge.UpdateBar(currentWater, maxWater);
         }
 
         if (state != PlayerState.Stopped && state != PlayerState.Dead)
@@ -694,14 +701,10 @@ public class Player : MonoBehaviour, IDamageable
         }
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    public void RefillWater(float amount)
     {
-        if (collision.gameObject.CompareTag("PickUp"))
-        {
-            currentWater += reFillAmount;
-            waterGauge.GetComponent<WaterGauge>().UpdateBar(currentWater, maxWater);
-            Destroy(collision.gameObject);
-        }
+        currentWater += amount;
+        waterGauge.UpdateBar(currentWater, maxWater);
     }
 
     // ========================================================================
