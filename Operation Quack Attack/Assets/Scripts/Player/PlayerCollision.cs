@@ -61,6 +61,7 @@ public class PlayerCollision : MonoBehaviour
 
         if (collision.gameObject.CompareTag("Stage"))
         {
+
             // OtherCollider (Player)
             float aLeft = collision.otherCollider.bounds.min.x;
             float aRight = collision.otherCollider.bounds.max.x;

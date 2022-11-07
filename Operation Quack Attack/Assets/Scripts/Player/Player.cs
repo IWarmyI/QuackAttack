@@ -56,13 +56,13 @@ public class Player : MonoBehaviour, IDamageable
 
     // Ground Movement
     [Header("Movement")]
-    private PlayerCollision col;
     [SerializeField] private Vector2 vel = Vector2.zero;
     private float speed = 0;
     [SerializeField] private float baseSpeed = 5;
     [SerializeField] private float topSpeed = 10;
     [SerializeField] private float accelRate = 10;
     private const float deccel = 0.65f; // Ground Friction
+    private PlayerCollision col;
 
     // Dashing
     [Header("Dashing")]
@@ -87,6 +87,7 @@ public class Player : MonoBehaviour, IDamageable
 
     private bool onGround = true;
     [SerializeField] private Timer jumpCoyote = new Timer(0.2f);
+    private Timer jumpCooldown;
     private const float airDeccel = 0.96f; // Air Resistance
 
     [SerializeField] private int airJumps = 1;
@@ -95,12 +96,12 @@ public class Player : MonoBehaviour, IDamageable
     private bool onWall = false;
     private int wallSide = 0;
     [SerializeField] private Timer wallCoyote = new Timer(0.2f);
-    [SerializeField] private Timer wallCooldown;
+    private Timer wallCooldown;
     private const float wallDeccel = 0.8f; // Wall Friction
 
     // Shooting
     [Header("Shooting")]
-    [SerializeField] public Projectile projectile;
+    [SerializeField] private Projectile projectile;
     [SerializeField] private Transform projectileManager;
     [SerializeField] private Vector2 projectileOffset = Vector2.zero;
     [SerializeField] private float fireRate = 0.2f;
@@ -122,16 +123,16 @@ public class Player : MonoBehaviour, IDamageable
     [SerializeField] private AudioClip[] movementSfx = null;
 
     // GameObject Components
-    [Header("Interface")]
-    private SpriteRenderer spr;
-    private Rigidbody2D rb;
+    [Header("UI")]
     [SerializeField] private GameObject pauseObj;
     [SerializeField] private GameObject HUD;
     [SerializeField] private GameObject waterGauge;
+    private SpriteRenderer spr;
+    private Rigidbody2D rb;
 
     // Properties
     public PlayerState State { get { return state; } }
-    public AnimState Animation { get { return animState; } set { animState = value; } }
+    public AnimState Animation { get { return animState; } }
     public bool HasStarted { get { return hasStarted; } }
     public float Speed { get { return speed; } }
     public int Health { get { return health; } set { health = value; } }
@@ -149,13 +150,19 @@ public class Player : MonoBehaviour, IDamageable
     }
     private float FireTime { get { return 1.0f / fireRate; } }
 
-    public Animator animator;
+    public Animator transitionAnimator;
     public float transitionDelayTime = 1.0f;
 
 
     public static void Initialize()
     {
         Player.isIntro = true;
+    }
+
+    void Awake()
+    {
+        GameObject.Find("Transition").TryGetComponent(out transitionAnimator);
+        input = Vector2.zero;
     }
 
     // Start is called before the first frame update
@@ -166,24 +173,20 @@ public class Player : MonoBehaviour, IDamageable
         sfxSource = _sources[1];
 
         if (quackSource == null)
-        {
             Debug.LogError("Quack Source is empty");
-        }
         else if (sfxSource == null)
-        {
             Debug.LogError("SFX source is empty");
-        }
         else
-        {
             quackSource.clip = quack[0];
-        }
 
         pos = transform.position;
         speed = baseSpeed;
         dashingTimer = dashingTime;
         fireTimer = FireTime;
         currentWater = maxWater;
-        wallCooldown = new Timer(wallCoyote.MaxTime);
+
+        jumpCooldown = new Timer(jumpCoyote.MaxTime);
+        wallCooldown = new Timer(wallCoyote.MaxTime / 2);
 
         spr = GetComponentInChildren<SpriteRenderer>();
         rb = GetComponentInChildren<Rigidbody2D>();
@@ -203,11 +206,6 @@ public class Player : MonoBehaviour, IDamageable
         }
     }
 
-    void Awake()
-    {
-        animator = GameObject.Find("Transition").GetComponent<Animator>();
-    }
-
     private void FixedUpdate()
     {
         // Compute collisions
@@ -225,7 +223,7 @@ public class Player : MonoBehaviour, IDamageable
         // Determine update based on playerstate
         switch (state)
         {
-            // Paused/Unactionable (Intro)
+            // Stopped/Unactionable (Intro)
             case PlayerState.Stopped:
                 UpdateStopped();
                 break;
@@ -256,6 +254,7 @@ public class Player : MonoBehaviour, IDamageable
 
         jumpCoyote.Update();
         wallCoyote.Update();
+        jumpCooldown.Update();
         wallCooldown.Update();
     }
 
@@ -282,10 +281,10 @@ public class Player : MonoBehaviour, IDamageable
         wallCoyote.Resume();
 
         // Ground Movement
-        if (onGround)
+        if (onGround || (jumpCoyote.IsRunning && !jumpCooldown.IsRunning && !onGround))
         {
             // Restart coyote time
-            jumpCoyote.Ready();
+            if (onGround && jumpCooldown.IsComplete) jumpCoyote.Ready();
 
             // Lateral movement
             if (input.x != 0)
@@ -294,7 +293,7 @@ public class Player : MonoBehaviour, IDamageable
                 animState = AnimState.Run;
 
                 // Reset speed when changing directions
-                if (input.x != oldInput.x) { speed = baseSpeed; }
+                if (input.x != oldInput.x) speed = baseSpeed;
 
                 // Accelerate speed, clamped from baseSpeed to topSpeed
                 speed = Mathf.Clamp(speed + accelRate * Time.deltaTime, baseSpeed, topSpeed);
@@ -345,20 +344,18 @@ public class Player : MonoBehaviour, IDamageable
             // Wall sliding
             if (onWall && input.x != 0)
             {
-                wallCoyote.Ready();
+                if (wallCooldown.IsComplete)
+                    wallCoyote.Ready();
 
                 // If pressing against wall, wallslide
                 if (input.x == wallSide * -1)
                 {
+                    // Set animation state to Wall
                     animState = AnimState.Wall;
 
+                    // If rising, deccelerate by wallDeccel
                     if (vel.y < 0)
-                    {
-                        //vel.y *= wallDeccel;
                         vel.y *= Mathf.Pow(wallDeccel, 50 * Time.deltaTime);
-                        //float slow = Mathf.Max(Mathf.Abs(vel.y) - wallDeccel * Time.deltaTime, 0);
-                        //vel.y = slow * Mathf.Sign(vel.y);
-                    }
                 }
             }
         }
@@ -383,9 +380,7 @@ public class Player : MonoBehaviour, IDamageable
             dashingCooldownTimer -= Time.deltaTime;
 
             if (dashingCooldownTimer <= 0)
-            {
                 anim.PlayFlash();
-            }
         }
 
         // Stores old input
@@ -515,20 +510,19 @@ public class Player : MonoBehaviour, IDamageable
         // Can only jump if in normal state
         if (state == PlayerState.Normal)
         {
-            // Wall jumps if on wall
-            if (input.x != 0 && !onGround && (onWall || (!wallCoyote.IsComplete && wallCooldown.IsComplete)))
+            // Walljumps if on wall
+            bool wallJumpInput = input.x != 0 || oldInput.x != 0;
+            bool wallJumpReady = onWall || !wallCoyote.IsComplete;
+            if (!onGround && wallJumpInput && wallJumpReady)
             {
                 Vector2 wallJump = new Vector2(wallSide * 0.75f, 1);
                 if (input.x + wallSide > 0) wallJump = new Vector2(wallSide * 0.65f, 0.75f);
                 vel = wallJump * jumpStrength;
-
                 onWall = false;
                 wallCoyote.Stop();
                 wallCooldown.Start();
 
                 sfxSource.PlayOneShot(movementSfx[0]);
-
-                //Debug.Log("Jump");
             }
 
             // Jumps if on ground
@@ -537,11 +531,12 @@ public class Player : MonoBehaviour, IDamageable
                 vel.y = jumpStrength;
                 onGround = false;
                 jumpCoyote.Stop();
+                jumpCooldown.Start();
 
                 sfxSource.PlayOneShot(movementSfx[1]);
             }
 
-            // Double jump
+            // Double jumps if in air
             else if (jumpCount < airJumps && currentWater >= 10)
             {
                 vel.y = jumpStrength;
@@ -629,6 +624,8 @@ public class Player : MonoBehaviour, IDamageable
 
     private void ComputeCollisions()
     {
+        if (state == PlayerState.Stopped) return;
+
         Dictionary<CollisionEvent, bool> events = col.CalculateCollision();
 
         // If on ground
@@ -689,8 +686,11 @@ public class Player : MonoBehaviour, IDamageable
         // When rising against wall, reduce vertical velocity
         if (events[CollisionEvent.WallVert])
         {
-            if (vel.y > 0 && Math.Abs(vel.x) >= baseSpeed)
-                vel.y *= Mathf.Pow(airDeccel, 50 * Time.deltaTime);
+            if (jumpCooldown.IsComplete)
+            {
+                if (vel.y > 0 && Math.Abs(vel.x) >= baseSpeed)
+                    vel.y *= Mathf.Pow(airDeccel, 50 * Time.deltaTime);
+            }
         }
     }
 
@@ -731,9 +731,7 @@ public class Player : MonoBehaviour, IDamageable
             if (iFramesTimer <= 0)
             {
                 health -= damage;
-
-                if (health <= 0)
-                    Die();
+                if (health <= 0) Die();
             }
         }
 
@@ -749,7 +747,8 @@ public class Player : MonoBehaviour, IDamageable
 
     IEnumerator DelayLoadLevel(string sceneName)
     {
-        animator.SetTrigger("TriggerTransition");
+        if (transitionAnimator != null)
+            transitionAnimator.SetTrigger("TriggerTransition");
         yield return new WaitForSeconds(transitionDelayTime);
         SceneManager.LoadScene(sceneName);
     }
