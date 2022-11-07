@@ -248,9 +248,7 @@ public class Player : MonoBehaviour, IDamageable
 
         // Update Shooting Timer
         if (fireTimer < FireTime)
-        {
             fireTimer += Time.deltaTime;
-        }
 
         if (currentWater < maxWater)
         {
@@ -387,7 +385,10 @@ public class Player : MonoBehaviour, IDamageable
             dashingCooldownTimer -= Time.deltaTime;
 
             if (dashingCooldownTimer <= 0)
+            {
                 anim.PlayFlash();
+                waterGauge.PlayFlash();
+            }
         }
 
         // Stores old input

@@ -9,11 +9,29 @@ public class WaterGauge : MonoBehaviour
     [SerializeField] private Image image;
     [SerializeField] private float speed = 10;
 
+    [SerializeField] private Material flashMat;
+    private const float flashTime = 0.2f;
+    private float flashTimer = 0.2f;
+
     float toFill = 100;
 
     void Start()
     {
         toFill = player.maxWater;
+    }
+
+    private void Update()
+    {
+        if (flashTimer < flashTime)
+        {
+            flashTimer += Time.deltaTime;
+
+            if (flashTimer >= flashTime)
+            {
+                image.material = null;
+            }
+        }
+
     }
 
     private void LateUpdate()
@@ -34,5 +52,9 @@ public class WaterGauge : MonoBehaviour
         toFill = Mathf.Clamp(currentWater / maxWater, 0, 1f);
     }
 
-  
+    public void PlayFlash()
+    {
+        image.material = flashMat;
+        flashTimer = 0;
+    }
 }

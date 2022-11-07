@@ -3068,7 +3068,7 @@ MonoBehaviour:
   m_text: 00'00''00
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 600dbaf22b5895b43bfd7a9a5126dba9, type: 2}
-  m_sharedMaterial: {fileID: -5207607791514246653, guid: 600dbaf22b5895b43bfd7a9a5126dba9, type: 2}
+  m_sharedMaterial: {fileID: 2100000, guid: 92339a147a50d32469a2d9129cfc4226, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -8782,6 +8782,7 @@ MonoBehaviour:
   player: {fileID: 1830123199}
   image: {fileID: 1328971900}
   speed: 10
+  flashMat: {fileID: 2100000, guid: 892ac7fa57f2ba244b8a8e341c6d9585, type: 2}
 --- !u!114 &1328971900
 MonoBehaviour:
   m_ObjectHideFlags: 0
