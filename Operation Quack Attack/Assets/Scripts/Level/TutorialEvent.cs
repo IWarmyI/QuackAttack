@@ -7,24 +7,24 @@ public class TutorialEvent : MonoBehaviour
 {
     private bool needHelp;
     private float resetTimer;
-    [SerializeField] float timer;
-    [SerializeField] TextMeshProUGUI tutorial;
+    [SerializeField] private float timer = 20.0f;
+    [SerializeField] private TMP_Text tutorial;
 
     // Start is called before the first frame update
     void Start()
     {
-       needHelp = false;
-       tutorial.enabled = false;
-       resetTimer = timer;
+        needHelp = false;
+        tutorial.enabled = false;
+        resetTimer = timer;
     }
 
     // Update is called once per frame
-    void FixedUpdate()
+    void Update()
     {
         // count down timer before tutorial shows
         if (needHelp)
         {
-            if (timer != 0.0f)
+            if (timer > 0)
             {
                 timer -= Time.deltaTime;
             }
@@ -49,7 +49,7 @@ public class TutorialEvent : MonoBehaviour
         {
             needHelp = false;
             timer = resetTimer;
-            tutorial.enabled = false;
+            //tutorial.enabled = false;
         }
     }
 }

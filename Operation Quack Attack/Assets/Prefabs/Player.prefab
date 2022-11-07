@@ -195,7 +195,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -260,7 +260,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speedMultiplier: 1.25
-  defaultMat: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  defaultMat: {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   flashMat: {fileID: 2100000, guid: 3df439dfe2986ff409e0768cc9ff0cac, type: 2}
   flashColor: {r: 0.050980393, g: 0.101960786, b: 0.29803923, a: 1}
 --- !u!1 &913230022992168071
@@ -322,9 +322,9 @@ PolygonCollider2D:
   m_Points:
     m_Paths:
     - - {x: 0, y: 2.125}
-      - {x: -0.5, y: 1.25}
+      - {x: -0.6125, y: 1.25}
       - {x: 0, y: -0.125}
-      - {x: 0.5, y: 1.25}
+      - {x: 0.6125, y: 1.25}
 --- !u!114 &1665344786
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -404,7 +404,7 @@ MonoBehaviour:
   driftInfluence: 60
   topAirSpeed: 18.5
   jumpCoyote:
-    time: 0.2
+    time: 0.05
     currentTime: 0
     isPaused: 0
   airJumps: 1
@@ -415,7 +415,6 @@ MonoBehaviour:
   projectile: {fileID: 8125120347618727777, guid: 381eb93ad2ad0ea4697c6c43fabe51a0, type: 3}
   projectileManager: {fileID: 0}
   projectileOffset: {x: 0.4, y: 0.35}
-  autoShoot: 1
   fireRate: 5
   projectileList: []
   currentWater: 0
@@ -424,14 +423,15 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 8f133431776716f4ea93a7ec5c8ba724, type: 3}
   - {fileID: 8300000, guid: fa9ef772332ecaa4a8480d9b920b1139, type: 3}
   - {fileID: 0}
-  quackSource: {fileID: 3463381780900638049}
-  sfxSource: {fileID: 1830123195}
   movementSfx:
   - {fileID: 8300000, guid: d2652cfc308606d429265f8183b3d7e3, type: 3}
   - {fileID: 8300000, guid: 07390601828d53b4fad3a573ff59a892, type: 3}
   - {fileID: 8300000, guid: 8fd7d62adcf1eec4b9ccf5b608805872, type: 3}
-  gameOverScreen: {fileID: 0}
   pauseObj: {fileID: 0}
+  HUD: {fileID: 0}
+  waterGauge: {fileID: 0}
+  transitionAnimator: {fileID: 0}
+  transitionDelayTime: 1
 --- !u!114 &913230024881484952
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -688,7 +688,7 @@ GameObject:
   - component: {fileID: 6070935436360118992}
   m_Layer: 0
   m_Name: Hitbox
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
