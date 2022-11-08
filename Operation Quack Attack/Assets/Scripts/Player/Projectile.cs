@@ -43,6 +43,7 @@ public class Projectile : MonoBehaviour
     void Update()
     {
         pos = transform.position;
+        spr.flipX = !facingRight;
 
         Vector2 vel = Vector2.zero;
         if (facingRight)

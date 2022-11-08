@@ -286,7 +286,7 @@ public class Player : MonoBehaviour, IDamageable
         wallCoyote.Resume();
 
         // Ground Movement
-        if (onGround || (jumpCoyote.IsRunning && !jumpCooldown.IsRunning && !onGround))
+        if (onGround || (jumpCoyote.IsRunning && !jumpCooldown.IsRunning && vel.y <= 0))
         {
             // Restart coyote time
             if (onGround && jumpCooldown.IsComplete) jumpCoyote.Ready();
@@ -551,8 +551,9 @@ public class Player : MonoBehaviour, IDamageable
                 onGround = false;
                 jumpCount++;
                 currentWater -= 10;
-                waterGauge.UpdateBar(currentWater, maxWater);
 
+                waterGauge.UpdateBar(currentWater, maxWater);
+                anim.PlayJump();
                 sfxSource.PlayOneShot(movementSfx[1]);
             }
         }
@@ -575,6 +576,7 @@ public class Player : MonoBehaviour, IDamageable
             speed = dashingSpeed;
             currentWater -= 10;
             waterGauge.UpdateBar(currentWater, maxWater);
+            anim.PlayDash();
         }
 
         if (state != PlayerState.Stopped && state != PlayerState.Dead)

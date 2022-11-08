@@ -18,19 +18,29 @@ public class PlayerAnimation : MonoBehaviour
 
     private Animator anim;
     private SpriteRenderer spr;
-    private TrailRenderer trail;
     private Dictionary<AnimState, bool> complete = new();
+
     [SerializeField] private Material defaultMat;
     [SerializeField] private Material flashMat;
     [SerializeField] private Color flashColor = new Color(0.5f, 0.5f, 0.5f);
     private const float flashTime = 0.2f;
     private float flashTimer = 0.2f;
 
+    private GameObject fxDash;
+    private TrailRenderer trail;
+    private ParticleSystem psDash;
+
+    private GameObject fxJump;
+    private ParticleSystem psJump;
+
+
     void Start()
     {
         anim = GetComponent<Animator>();
         spr = GetComponent<SpriteRenderer>();
         trail = GetComponentInChildren<TrailRenderer>();
+        psDash = transform.GetComponentsInChildren<ParticleSystem>()[0];
+        psJump = transform.GetComponentsInChildren<ParticleSystem>()[1];
     }
 
     private void Update()
@@ -109,5 +119,17 @@ public class PlayerAnimation : MonoBehaviour
         spr.material = flashMat;
         spr.material.color = flashColor;
         flashTimer = 0;
+    }
+
+    public void PlayJump()
+    {
+        psJump.Stop(true, ParticleSystemStopBehavior.StopEmitting);
+        psJump.Play();
+    }
+
+    public void PlayDash()
+    {
+        psDash.Stop(true, ParticleSystemStopBehavior.StopEmitting);
+        psDash.Play();
     }
 }
