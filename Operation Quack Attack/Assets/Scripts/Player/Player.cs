@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
+using static PlayerCollision;
 
 public class Player : MonoBehaviour, IDamageable
 {
@@ -61,6 +62,7 @@ public class Player : MonoBehaviour, IDamageable
     [SerializeField] private float topSpeed = 10;
     [SerializeField] private float accelRate = 10;
     private const float deccel = 0.65f; // Ground Friction
+    private PlayerCollision col;
 
     // Dashing
     [Header("Dashing")]
@@ -85,6 +87,7 @@ public class Player : MonoBehaviour, IDamageable
 
     private bool onGround = true;
     [SerializeField] private Timer jumpCoyote = new Timer(0.2f);
+    private Timer jumpCooldown;
     private const float airDeccel = 0.96f; // Air Resistance
 
     [SerializeField] private int airJumps = 1;
@@ -93,12 +96,12 @@ public class Player : MonoBehaviour, IDamageable
     private bool onWall = false;
     private int wallSide = 0;
     [SerializeField] private Timer wallCoyote = new Timer(0.2f);
-    [SerializeField] private Timer wallCooldown;
+    private Timer wallCooldown;
     private const float wallDeccel = 0.8f; // Wall Friction
 
     // Shooting
     [Header("Shooting")]
-    [SerializeField] public Projectile projectile;
+    [SerializeField] private Projectile projectile;
     [SerializeField] private Transform projectileManager;
     [SerializeField] private Vector2 projectileOffset = Vector2.zero;
     [SerializeField] private float fireRate = 0.2f;
@@ -107,9 +110,9 @@ public class Player : MonoBehaviour, IDamageable
     [SerializeField] public List<Projectile> projectileList = new List<Projectile>();
 
     // Water ammo
-    private float maxWater = 100;
-    [SerializeField] public float currentWater = 0;
-    [SerializeField] public float reFillAmount = 10;
+    [SerializeField] public float maxWater = 100;
+    public float currentWater = 0;
+    [SerializeField] private float waterRegen = 5;
 
     //Sound Effects 
     [Header("Sound")]
@@ -120,16 +123,16 @@ public class Player : MonoBehaviour, IDamageable
     [SerializeField] private AudioClip[] movementSfx = null;
 
     // GameObject Components
-    [Header("Interface")]
-    private SpriteRenderer spr;
-    private Rigidbody2D rb;
+    [Header("UI")]
     [SerializeField] private GameObject pauseObj;
     [SerializeField] private GameObject HUD;
-    [SerializeField] private GameObject waterGauge;
+    [SerializeField] private WaterGauge waterGauge;
+    private SpriteRenderer spr;
+    private Rigidbody2D rb;
 
     // Properties
     public PlayerState State { get { return state; } }
-    public AnimState Animation { get { return animState; } set { animState = value; } }
+    public AnimState Animation { get { return animState; } }
     public bool HasStarted { get { return hasStarted; } }
     public float Speed { get { return speed; } }
     public int Health { get { return health; } set { health = value; } }
@@ -147,13 +150,19 @@ public class Player : MonoBehaviour, IDamageable
     }
     private float FireTime { get { return 1.0f / fireRate; } }
 
-    public Animator animator;
+    public Animator transitionAnimator;
     public float transitionDelayTime = 1.0f;
 
 
     public static void Initialize()
     {
         Player.isIntro = true;
+    }
+
+    void Awake()
+    {
+        GameObject.Find("Transition").TryGetComponent(out transitionAnimator);
+        input = Vector2.zero;
     }
 
     // Start is called before the first frame update
@@ -164,33 +173,30 @@ public class Player : MonoBehaviour, IDamageable
         sfxSource = _sources[1];
 
         if (quackSource == null)
-        {
             Debug.LogError("Quack Source is empty");
-        }
         else if (sfxSource == null)
-        {
             Debug.LogError("SFX source is empty");
-        }
         else
-        {
             quackSource.clip = quack[0];
-        }
 
         pos = transform.position;
         speed = baseSpeed;
         dashingTimer = dashingTime;
         fireTimer = FireTime;
         currentWater = maxWater;
-        wallCooldown = new Timer(wallCoyote.MaxTime);
+
+        jumpCooldown = new Timer(jumpCoyote.MaxTime);
+        wallCooldown = new Timer(wallCoyote.MaxTime / 2);
 
         spr = GetComponentInChildren<SpriteRenderer>();
         rb = GetComponentInChildren<Rigidbody2D>();
+        col = gameObject.GetOrAddComponent<PlayerCollision>();
         anim = GetComponentInChildren<PlayerAnimation>();
 
         for (int i = 0; i < 10; i++)
         {
             projectileList.Add(Instantiate(projectile, ProjectilePos, Quaternion.identity, projectileManager));
-            projectileList[projectileList.Count - 1].gameObject.SetActive(false);
+            projectileList[i].gameObject.SetActive(false);
         }
 
         if (isIntro)
@@ -200,12 +206,16 @@ public class Player : MonoBehaviour, IDamageable
         }
     }
 
-    void Awake()
+    private void FixedUpdate()
     {
-        animator = GameObject.Find("Transition").GetComponent<Animator>();
+        // Compute collisions
+        ComputeCollisions();
+
+        // Apply rigidbody velocity
+        rb.velocity = vel;
     }
 
-    private void FixedUpdate()
+    public void Update()
     {
         // Get current position
         pos = transform.position;
@@ -213,7 +223,7 @@ public class Player : MonoBehaviour, IDamageable
         // Determine update based on playerstate
         switch (state)
         {
-            // Paused/Unactionable (Intro)
+            // Stopped/Unactionable (Intro)
             case PlayerState.Stopped:
                 UpdateStopped();
                 break;
@@ -235,16 +245,21 @@ public class Player : MonoBehaviour, IDamageable
 
         // Apply velocity
         pos += vel * Time.deltaTime;
-        rb.velocity = vel;
 
         // Update Shooting Timer
         if (fireTimer < FireTime)
-        {
             fireTimer += Time.deltaTime;
+
+        if (currentWater < maxWater)
+        {
+            currentWater += waterRegen * Time.deltaTime;
+            waterGauge.UpdateBar(currentWater, maxWater);
         }
+        if (currentWater > maxWater) currentWater = maxWater;
 
         jumpCoyote.Update();
         wallCoyote.Update();
+        jumpCooldown.Update();
         wallCooldown.Update();
     }
 
@@ -271,10 +286,10 @@ public class Player : MonoBehaviour, IDamageable
         wallCoyote.Resume();
 
         // Ground Movement
-        if (onGround)
+        if (onGround || (jumpCoyote.IsRunning && !jumpCooldown.IsRunning && vel.y <= 0))
         {
             // Restart coyote time
-            jumpCoyote.Ready();
+            if (onGround && jumpCooldown.IsComplete) jumpCoyote.Ready();
 
             // Lateral movement
             if (input.x != 0)
@@ -283,7 +298,7 @@ public class Player : MonoBehaviour, IDamageable
                 animState = AnimState.Run;
 
                 // Reset speed when changing directions
-                if (input.x != oldInput.x) { speed = baseSpeed; }
+                if (input.x != oldInput.x) speed = baseSpeed;
 
                 // Accelerate speed, clamped from baseSpeed to topSpeed
                 speed = Mathf.Clamp(speed + accelRate * Time.deltaTime, baseSpeed, topSpeed);
@@ -298,7 +313,7 @@ public class Player : MonoBehaviour, IDamageable
 
                 // Reset speed and deccelerate velocity
                 speed = baseSpeed;
-                vel.x *= deccel;
+                vel.x *= Mathf.Pow(deccel, 50 * Time.deltaTime);
                 if (Mathf.Abs(vel.x) < baseSpeed * 0.1f) vel.x = 0;
             }
         }
@@ -328,25 +343,24 @@ public class Player : MonoBehaviour, IDamageable
             {
                 // Deccelerate velocity
                 vel.x = Mathf.Min(vel.x, topAirSpeed);
-                vel.x *= airDeccel;
+                vel.x *= Mathf.Pow(airDeccel, 50 * Time.deltaTime);
             }
 
             // Wall sliding
             if (onWall && input.x != 0)
             {
-                wallCoyote.Ready();
+                if (wallCooldown.IsComplete)
+                    wallCoyote.Ready();
 
                 // If pressing against wall, wallslide
                 if (input.x == wallSide * -1)
                 {
+                    // Set animation state to Wall
                     animState = AnimState.Wall;
 
+                    // If rising, deccelerate by wallDeccel
                     if (vel.y < 0)
-                    {
-                        vel.y *= wallDeccel;
-                        //float slow = Mathf.Max(Mathf.Abs(vel.y) - wallDeccel * Time.deltaTime, 0);
-                        //vel.y = slow * Mathf.Sign(vel.y);
-                    }
+                        vel.y *= Mathf.Pow(wallDeccel, 50 * Time.deltaTime);
                 }
             }
         }
@@ -373,6 +387,7 @@ public class Player : MonoBehaviour, IDamageable
             if (dashingCooldownTimer <= 0)
             {
                 anim.PlayFlash();
+                waterGauge.PlayFlash();
             }
         }
 
@@ -382,15 +397,6 @@ public class Player : MonoBehaviour, IDamageable
 
     private void UpdateDashing()
     {
-        // Set animation state to Air
-        animState = AnimState.Dash;
-
-        // Dashing timer counting
-        dashingTimer -= Time.deltaTime;
-
-        // Apply dashing speed
-        vel.x = speed * (facingRight ? 1 : -1);
-
         // When counter is over, go back to Normal state and reset dash timer
         if (dashingTimer <= 0)
         {
@@ -399,6 +405,15 @@ public class Player : MonoBehaviour, IDamageable
             dashingCooldownTimer = dashingCooldown;
             state = PlayerState.Normal;
         }
+
+        // Set animation state to Air
+        animState = AnimState.Dash;
+
+        // Dashing timer counting
+        dashingTimer -= Time.deltaTime;
+
+        // Apply dashing speed
+        vel.x = speed * (facingRight ? 1 : -1);
     }
 
     private void UpdateStopped()
@@ -434,14 +449,14 @@ public class Player : MonoBehaviour, IDamageable
         speed = baseSpeed;
         if (onGround)
         {
-            vel.x *= deccel;
+            vel.x *= Mathf.Pow(deccel, 50 * Time.deltaTime);
             if (Mathf.Abs(vel.x) < baseSpeed * 0.1f) vel.x = 0;
         }
         else
         {
             vel.y -= (vel.y > 0 ? jumpGravity : fallGravity) * Time.deltaTime;
             vel.x = Mathf.Min(vel.x, topAirSpeed);
-            vel.x *= airDeccel;
+            vel.x *= Mathf.Pow(airDeccel, 50 * Time.deltaTime);
         }
 
         // Once complete, activate game over screen
@@ -457,7 +472,9 @@ public class Player : MonoBehaviour, IDamageable
         if (currentWater >= 5)
         {
             currentWater -= 5;
-            waterGauge.GetComponent<WaterGauge>().UpdateBar(currentWater, maxWater);
+            waterGauge.UpdateBar(currentWater, maxWater);
+            anim.PlayShoot();
+
             // Create projectile instance
             foreach (Projectile bullet in projectileList)
             {
@@ -503,13 +520,14 @@ public class Player : MonoBehaviour, IDamageable
         // Can only jump if in normal state
         if (state == PlayerState.Normal)
         {
-            // Wall jumps if on wall
-            if (input.x != 0 && !onGround && (onWall || (!wallCoyote.IsComplete && wallCooldown.IsComplete)))
+            // Walljumps if on wall
+            bool wallJumpInput = input.x != 0 || oldInput.x != 0;
+            bool wallJumpReady = onWall || !wallCoyote.IsComplete;
+            if (!onGround && wallJumpInput && wallJumpReady)
             {
                 Vector2 wallJump = new Vector2(wallSide * 0.75f, 1);
                 if (input.x + wallSide > 0) wallJump = new Vector2(wallSide * 0.65f, 0.75f);
                 vel = wallJump * jumpStrength;
-
                 onWall = false;
                 wallCoyote.Stop();
                 wallCooldown.Start();
@@ -523,19 +541,21 @@ public class Player : MonoBehaviour, IDamageable
                 vel.y = jumpStrength;
                 onGround = false;
                 jumpCoyote.Stop();
+                jumpCooldown.Start();
 
                 sfxSource.PlayOneShot(movementSfx[1]);
             }
 
-            // Double jump
+            // Double jumps if in air
             else if (jumpCount < airJumps && currentWater >= 10)
             {
                 vel.y = jumpStrength;
                 onGround = false;
                 jumpCount++;
                 currentWater -= 10;
-                waterGauge.GetComponent<WaterGauge>().UpdateBar(currentWater, maxWater);
 
+                waterGauge.UpdateBar(currentWater, maxWater);
+                anim.PlayJump();
                 sfxSource.PlayOneShot(movementSfx[1]);
             }
         }
@@ -557,7 +577,8 @@ public class Player : MonoBehaviour, IDamageable
             // Set dashing speed
             speed = dashingSpeed;
             currentWater -= 10;
-            waterGauge.GetComponent<WaterGauge>().UpdateBar(currentWater, maxWater);
+            waterGauge.UpdateBar(currentWater, maxWater);
+            anim.PlayDash();
         }
 
         if (state != PlayerState.Stopped && state != PlayerState.Dead)
@@ -612,188 +633,83 @@ public class Player : MonoBehaviour, IDamageable
     // ========================================================================
     // Collision Messages
     // ========================================================================
-    private void OnCollisionEnter2D(Collision2D collision)
+
+    private void ComputeCollisions()
     {
-        if (collision.otherCollider.isTrigger) return;
+        if (state == PlayerState.Stopped) return;
 
-        if (collision.gameObject.CompareTag("Stage"))
+        Dictionary<CollisionEvent, bool> events = col.CalculateCollision();
+
+        // If on ground
+        if (events[CollisionEvent.Land])
         {
-            // OtherCollider (Player)
-            float aLeft = collision.otherCollider.bounds.min.x;
-            float aRight = collision.otherCollider.bounds.max.x;
-            float aBottom = collision.otherCollider.bounds.min.y;
-            float aTop = collision.otherCollider.bounds.max.y;
-            // Collider (Wall)
-            float bLeft = collision.collider.bounds.min.x;
-            float bRight = collision.collider.bounds.max.x;
-            float bBottom = collision.collider.bounds.min.y;
-            float bTop = collision.collider.bounds.max.y;
-
-            // If bottom of player collider is over top of platform colllider
-            if (bTop <= aBottom)
-            {
-                onGround = true;
-                jumpCount = 0;
-
-                // Resets vertical velocity
-                if (vel.y < 0)
-                    vel.y = 0;
-            }
-
-            // If top of player collider is under bottom of platform colllider
-            else if (bBottom > aTop)
-            {
-                // When bumping head, kill vertical velocity
-                if (vel.y > 0) vel.y = 0;
-            }
-
-            // If player bumps into wall/side of a platform
-            else if (bBottom <= aTop)
-            {
-                // If air dashing, bonk off of the wall
-                if (!onGround && (state == PlayerState.Dashing))
-                {
-                    speed = baseSpeed * -1;
-                    vel.x = speed * (facingRight ? 1 : -1);
-
-                    // Cancel dash
-                    dashingTimer = dashingTime;
-                    state = PlayerState.Normal;
-                }
-            }
+            onGround = true;
+            jumpCount = 0;
+            if (vel.y < 0) vel.y = 0;
         }
-    }
-
-    private void OnCollisionStay2D(Collision2D collision)
-    {
-        if (collision.otherCollider.isTrigger) return;
-
-        if (collision.gameObject.CompareTag("Stage"))
+        else
         {
-            // OtherCollider (Player)
-            float aLeft = collision.otherCollider.bounds.min.x;
-            float aRight = collision.otherCollider.bounds.max.x;
-            float aBottom = collision.otherCollider.bounds.min.y;
-            float aTop = collision.otherCollider.bounds.max.y;
-            // Collider (Wall)
-            float bLeft = collision.collider.bounds.min.x;
-            float bRight = collision.collider.bounds.max.x;
-            float bBottom = collision.collider.bounds.min.y;
-            float bTop = collision.collider.bounds.max.y;
-
-            // If bottom of player collider is over top of platform colllider
-            if (bTop <= aBottom )
-            {
-                onGround = true;
-                jumpCount = 0;
-                onWall = false;
-
-                // Resets vertical velocity
-                if (vel.y < 0)
-                    vel.y = 0;
-            }
-
-            // If player bumps into wall/side of a platform
-            else
-            {
-                // If in the air...
-                if (!onGround)
-                {
-                    // If on wall, allow walljump
-                    if (bBottom <= aTop)
-                    {
-                        onWall = true;
-
-                        // Determine which side the wall is on
-                        float deltaX = vel.x * Time.deltaTime;
-                        if (aRight + deltaX >= bLeft && aLeft < bLeft) // Rightside Wall
-                            wallSide = -1;
-                        else if (aLeft + deltaX <= bRight && aRight > bRight) // Leftside Wall
-                            wallSide = 1;
-                    }
-
-                    // When going agsint wall...
-                    float delta = vel.x * Time.deltaTime;
-                    if ((aRight + delta >= bLeft && aLeft < bLeft) ||
-                        (aLeft + delta <= bRight && aRight > bRight))
-                    {
-                        // If air dashing, bonk off of the wall
-                        if (state == PlayerState.Dashing)// || Math.Abs(vel.x) >= topSpeed))
-                        {
-                            if (bBottom <= aTop)
-                            {
-                                speed = baseSpeed;
-                                vel.x = -1 * speed * (facingRight ? 1 : -1);
-
-                                // Cancel dash
-                                dashingTimer = dashingTime;
-                                state = PlayerState.Normal;
-                            }
-                        }
-                        else
-                        {
-                            // Otherwise, if in the air, reduces lateral velocity as if on the ground
-                            speed = baseSpeed;
-                            vel.x *= deccel;
-                            if (Mathf.Abs(vel.x) < baseSpeed * 0.1f) vel.x = 0;
-                        }
-                    }
-
-                    // If rising, reduce vertical velocity
-                    if (vel.y > 0 && Math.Abs(vel.x) >= baseSpeed) vel.y *= airDeccel;
-                }
-
-                // If on the ground, but not 100% on top, slide down
-                else
-                {
-                    if (aTop > bTop && aBottom <= bTop)
-                    {
-                        Debug.Log("Sliding");
-                        onGround = false;
-                    }
-                }
-            }
-        }
-    }
-
-    private void OnCollisionExit2D(Collision2D collision)
-    {
-        if (collision.otherCollider.isTrigger) return;
-
-        if (collision.gameObject.CompareTag("Stage"))
-        {
-            // OtherCollider (Player)
-            float aLeft = collision.otherCollider.bounds.min.x;
-            float aRight = collision.otherCollider.bounds.max.x;
-            float aBottom = collision.otherCollider.bounds.min.y;
-            float aTop = collision.otherCollider.bounds.max.y;
-            // Collider (Wall)
-            float bLeft = collision.collider.bounds.min.x;
-            float bRight = collision.collider.bounds.max.x;
-            float bBottom = collision.collider.bounds.min.y;
-            float bTop = collision.collider.bounds.max.y;
-
-            if (bTop < aBottom)
-            {
-            }
-            else if (bBottom <= aTop)
-            {
-            }
-
             onGround = false;
+        }
+
+        // If on wall
+        if (events[CollisionEvent.Wall])
+        {
+            onWall = true;
+            wallSide = events[CollisionEvent.WallSide] ? 1 : -1;
+        }
+        else
+        {
             onWall = false;
-            //wallSide = 0;
+        }
+
+        // When bumping head, kill vertical velocity
+        if (events[CollisionEvent.Roof])
+            if (vel.y > 0) vel.y = 0;
+
+        // When on ground but not 100% on, slide off
+        if (events[CollisionEvent.Slide])
+            onGround = false;
+
+        // When dashing against wall, bonk off
+        if (events[CollisionEvent.WallBonk])
+        {
+            speed = baseSpeed * -1;
+            vel.x = speed * (facingRight ? 1 : -1);
+
+            // Cancel dash
+            dashingTimer = dashingTime;
+            iFramesTimer = iFrames;
+            dashingCooldownTimer = dashingCooldown;
+            state = PlayerState.Normal;
+        }
+
+        // When drifting against wall, reduce lateral velocity
+        if (events[CollisionEvent.WallLat])
+        {
+            if (wallCooldown.IsComplete && state != PlayerState.Dashing)
+            {
+                speed = baseSpeed;
+                vel.x *= Mathf.Pow(deccel, 50 * Time.deltaTime);
+                if (Mathf.Abs(vel.x) < baseSpeed * 0.1f) vel.x = 0;
+            }
+        }
+
+        // When rising against wall, reduce vertical velocity
+        if (events[CollisionEvent.WallVert])
+        {
+            if (jumpCooldown.IsComplete)
+            {
+                if (vel.y > 0 && Math.Abs(vel.x) >= baseSpeed)
+                    vel.y *= Mathf.Pow(airDeccel, 50 * Time.deltaTime);
+            }
         }
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    public void RefillWater(float amount)
     {
-        if (collision.gameObject.CompareTag("PickUp"))
-        {
-            currentWater += reFillAmount;
-            waterGauge.GetComponent<WaterGauge>().UpdateBar(currentWater, maxWater);
-            Destroy(collision.gameObject);
-        }
+        currentWater += amount;
+        waterGauge.UpdateBar(currentWater, maxWater);
     }
 
     // ========================================================================
@@ -823,9 +739,7 @@ public class Player : MonoBehaviour, IDamageable
             if (iFramesTimer <= 0)
             {
                 health -= damage;
-
-                if (health <= 0)
-                    Die();
+                if (health <= 0) Die();
             }
         }
 
@@ -841,7 +755,8 @@ public class Player : MonoBehaviour, IDamageable
 
     IEnumerator DelayLoadLevel(string sceneName)
     {
-        animator.SetTrigger("TriggerTransition");
+        if (transitionAnimator != null)
+            transitionAnimator.SetTrigger("TriggerTransition");
         yield return new WaitForSeconds(transitionDelayTime);
         SceneManager.LoadScene(sceneName);
     }

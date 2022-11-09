@@ -42,10 +42,10 @@ public class HUDTimer : MonoBehaviour
         int sec = Mathf.FloorToInt(timer - min * 60);
         int mil = Mathf.FloorToInt((timer - (min * 60 + sec)) * 100);
 
-        string text = $"<mspace=0.9em>{min:00}</mspace>" +
-                      $"'<mspace=0.9em>{sec:00}</mspace>" +
-                      $"''<mspace=0.9em>{mil:00}</mspace>\n";
-        text += $"Water {water}\n";
+        string text = $"<mspace=0.95em>{min:00}</mspace>" +
+                      $"'<mspace=0.95em>{sec:00}</mspace>" +
+                      $"''<mspace=0.95em>{mil:00}</mspace>\n";
+        text += $"Water {(int)water}\n";
         hud.text = text;
     }
 }

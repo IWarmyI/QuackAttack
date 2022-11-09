@@ -32,7 +32,7 @@ public class PlayerBounds : MonoBehaviour
     {
         if (player == null) return;
 
-        if (player.State != Player.PlayerState.Dashing)
+        if (player.State == Player.PlayerState.Normal)
         {
             if (player.OnGround || (player.Velocity.y < 0 && !player.OnGround))
             {

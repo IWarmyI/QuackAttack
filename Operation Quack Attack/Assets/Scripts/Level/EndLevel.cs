@@ -21,6 +21,14 @@ public class EndLevel : MonoBehaviour
         }
     }
 
+    private void OnTriggerEnter2D(Collider2D collider)
+    {
+        if (collider.gameObject.CompareTag("Player"))
+        {
+            StartCoroutine(DelayLoadLevel(("EndLevel")));
+        }
+    }
+
     IEnumerator DelayLoadLevel(string sceneName)
     {
         animator.SetTrigger("TriggerTransition");

@@ -29,7 +29,7 @@ public class PlayerCamera : MonoBehaviour
 
     void Start()
     {
-        transform.position = player.position;
+        transform.position = player.position + offset;
     }
 
     void LateUpdate()
