@@ -27,20 +27,29 @@ public class PlayerAnimation : MonoBehaviour
     private float flashTimer = 0.2f;
 
     private GameObject fxDash;
+    private GameObject fxJump;
+    private GameObject fxShoot;
+    private GameObject afterImg;
+
     private TrailRenderer trail;
     private ParticleSystem psDash;
-
-    private GameObject fxJump;
     private ParticleSystem psJump;
+    private ParticleSystem psShoot;
+    private ParticleSystem psAfter;
+
+    private Vector3 flipEulers = new Vector3(0, 180, 0);
 
 
     void Start()
     {
         anim = GetComponent<Animator>();
         spr = GetComponent<SpriteRenderer>();
+
         trail = GetComponentInChildren<TrailRenderer>();
         psDash = transform.GetComponentsInChildren<ParticleSystem>()[0];
         psJump = transform.GetComponentsInChildren<ParticleSystem>()[1];
+        psShoot = transform.GetComponentsInChildren<ParticleSystem>()[2];
+        psAfter = transform.GetComponentsInChildren<ParticleSystem>()[3];
     }
 
     private void Update()
@@ -70,6 +79,9 @@ public class PlayerAnimation : MonoBehaviour
         {
             spr.flipX = !_facing;
         }
+        psDash.transform.rotation  = Quaternion.Euler(_facing ? flipEulers : Vector3.zero);
+        psShoot.transform.rotation = Quaternion.Euler(_facing ? flipEulers : Vector3.zero);
+        psAfter.transform.rotation = Quaternion.Euler(_facing ? flipEulers : Vector3.zero);
 
         if (trail != null)
         {
@@ -131,5 +143,12 @@ public class PlayerAnimation : MonoBehaviour
     {
         psDash.Stop(true, ParticleSystemStopBehavior.StopEmitting);
         psDash.Play();
+        psAfter.Stop(true, ParticleSystemStopBehavior.StopEmitting);
+        psAfter.Play();
+    }
+    public void PlayShoot()
+    {
+        psShoot.Stop(true, ParticleSystemStopBehavior.StopEmitting);
+        psShoot.Play();
     }
 }

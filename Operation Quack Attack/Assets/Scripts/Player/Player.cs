@@ -473,6 +473,8 @@ public class Player : MonoBehaviour, IDamageable
         {
             currentWater -= 5;
             waterGauge.UpdateBar(currentWater, maxWater);
+            anim.PlayShoot();
+
             // Create projectile instance
             foreach (Projectile bullet in projectileList)
             {
