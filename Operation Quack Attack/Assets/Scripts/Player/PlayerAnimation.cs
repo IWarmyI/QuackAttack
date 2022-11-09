@@ -36,8 +36,9 @@ public class PlayerAnimation : MonoBehaviour
     private ParticleSystem psJump;
     private ParticleSystem psShoot;
     private ParticleSystem psAfter;
+    private ParticleSystemRenderer psrAfter;
 
-    private Vector3 flipEulers = new Vector3(0, 180, 0);
+    private Vector3 rotate180 = new Vector3(0, 180, 0);
 
 
     void Start()
@@ -50,6 +51,7 @@ public class PlayerAnimation : MonoBehaviour
         psJump = transform.GetComponentsInChildren<ParticleSystem>()[1];
         psShoot = transform.GetComponentsInChildren<ParticleSystem>()[2];
         psAfter = transform.GetComponentsInChildren<ParticleSystem>()[3];
+        psrAfter = psAfter.GetComponent<ParticleSystemRenderer>();
     }
 
     private void Update()
@@ -79,9 +81,9 @@ public class PlayerAnimation : MonoBehaviour
         {
             spr.flipX = !_facing;
         }
-        psDash.transform.rotation  = Quaternion.Euler(_facing ? flipEulers : Vector3.zero);
-        psShoot.transform.rotation = Quaternion.Euler(_facing ? flipEulers : Vector3.zero);
-        psAfter.transform.rotation = Quaternion.Euler(_facing ? flipEulers : Vector3.zero);
+        psDash.transform.rotation  = Quaternion.Euler(_facing ? Vector3.zero : rotate180);
+        psShoot.transform.rotation = Quaternion.Euler(_facing ? Vector3.zero : rotate180);
+        psrAfter.flip = _facing ? Vector2.zero : Vector2.right;
 
         if (trail != null)
         {
