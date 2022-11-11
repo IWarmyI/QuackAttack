@@ -6,6 +6,7 @@ using UnityEngine;
 public class Projectile : MonoBehaviour
 {
     public Vector2 pos;
+    private Vector2 offset;
     [SerializeField] private float speed = 20;
     public bool facingRight = false;
     public GameObject player;
@@ -13,6 +14,23 @@ public class Projectile : MonoBehaviour
     // GameObject Components
     SpriteRenderer spr;
     Rigidbody2D rb;
+    TrailRenderer trail;
+
+    public Vector2 Offset
+    {
+        get
+        {
+            return offset;
+        }
+        set
+        {
+            offset = value;
+            if (spr != null)
+                spr.transform.localPosition = offset;
+            if (trail != null)
+                trail.transform.localPosition = offset;
+        }
+    }
 
     private void OnEnable()
     {
@@ -35,8 +53,9 @@ public class Projectile : MonoBehaviour
     {
         pos = transform.position;
 
-        spr = GetComponent<SpriteRenderer>();
+        spr = GetComponentInChildren<SpriteRenderer>();
         rb = GetComponent<Rigidbody2D>();
+        trail = GetComponentInChildren<TrailRenderer>();
     }
 
     // Update is called once per frame
@@ -56,6 +75,12 @@ public class Projectile : MonoBehaviour
         }
         pos += vel * Time.deltaTime;
         rb.velocity = vel;
+    }
+
+    private void OnDisable()
+    {
+        if (trail != null)
+            trail.Clear();
     }
 
     private void OnCollisionEnter2D(Collision2D collision)

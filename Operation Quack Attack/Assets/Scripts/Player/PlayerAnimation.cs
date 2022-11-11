@@ -7,7 +7,7 @@ using static Player;
 
 public class PlayerAnimation : MonoBehaviour
 {
-    // Animation
+    // Player Animation Parameters
     private AnimState _animState = AnimState.Idle;
     private bool _onGround = false;
     private bool _onWall = false;
@@ -16,22 +16,20 @@ public class PlayerAnimation : MonoBehaviour
     private bool _isTopSpeed = false;
     [SerializeField] private float speedMultiplier = 1.25f;
 
+    // Player Components
+    private Player player;
     private Animator anim;
     private SpriteRenderer spr;
     private Dictionary<AnimState, bool> complete = new();
 
+    // Dash Ready Flash
     [SerializeField] private Material defaultMat;
     [SerializeField] private Material flashMat;
     [SerializeField] private Color flashColor = new Color(0.5f, 0.5f, 0.5f);
     private const float flashTime = 0.2f;
     private float flashTimer = 0.2f;
 
-    private GameObject fxDash;
-    private GameObject fxJump;
-    private GameObject fxShoot;
-    private GameObject afterImg;
-
-    private TrailRenderer trail;
+    // Particle Systems
     private ParticleSystem psDash;
     private ParticleSystem psJump;
     private ParticleSystem psShoot;
@@ -43,15 +41,21 @@ public class PlayerAnimation : MonoBehaviour
 
     void Start()
     {
+        player = GetComponentInParent<Player>();
         anim = GetComponent<Animator>();
         spr = GetComponent<SpriteRenderer>();
 
-        trail = GetComponentInChildren<TrailRenderer>();
-        psDash = transform.GetComponentsInChildren<ParticleSystem>()[0];
-        psJump = transform.GetComponentsInChildren<ParticleSystem>()[1];
-        psShoot = transform.GetComponentsInChildren<ParticleSystem>()[2];
-        psAfter = transform.GetComponentsInChildren<ParticleSystem>()[3];
+        GameObject waterFx = transform.GetChild(0).gameObject;
+        psDash = waterFx.GetComponentsInChildren<ParticleSystem>()[0];
+        psJump = waterFx.GetComponentsInChildren<ParticleSystem>()[1];
+        psShoot = waterFx.GetComponentsInChildren<ParticleSystem>()[2];
+        psAfter = waterFx.GetComponentsInChildren<ParticleSystem>()[3];
         psrAfter = psAfter.GetComponent<ParticleSystemRenderer>();
+
+        player.OnPlayerAirJump += JumpFX;
+        player.OnPlayerDash += DashFX;
+        player.OnPlayerDashReady += FlashFX;
+        player.OnPlayerShoot += ShootFX;
     }
 
     private void Update()
@@ -84,18 +88,6 @@ public class PlayerAnimation : MonoBehaviour
         psDash.transform.rotation  = Quaternion.Euler(_facing ? Vector3.zero : rotate180);
         psShoot.transform.rotation = Quaternion.Euler(_facing ? Vector3.zero : rotate180);
         psrAfter.flip = _facing ? Vector2.zero : Vector2.right;
-
-        if (trail != null)
-        {
-            if (_animState == AnimState.Dash)
-            {
-                trail.emitting = true;
-            }
-            else
-            {
-                trail.emitting = false;
-            }
-        }
     }
 
     public void Animate(AnimState animState, bool onGround, bool onWall, bool isFalling, bool isTopSpeed, bool facing)
@@ -128,27 +120,25 @@ public class PlayerAnimation : MonoBehaviour
         complete[animState] = true;
     }
 
-    public void PlayFlash()
+    private void FlashFX()
     {
         spr.material = flashMat;
         spr.material.color = flashColor;
         flashTimer = 0;
     }
-
-    public void PlayJump()
+    private void JumpFX()
     {
         psJump.Stop(true, ParticleSystemStopBehavior.StopEmitting);
         psJump.Play();
     }
-
-    public void PlayDash()
+    private void DashFX()
     {
         psDash.Stop(true, ParticleSystemStopBehavior.StopEmitting);
         psDash.Play();
         psAfter.Stop(true, ParticleSystemStopBehavior.StopEmitting);
         psAfter.Play();
     }
-    public void PlayShoot()
+    private void ShootFX()
     {
         psShoot.Stop(true, ParticleSystemStopBehavior.StopEmitting);
         psShoot.Play();

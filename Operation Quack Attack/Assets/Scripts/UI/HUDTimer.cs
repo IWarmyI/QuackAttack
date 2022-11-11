@@ -33,7 +33,7 @@ public class HUDTimer : MonoBehaviour
             }
         }
 
-        water = player.currentWater;
+        water = player.Water;
     }
 
     private void LateUpdate()

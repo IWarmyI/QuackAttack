@@ -1,7 +1,5 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics.Contracts;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -46,7 +44,7 @@ public class Player : MonoBehaviour, IDamageable
     private AnimState animState = AnimState.Idle;
     private PlayerAnimation anim;
     private bool hasStarted = false;
-    private static bool isIntro = true;
+    private static bool _isIntro = true;
 
     // Position and Input
     private Vector2 pos;
@@ -110,25 +108,29 @@ public class Player : MonoBehaviour, IDamageable
     [SerializeField] public List<Projectile> projectileList = new List<Projectile>();
 
     // Water ammo
-    [SerializeField] public float maxWater = 100;
-    public float currentWater = 0;
+    [SerializeField] private float maxWater = 100;
+    private float currentWater = 0;
     [SerializeField] private float waterRegen = 5;
-
-    //Sound Effects 
-    [Header("Sound")]
-    [SerializeField] private AudioClip[] quack = null;
-    AudioSource[] _sources;
-    private AudioSource quackSource;
-    private AudioSource sfxSource;
-    [SerializeField] private AudioClip[] movementSfx = null;
 
     // GameObject Components
     [Header("UI")]
     [SerializeField] private GameObject pauseObj;
     [SerializeField] private GameObject HUD;
-    [SerializeField] private WaterGauge waterGauge;
+    //[SerializeField] private WaterGauge waterGauge;
     private SpriteRenderer spr;
     private Rigidbody2D rb;
+
+    // Events
+    public delegate void PlayerEvent();
+    public event PlayerEvent OnPlayerStep; // (Not Implemented)
+    public event PlayerEvent OnPlayerLand;
+    public event PlayerEvent OnPlayerJump;
+    public event PlayerEvent OnPlayerWallJump;
+    public event PlayerEvent OnPlayerAirJump;
+    public event PlayerEvent OnPlayerDash;
+    public event PlayerEvent OnPlayerDashReady;
+    public event PlayerEvent OnPlayerShoot;
+    public event PlayerEvent OnPlayerQuack;
 
     // Properties
     public PlayerState State { get { return state; } }
@@ -136,6 +138,8 @@ public class Player : MonoBehaviour, IDamageable
     public bool HasStarted { get { return hasStarted; } }
     public float Speed { get { return speed; } }
     public int Health { get { return health; } set { health = value; } }
+    public float Water { get { return currentWater; }  }
+    public float MaxWater { get { return maxWater; } }
     public bool OnGround { get { return onGround; } }
     public int HitSide { get { return hitSide; } set { hitSide = value; } }
     public Vector2 Velocity { get { return vel; } }
@@ -156,29 +160,23 @@ public class Player : MonoBehaviour, IDamageable
 
     public static void Initialize()
     {
-        Player.isIntro = true;
+        Player._isIntro = true;
     }
 
     void Awake()
     {
         GameObject.Find("Transition").TryGetComponent(out transitionAnimator);
+    }
+
+    void OnEnable()
+    {
         input = Vector2.zero;
+        isFiring = false;
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        _sources = GetComponents<AudioSource>();
-        quackSource = _sources[0];
-        sfxSource = _sources[1];
-
-        if (quackSource == null)
-            Debug.LogError("Quack Source is empty");
-        else if (sfxSource == null)
-            Debug.LogError("SFX source is empty");
-        else
-            quackSource.clip = quack[0];
-
         pos = transform.position;
         speed = baseSpeed;
         dashingTimer = dashingTime;
@@ -199,7 +197,7 @@ public class Player : MonoBehaviour, IDamageable
             projectileList[i].gameObject.SetActive(false);
         }
 
-        if (isIntro)
+        if (_isIntro)
         {
             state = PlayerState.Stopped;
             animState = AnimState.Intro;
@@ -253,7 +251,7 @@ public class Player : MonoBehaviour, IDamageable
         if (currentWater < maxWater)
         {
             currentWater += waterRegen * Time.deltaTime;
-            waterGauge.UpdateBar(currentWater, maxWater);
+            //waterGauge.UpdateBar(currentWater, maxWater);
         }
         if (currentWater > maxWater) currentWater = maxWater;
 
@@ -386,8 +384,7 @@ public class Player : MonoBehaviour, IDamageable
 
             if (dashingCooldownTimer <= 0)
             {
-                anim.PlayFlash();
-                waterGauge.PlayFlash();
+                OnPlayerDashReady();
             }
         }
 
@@ -419,11 +416,11 @@ public class Player : MonoBehaviour, IDamageable
     private void UpdateStopped()
     {
         // If intro animation is playing, wait for it to complete
-        if (isIntro)
+        if (_isIntro)
         {
             if (anim.IsComplete(animState))
             {
-                isIntro = false;
+                _isIntro = false;
                 state = PlayerState.Normal;
                 animState = AnimState.Idle;
             }
@@ -462,7 +459,7 @@ public class Player : MonoBehaviour, IDamageable
         // Once complete, activate game over screen
         if (anim.IsComplete(animState))
         {
-            //gameObject.SetActive(false);
+            gameObject.SetActive(false);
             StartCoroutine(DelayLoadLevel(("GameOver")));
         }
     }    
@@ -472,8 +469,8 @@ public class Player : MonoBehaviour, IDamageable
         if (currentWater >= 5)
         {
             currentWater -= 5;
-            waterGauge.UpdateBar(currentWater, maxWater);
-            anim.PlayShoot();
+            //waterGauge.UpdateBar(currentWater, maxWater);
+            OnPlayerShoot?.Invoke();
 
             // Create projectile instance
             foreach (Projectile bullet in projectileList)
@@ -486,14 +483,17 @@ public class Player : MonoBehaviour, IDamageable
                 {
                     bullet.transform.position = ProjectilePos;
                     bullet.facingRight = facingRight;
+                    bullet.Offset = new Vector2(0, Random.Range(-1f, 1f) * 0.25f);
                     bullet.transform.SetAsLastSibling();
                     bullet.gameObject.SetActive(true);
                     return;
                 }
             }
             Projectile first = projectileManager.GetChild(0).GetComponent<Projectile>();
+            first.gameObject.SetActive(false);
             first.transform.position = ProjectilePos;
             first.facingRight = facingRight;
+            first.Offset = new Vector2(0, Random.Range(-1f, 1f) * 0.25f);
             first.transform.SetAsLastSibling();
             first.gameObject.SetActive(true);
         }
@@ -532,7 +532,7 @@ public class Player : MonoBehaviour, IDamageable
                 wallCoyote.Stop();
                 wallCooldown.Start();
 
-                sfxSource.PlayOneShot(movementSfx[0]);
+                OnPlayerWallJump?.Invoke();
             }
 
             // Jumps if on ground
@@ -543,7 +543,7 @@ public class Player : MonoBehaviour, IDamageable
                 jumpCoyote.Stop();
                 jumpCooldown.Start();
 
-                sfxSource.PlayOneShot(movementSfx[1]);
+                OnPlayerJump?.Invoke();
             }
 
             // Double jumps if in air
@@ -554,9 +554,8 @@ public class Player : MonoBehaviour, IDamageable
                 jumpCount++;
                 currentWater -= 10;
 
-                waterGauge.UpdateBar(currentWater, maxWater);
-                anim.PlayJump();
-                sfxSource.PlayOneShot(movementSfx[1]);
+                //waterGauge.UpdateBar(currentWater, maxWater);
+                OnPlayerAirJump?.Invoke();
             }
         }
 
@@ -569,7 +568,6 @@ public class Player : MonoBehaviour, IDamageable
         // Can only dash if in normal state
         if (state == PlayerState.Normal && dashingCooldownTimer <= 0 && currentWater >= 10)
         {
-            sfxSource.PlayOneShot(movementSfx[2]);
             // Change state to dashing and reset vertical speed
             state = PlayerState.Dashing;
             vel.y = 0;
@@ -577,8 +575,8 @@ public class Player : MonoBehaviour, IDamageable
             // Set dashing speed
             speed = dashingSpeed;
             currentWater -= 10;
-            waterGauge.UpdateBar(currentWater, maxWater);
-            anim.PlayDash();
+            //waterGauge.UpdateBar(currentWater, maxWater);
+            OnPlayerDash?.Invoke();
         }
 
         if (state != PlayerState.Stopped && state != PlayerState.Dead)
@@ -587,22 +585,13 @@ public class Player : MonoBehaviour, IDamageable
 
     private void OnQuack(InputValue value)
     {
-        //Play the quack sound effect when button is pressed
-        int deepQuackPercentage = UnityEngine.Random.Range(0, 100);
-
-        if (deepQuackPercentage <= 10)
-        {
-            quackSource.PlayOneShot(quack[1]);
-        }
-        else if (deepQuackPercentage > 10)
-        {
-            quackSource.PlayOneShot(quack[0]);
-        }
+        OnPlayerQuack?.Invoke();
     }
 
     private void OnShoot(InputValue value)
     {
         isFiring = value.isPressed;
+
         if (state != PlayerState.Stopped && state != PlayerState.Dead)
             if (value.isPressed) hasStarted = true;
     }
@@ -627,7 +616,6 @@ public class Player : MonoBehaviour, IDamageable
         pauseObj.SetActive(!pauseObj.activeSelf);
         HUD.SetActive(!HUD.activeSelf);
         gameObject.SetActive(false);
-
     }
 
     // ========================================================================
@@ -649,6 +637,7 @@ public class Player : MonoBehaviour, IDamageable
         }
         else
         {
+            if (onGround) OnPlayerLand?.Invoke();
             onGround = false;
         }
 
@@ -700,7 +689,7 @@ public class Player : MonoBehaviour, IDamageable
         {
             if (jumpCooldown.IsComplete)
             {
-                if (vel.y > 0 && Math.Abs(vel.x) >= baseSpeed)
+                if (vel.y > 0 && Mathf.Abs(vel.x) >= baseSpeed)
                     vel.y *= Mathf.Pow(airDeccel, 50 * Time.deltaTime);
             }
         }
@@ -709,7 +698,7 @@ public class Player : MonoBehaviour, IDamageable
     public void RefillWater(float amount)
     {
         currentWater += amount;
-        waterGauge.UpdateBar(currentWater, maxWater);
+        //waterGauge.UpdateBar(currentWater, maxWater);
     }
 
     // ========================================================================
