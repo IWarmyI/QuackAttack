@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
+using static AudioSliders;
 
 public class MainMenu : MonoBehaviour
 {
@@ -16,6 +17,8 @@ public class MainMenu : MonoBehaviour
     public GameObject OptionsFirstOption;
     public GameObject CreditsFirstObject;
 
+    public GameObject canvas;
+
     public Animator animator;
     public float transitionDelayTime = 1.0f;
 
@@ -25,11 +28,17 @@ public class MainMenu : MonoBehaviour
     {
         MainMenuButton();
         Time.timeScale = 1.0f;
+        canvas.GetComponent<AudioSource>().volume = musicFloat;
     }
 
     void Awake()
     {
         animator = GameObject.Find("Transition").GetComponent<Animator>();
+    }
+
+    void Update()
+    {
+        canvas.GetComponent<AudioSource>().volume = musicFloat;
     }
 
     public void DifficultyButton()

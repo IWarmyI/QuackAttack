@@ -8,6 +8,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using static PlayerCollision;
+using static AudioSliders;
 
 public class Player : MonoBehaviour, IDamageable
 {
@@ -169,6 +170,8 @@ public class Player : MonoBehaviour, IDamageable
     void Start()
     {
         _sources = GetComponents<AudioSource>();
+        _sources[0].volume = sfxFloat;
+        _sources[1].volume = sfxFloat;
         quackSource = _sources[0];
         sfxSource = _sources[1];
 
