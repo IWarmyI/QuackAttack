@@ -37,8 +37,14 @@ public class Player : MonoBehaviour, IDamageable
     }
 
     // Player State
-    private PlayerState state = PlayerState.Normal;
+    [Header("Stats")]
     [SerializeField] private int health = 1;
+    private PlayerState state = PlayerState.Normal;
+
+    // Water ammo
+    [SerializeField] private float maxWater = 100;
+    private float currentWater = 0;
+    [SerializeField] private float waterRegen = 5;
 
     // Animation
     private AnimState animState = AnimState.Idle;
@@ -106,11 +112,6 @@ public class Player : MonoBehaviour, IDamageable
     private float fireTimer = 0.2f;
     private bool isFiring = false;
     [SerializeField] public List<Projectile> projectileList = new List<Projectile>();
-
-    // Water ammo
-    [SerializeField] private float maxWater = 100;
-    private float currentWater = 0;
-    [SerializeField] private float waterRegen = 5;
 
     // GameObject Components
     [Header("UI")]

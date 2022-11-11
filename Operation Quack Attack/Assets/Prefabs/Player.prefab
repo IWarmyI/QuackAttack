@@ -5123,13 +5123,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health: 1
+  maxWater: 100
+  waterRegen: 2.5
   vel: {x: 0, y: 0}
   baseSpeed: 8.5
   topSpeed: 20
   accelRate: 15
   dashingSpeed: 30
   dashingTime: 0.15
-  dashingCooldown: 0.3
+  dashingCooldown: 0.35
   jumpStrength: 15
   jumpGravity: 40
   fallGravity: 65
@@ -5149,19 +5151,8 @@ MonoBehaviour:
   projectileOffset: {x: 0.4, y: 0.35}
   fireRate: 5
   projectileList: []
-  maxWater: 100
-  currentWater: 0
-  waterRegen: 2.5
-  quack:
-  - {fileID: 8300000, guid: 8f133431776716f4ea93a7ec5c8ba724, type: 3}
-  - {fileID: 8300000, guid: fa9ef772332ecaa4a8480d9b920b1139, type: 3}
-  movementSfx:
-  - {fileID: 8300000, guid: d2652cfc308606d429265f8183b3d7e3, type: 3}
-  - {fileID: 8300000, guid: 07390601828d53b4fad3a573ff59a892, type: 3}
-  - {fileID: 8300000, guid: 8fd7d62adcf1eec4b9ccf5b608805872, type: 3}
   pauseObj: {fileID: 0}
   HUD: {fileID: 0}
-  waterGauge: {fileID: 0}
   transitionAnimator: {fileID: 0}
   transitionDelayTime: 1
 --- !u!114 &5718507700172701313
