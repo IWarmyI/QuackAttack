@@ -460,7 +460,6 @@ public class Player : MonoBehaviour, IDamageable
         // Once complete, activate game over screen
         if (anim.IsComplete(animState))
         {
-            gameObject.SetActive(false);
             StartCoroutine(DelayLoadLevel(("GameOver")));
         }
     }    
