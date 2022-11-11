@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static AudioSliders;
 
 public class PlayerAudio : MonoBehaviour
 {
@@ -21,6 +22,8 @@ public class PlayerAudio : MonoBehaviour
             Debug.LogError("Player Audio component requires a Player component.");
 
         _sources = GetComponents<AudioSource>();
+        _sources[0].volume = sfxFloat;
+        _sources[1].volume = sfxFloat;
         quackSource = _sources[0];
         sfxSource = _sources[1];
 

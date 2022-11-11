@@ -5,6 +5,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using TMPro;
 using static HUDTimer;
+using static AudioSliders;
 
 public class Stats : MonoBehaviour
 {
@@ -13,6 +14,8 @@ public class Stats : MonoBehaviour
 
     public GameObject mainmenuButton;
     public GameObject nextLevelButton;
+
+    public GameObject canvas;
 
     public int levelNum;
 
@@ -32,6 +35,8 @@ public class Stats : MonoBehaviour
 
         EventSystem.current.SetSelectedGameObject(null);
         EventSystem.current.SetSelectedGameObject(mainmenuButton);
+
+        canvas.GetComponent<AudioSource>().volume = musicFloat;
     }
 
     void Awake()

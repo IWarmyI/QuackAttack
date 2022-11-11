@@ -4,20 +4,23 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Audio;
 
-[RequireComponent( typeof (Slider))]
 public class AudioSliders : MonoBehaviour
 {
-    Slider slider
+    public Slider music, sfx;
+    public static float musicFloat, sfxFloat = 1f;
+
+    void Start ()
     {
-        get { return GetComponent<Slider>(); }
+        musicFloat = 1f;
+        sfxFloat = 1f;
+        music.value = musicFloat;
+        sfx.value = sfxFloat;
     }
 
-    public AudioMixer mixer;
-    public string volumeName;
-
-    // Update is called once per frame
-    public void UpdateValueOnChange(float value)
+    public void UpdateSound()
     {
-        mixer.SetFloat(volumeName, Mathf.Log(value) * 20.0f);
+        musicFloat = music.value;
+
+        sfxFloat = sfx.value;
     }
 }
