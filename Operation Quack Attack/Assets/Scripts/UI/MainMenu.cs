@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 using static AudioSliders;
 
 public class MainMenu : MonoBehaviour
@@ -22,12 +23,20 @@ public class MainMenu : MonoBehaviour
     public Animator animator;
     public float transitionDelayTime = 1.0f;
 
+    private static bool firstTime = true;
 
     // Start is called before the first frame update
     void Start()
     {
         MainMenuButton();
         Time.timeScale = 1.0f;
+
+        if (firstTime)
+        {
+            musicFloat = 1.0f;
+            sfxFloat = 1.0f;
+        }
+
         canvas.GetComponent<AudioSource>().volume = musicFloat;
     }
 
@@ -50,6 +59,7 @@ public class MainMenu : MonoBehaviour
 
     public void TutorialButton()
     {
+        firstTime = false;
         //Play Tutorial
         Player.Initialize();
         //SceneManager.LoadScene("TutorialChallenge");

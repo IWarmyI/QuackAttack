@@ -7,20 +7,22 @@ using UnityEngine.Audio;
 public class AudioSliders : MonoBehaviour
 {
     public Slider music, sfx;
-    public static float musicFloat, sfxFloat = 1f;
+    public static float musicFloat;
+    public static float sfxFloat;
 
-    void Start ()
+    void OnEnable()
     {
-        musicFloat = 1f;
-        sfxFloat = 1f;
         music.value = musicFloat;
         sfx.value = sfxFloat;
     }
 
-    public void UpdateSound()
+    public void UpdateMusic()
     {
         musicFloat = music.value;
+    }
 
+    public void UpdateSFX()
+    {
         sfxFloat = sfx.value;
     }
 }

@@ -37,6 +37,8 @@ public class Stats : MonoBehaviour
         EventSystem.current.SetSelectedGameObject(mainmenuButton);
 
         canvas.GetComponent<AudioSource>().volume = musicFloat;
+        Debug.Log(musicFloat);
+        Debug.Log(sfxFloat);
     }
 
     void Awake()
