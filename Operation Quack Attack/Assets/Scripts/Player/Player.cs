@@ -50,13 +50,17 @@ public class Player : MonoBehaviour, IDamageable
     private AnimState animState = AnimState.Idle;
     private PlayerAnimation anim;
     private bool hasStarted = false;
-    private static bool _isIntro = true;
 
     // Position and Input
     private Vector2 pos;
     private Vector2 input = Vector2.zero;
     private Vector2 oldInput = Vector2.zero;
     private bool facingRight = true;
+
+    // Restart
+    private static bool _isIntro = true;
+    private static bool _isRespawn = false;
+    private static Vector2 _respawnPos = Vector2.zero;
 
     // Ground Movement
     [Header("Movement")]
@@ -161,7 +165,25 @@ public class Player : MonoBehaviour, IDamageable
 
     public static void Initialize()
     {
-        Player._isIntro = true;
+        _isIntro = true;
+        _isRespawn = false;
+        _respawnPos = Vector2.zero;
+    }
+
+    public static void Respawn(Vector2 position)
+    {
+        _isRespawn = true;
+        _respawnPos = position;
+    }
+
+    private void Reposition(Vector2 position, bool facingRight = true)
+    {
+        transform.position = position;
+        rb.position = position;
+        rb.velocity = Vector2.zero;
+        pos = transform.position;
+
+        this.facingRight = facingRight;
     }
 
     void Awake()
@@ -202,6 +224,10 @@ public class Player : MonoBehaviour, IDamageable
         {
             state = PlayerState.Stopped;
             animState = AnimState.Intro;
+        }
+        if (_isRespawn)
+        {
+            Reposition(_respawnPos);
         }
     }
 
