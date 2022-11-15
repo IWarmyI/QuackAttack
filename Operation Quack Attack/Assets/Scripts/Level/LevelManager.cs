@@ -1,31 +1,111 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class LevelManager : MonoBehaviour
 {
-    [SerializeField] private Player player;
-    [SerializeField] private List<Checkpoint> checkpoints = new List<Checkpoint>();
-    
-    public Player Player { get => player; }
-    public List<Checkpoint> Checkpoints { get => checkpoints; }
+    public static int CurrentLevel = -1;
+    public const int FirstLevel = 1;
+    public static string[] MenuLevels = { "MainMenu", "Stats", "GameOver" };
 
-    // Start is called before the first frame update
-    void Start()
+    public static LevelManager Instance;
+
+    public Animator transitionAnimator;
+    public float transitionDelayTime = 1.0f;
+    public bool isLoading;
+
+    private void Awake()
     {
-        
+        if (Instance != null)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
+        SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
-    // Update is called once per frame
-    void Update()
+    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        
+        string name = SceneManager.GetActiveScene().name;
+
+        if (!MenuLevels.Contains(name))
+        {
+            CurrentLevel = SceneManager.GetActiveScene().buildIndex;
+        }
+
+        Debug.Log($"Current Level: {CurrentLevel}");
     }
 
-    public void Respawn(Checkpoint checkpoint)
+    public void LoadScene(string sceneName)
     {
-        Player.Respawn(checkpoint.position);
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        StartCoroutine(DelayLoadLevel(sceneName));
+    }
+
+    public void MainMenu()
+    {
+        LoadScene("MainMenu");
+    }
+
+    public void NewGame()
+    {
+        LoadNewLevel(FirstLevel);
+    }
+
+    public void RestartLevel()
+    {
+        LoadNewLevel(CurrentLevel);
+    }
+
+    public void NextLevel()
+    {
+        LoadNewLevel(CurrentLevel + 1);
+    }
+
+    public void Respawn()
+    {
+        StartCoroutine(DelayLoadLevel(CurrentLevel));
+    }
+
+    public void LoadNewLevel(int level, bool transition = true)
+    {
+        Player.Initialize();
+        CheckpointManager.Initialize();
+        CurrentLevel = level;
+        if (transition)
+            StartCoroutine(DelayLoadLevel(level));
+        else
+            SceneManager.LoadScene(level);
+    }
+
+    private IEnumerator DelayLoadLevel(int sceneID)
+    {
+        if (!isLoading)
+        {
+            if (transitionAnimator != null)
+            transitionAnimator.SetTrigger("TriggerTransition");
+            isLoading = true;
+            yield return new WaitForSeconds(transitionDelayTime);
+            isLoading = false;
+            SceneManager.LoadScene(sceneID);
+        }
+    }
+
+    private IEnumerator DelayLoadLevel(string sceneName)
+    {
+        if (!isLoading)
+        {
+            if (transitionAnimator != null)
+                transitionAnimator.SetTrigger("TriggerTransition");
+            isLoading = true;
+            yield return new WaitForSeconds(transitionDelayTime);
+            isLoading = false;
+            SceneManager.LoadScene(sceneName);
+        }
     }
 }

@@ -8,19 +8,15 @@ public class GameOverScript : MonoBehaviour
 {
     public GameObject firstOption;
 
-    public Animator animator;
-    public float transitionDelayTime = 1.0f;
+    private LevelManager levelManager;
 
     // Start is called before the first frame update
     void Start()
     {
+        levelManager = GameObject.FindWithTag("LevelManager").GetComponent<LevelManager>();
+
         EventSystem.current.SetSelectedGameObject(null);
         EventSystem.current.SetSelectedGameObject(firstOption);
-    }
-
-    void Awake()
-    {
-        animator = GameObject.Find("Transition").GetComponent<Animator>();
     }
 
     // Update is called once per frame
@@ -31,18 +27,11 @@ public class GameOverScript : MonoBehaviour
 
     public void Restart()
     {
-        StartCoroutine(DelayLoadLevel("TutorialChallenge"));
+        levelManager.LoadScene("TutorialChallenge");
     }
 
     public void BacktoMainMenu()
     {
-        StartCoroutine(DelayLoadLevel("MainMenu"));
-    }
-
-    IEnumerator DelayLoadLevel(string sceneName)
-    {
-        animator.SetTrigger("TriggerTransition");
-        yield return new WaitForSeconds(transitionDelayTime);
-        SceneManager.LoadScene(sceneName);
+        levelManager.RestartLevel();
     }
 }

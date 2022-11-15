@@ -1,29 +1,58 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Checkpoint : MonoBehaviour
 {
-    [SerializeField] LevelManager levelManager;
-    public Vector2 position = Vector2.zero;
+    [SerializeField] private Vector2 respawnOffset = Vector2.zero;
+    private bool isActivated = false;
 
-    // Start is called before the first frame update
-    void Start()
+    public Vector2 RespawnPosition { get => (Vector2) transform.position + respawnOffset; }
+    public bool IsActivated { get => isActivated; set => isActivated = value; }
+
+    public delegate void CheckpointEvent(Checkpoint cp);
+    public event CheckpointEvent OnActivated;
+
+    public void Activate()
     {
-        position = (Vector2)transform.position + Vector2.left;
+        if (isActivated) return;
+
+        SetComplete();
+        Player.Respawn(RespawnPosition);
+        OnActivated?.Invoke(this);
     }
 
-    // Update is called once per frame
-    void Update()
+    public void SetComplete()
     {
-
+        isActivated = true;
+        gameObject.SetActive(false);
     }
+
+    public void Restart()
+    {
+        isActivated = false;
+        gameObject.SetActive(true);
+    }
+
     private void OnTriggerEnter2D(Collider2D collider)
     {
+        if (isActivated) return;
+
         if (collider.gameObject.CompareTag("Player"))
         {
-            levelManager.Respawn(this);
-            Debug.Log("TriggerEnter");
+            Activate();
         }
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.green;
+        Gizmos.DrawLine(
+            RespawnPosition + new Vector2(-0.5f, -0.5f),
+            RespawnPosition + new Vector2(0.5f, -0.5f));
+        Gizmos.DrawLine(
+            RespawnPosition + Vector2.up * 0.5f,
+            RespawnPosition + Vector2.down * 0.5f);
     }
 }
