@@ -43,6 +43,8 @@ public class LevelManager : MonoBehaviour
         {
             IsLastLevel = true;
         }
+
+        Debug.Log($"Current Level: {CurrentLevel}");
     }
 
     public void LoadScene(string sceneName)
