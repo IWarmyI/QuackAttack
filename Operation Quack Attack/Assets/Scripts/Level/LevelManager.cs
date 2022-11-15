@@ -9,7 +9,8 @@ public class LevelManager : MonoBehaviour
 {
     public static int CurrentLevel = -1;
     public const int FirstLevel = 1;
-    public static string[] MenuLevels = { "MainMenu", "Stats", "GameOver" };
+    public static bool IsLastLevel = false;
+    public static string[] MenuLevels = { "MainMenu", "EndLevel", "GameOver" };
 
     public static LevelManager Instance;
 
@@ -38,8 +39,10 @@ public class LevelManager : MonoBehaviour
         {
             CurrentLevel = SceneManager.GetActiveScene().buildIndex;
         }
-
-        Debug.Log($"Current Level: {CurrentLevel}");
+        else
+        {
+            IsLastLevel = true;
+        }
     }
 
     public void LoadScene(string sceneName)

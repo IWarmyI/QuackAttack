@@ -27,8 +27,29 @@ public class CheckpointManager : MonoBehaviour
             Instance = this;
             DontDestroyOnLoad(gameObject);
         }
+
+        SceneManager.sceneLoaded += OnSceneLoaded;
     }
-    
+
+    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        if (Instance == null && Level == LevelManager.CurrentLevel)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+            SceneManager.sceneLoaded += OnSceneLoaded;
+        }
+
+        if (RestartFlag)
+        {
+            foreach (Checkpoint cp in checkpoints)
+            {
+                //cp.gameObject.SetActive(true);
+                cp.Restart();
+            }
+        }
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -36,15 +57,11 @@ public class CheckpointManager : MonoBehaviour
         foreach (Transform child in transform)
         {
             Checkpoint cp = child.GetComponent<Checkpoint>();
+
             checkpoints.Add(cp);
             cp.OnActivated += UpdateCheckpoints;
-
-            if (RestartFlag)
-            {
-                cp.Restart();
-                RestartFlag = false;
-            }
         }
+        if (RestartFlag) RestartFlag = false;
     }
 
     public static void Initialize()

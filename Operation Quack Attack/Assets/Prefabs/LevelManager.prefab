@@ -59,7 +59,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 4
   m_TargetDisplay: 0
 --- !u!114 &5214206388682325809
 MonoBehaviour:
@@ -198,7 +198,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1413094895158535983, guid: c818be162face5248a2d1eaa474b30fb, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 1775
+      value: 2048
       objectReference: {fileID: 0}
     - target: {fileID: 1413094895158535983, guid: c818be162face5248a2d1eaa474b30fb, type: 3}
       propertyPath: m_SizeDelta.y
@@ -226,7 +226,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1413094895158535983, guid: c818be162face5248a2d1eaa474b30fb, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: -20
       objectReference: {fileID: 0}
     - target: {fileID: 1413094895158535983, guid: c818be162face5248a2d1eaa474b30fb, type: 3}
       propertyPath: m_LocalRotation.w
@@ -246,7 +246,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1413094895158535983, guid: c818be162face5248a2d1eaa474b30fb, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -1437.4
+      value: -1574
       objectReference: {fileID: 0}
     - target: {fileID: 1413094895158535983, guid: c818be162face5248a2d1eaa474b30fb, type: 3}
       propertyPath: m_AnchoredPosition.y

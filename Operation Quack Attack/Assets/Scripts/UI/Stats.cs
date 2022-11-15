@@ -35,9 +35,12 @@ public class Stats : MonoBehaviour
         EventSystem.current.SetSelectedGameObject(null);
         EventSystem.current.SetSelectedGameObject(mainmenuButton);
 
+        if (LevelManager.IsLastLevel)
+            nextLevelButton.SetActive(false);
+        else
+            nextLevelButton.SetActive(true);
+
         canvas.GetComponent<AudioSource>().volume = musicFloat;
-        Debug.Log(musicFloat);
-        Debug.Log(sfxFloat);
     }
 
     public void MainMenuButton()
@@ -48,5 +51,10 @@ public class Stats : MonoBehaviour
     public void NextLevelButton()
     {
         levelManager.NextLevel();
+    }
+
+    public void RestartLevelButton()
+    {
+        levelManager.RestartLevel();
     }
 }
