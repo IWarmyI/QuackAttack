@@ -10,6 +10,7 @@ TagManager:
   - EndLevel
   - Tutorial
   - PickUp
+  - LevelManager
   layers:
   - Default
   - TransparentFX

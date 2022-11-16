@@ -19,15 +19,15 @@ public class MainMenu : MonoBehaviour
     public GameObject CreditsFirstObject;
 
     public GameObject canvas;
-
-    public Animator animator;
-    public float transitionDelayTime = 1.0f;
+    public LevelManager levelManager;
 
     private static bool firstTime = true;
 
     // Start is called before the first frame update
     void Start()
     {
+        levelManager = GameObject.FindWithTag("LevelManager").GetComponent<LevelManager>();
+
         MainMenuButton();
         Time.timeScale = 1.0f;
 
@@ -36,13 +36,7 @@ public class MainMenu : MonoBehaviour
             musicFloat = 1.0f;
             sfxFloat = 1.0f;
         }
-
         canvas.GetComponent<AudioSource>().volume = musicFloat;
-    }
-
-    void Awake()
-    {
-        animator = GameObject.Find("Transition").GetComponent<Animator>();
     }
 
     void Update()
@@ -62,8 +56,7 @@ public class MainMenu : MonoBehaviour
         firstTime = false;
         //Play Tutorial
         Player.Initialize();
-        //SceneManager.LoadScene("TutorialChallenge");
-        StartCoroutine(DelayLoadLevel("TutorialChallenge"));
+        levelManager.NewGame();
     }
 
     public void StartButton()
@@ -113,17 +106,5 @@ public class MainMenu : MonoBehaviour
 
         EventSystem.current.SetSelectedGameObject(null);
         EventSystem.current.SetSelectedGameObject(CreditsFirstObject);
-    }
-
-    public void SecondTutorialButton()
-    {
-        StartCoroutine(DelayLoadLevel("TutorialChallenge"));
-    }
-
-    IEnumerator DelayLoadLevel(string sceneName)
-    {
-        animator.SetTrigger("TriggerTransition");
-        yield return new WaitForSeconds(transitionDelayTime);
-        SceneManager.LoadScene(sceneName);
     }
 }

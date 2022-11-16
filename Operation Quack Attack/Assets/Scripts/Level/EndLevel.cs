@@ -5,19 +5,18 @@ using UnityEngine.SceneManagement;
 
 public class EndLevel : MonoBehaviour
 {
-    public Animator animator;
-    public float transitionDelayTime = 1.0f;
+    private LevelManager levelManager;
 
-    void Awake()
+    void Start()
     {
-        animator = GameObject.Find("Transition").GetComponent<Animator>();
+        levelManager = GameObject.FindWithTag("LevelManager").GetComponent<LevelManager>();
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            StartCoroutine(DelayLoadLevel(("EndLevel")));
+            levelManager.LoadScene("EndLevel");
         }
     }
 
@@ -25,14 +24,7 @@ public class EndLevel : MonoBehaviour
     {
         if (collider.gameObject.CompareTag("Player"))
         {
-            StartCoroutine(DelayLoadLevel(("EndLevel")));
+            levelManager.LoadScene("EndLevel");
         }
-    }
-
-    IEnumerator DelayLoadLevel(string sceneName)
-    {
-        animator.SetTrigger("TriggerTransition");
-        yield return new WaitForSeconds(transitionDelayTime);
-        SceneManager.LoadScene(sceneName);
     }
 }

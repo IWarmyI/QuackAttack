@@ -50,13 +50,17 @@ public class Player : MonoBehaviour, IDamageable
     private AnimState animState = AnimState.Idle;
     private PlayerAnimation anim;
     private bool hasStarted = false;
-    private static bool _isIntro = true;
 
     // Position and Input
     private Vector2 pos;
     private Vector2 input = Vector2.zero;
     private Vector2 oldInput = Vector2.zero;
     private bool facingRight = true;
+
+    // Restart
+    private static bool _isIntro = true;
+    private static bool _isRespawn = false;
+    private static Vector2 _respawnPos = Vector2.zero;
 
     // Ground Movement
     [Header("Movement")]
@@ -90,7 +94,7 @@ public class Player : MonoBehaviour, IDamageable
     [SerializeField] private float topAirSpeed = 10;
 
     private bool onGround = true;
-    [SerializeField] private Timer jumpCoyote = new Timer(0.2f);
+    [SerializeField] private Timer jumpCoyote = new Timer(0.2f, true);
     private Timer jumpCooldown;
     private const float airDeccel = 0.96f; // Air Resistance
 
@@ -99,7 +103,7 @@ public class Player : MonoBehaviour, IDamageable
 
     private bool onWall = false;
     private int wallSide = 0;
-    [SerializeField] private Timer wallCoyote = new Timer(0.2f);
+    [SerializeField] private Timer wallCoyote = new Timer(0.2f, true);
     private Timer wallCooldown;
     private const float wallDeccel = 0.8f; // Wall Friction
 
@@ -117,8 +121,7 @@ public class Player : MonoBehaviour, IDamageable
     [Header("UI")]
     [SerializeField] private GameObject pauseObj;
     [SerializeField] private GameObject HUD;
-    //[SerializeField] private WaterGauge waterGauge;
-    private SpriteRenderer spr;
+    private LevelManager levelManager;
     private Rigidbody2D rb;
 
     // Events
@@ -155,18 +158,30 @@ public class Player : MonoBehaviour, IDamageable
     }
     private float FireTime { get { return 1.0f / fireRate; } }
 
-    public Animator transitionAnimator;
-    public float transitionDelayTime = 1.0f;
-
-
     public static void Initialize()
     {
-        Player._isIntro = true;
+        _isIntro = true;
+        _isRespawn = false;
+        _respawnPos = Vector2.zero;
+
+        CheckpointManager.Initialize();
+        HUDTimer.Initialize();
     }
 
-    void Awake()
+    public static void Respawn(Vector2 position)
     {
-        GameObject.Find("Transition").TryGetComponent(out transitionAnimator);
+        _isRespawn = true;
+        _respawnPos = position;
+    }
+
+    private void Reposition(Vector2 position, bool facingRight = true)
+    {
+        transform.position = position;
+        rb.position = position;
+        rb.velocity = Vector2.zero;
+        pos = transform.position;
+
+        this.facingRight = facingRight;
     }
 
     void OnEnable()
@@ -178,6 +193,8 @@ public class Player : MonoBehaviour, IDamageable
     // Start is called before the first frame update
     void Start()
     {
+        levelManager = GameObject.FindWithTag("LevelManager").GetComponent<LevelManager>();
+
         pos = transform.position;
         speed = baseSpeed;
         dashingTimer = dashingTime;
@@ -187,7 +204,6 @@ public class Player : MonoBehaviour, IDamageable
         jumpCooldown = new Timer(jumpCoyote.MaxTime);
         wallCooldown = new Timer(wallCoyote.MaxTime / 2);
 
-        spr = GetComponentInChildren<SpriteRenderer>();
         rb = GetComponentInChildren<Rigidbody2D>();
         col = gameObject.GetOrAddComponent<PlayerCollision>();
         anim = GetComponentInChildren<PlayerAnimation>();
@@ -202,6 +218,10 @@ public class Player : MonoBehaviour, IDamageable
         {
             state = PlayerState.Stopped;
             animState = AnimState.Intro;
+        }
+        if (_isRespawn)
+        {
+            Reposition(_respawnPos);
         }
     }
 
@@ -460,7 +480,7 @@ public class Player : MonoBehaviour, IDamageable
         // Once complete, activate game over screen
         if (anim.IsComplete(animState))
         {
-            StartCoroutine(DelayLoadLevel(("GameOver")));
+            levelManager.Respawn();
         }
     }    
 
@@ -598,8 +618,10 @@ public class Player : MonoBehaviour, IDamageable
 
     public void OnRestart(InputValue value)
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         Time.timeScale = 1.0f;
+        if (!LevelManager.GamemodeCheckpoints)
+            HUDTimer.Initialize();
+        levelManager.Respawn();
     }
 
     private void OnPauseToggle(InputValue value)
@@ -614,7 +636,7 @@ public class Player : MonoBehaviour, IDamageable
         }
 
         pauseObj.SetActive(!pauseObj.activeSelf);
-        HUD.SetActive(!HUD.activeSelf);
+        //HUD.SetActive(!HUD.activeSelf);
         gameObject.SetActive(false);
     }
 
@@ -740,13 +762,5 @@ public class Player : MonoBehaviour, IDamageable
         state = PlayerState.Dead;
         Vector2 knockback = new Vector2(hitSide, 0.5f);
         vel = knockback * jumpStrength;
-    }
-
-    IEnumerator DelayLoadLevel(string sceneName)
-    {
-        if (transitionAnimator != null)
-            transitionAnimator.SetTrigger("TriggerTransition");
-        yield return new WaitForSeconds(transitionDelayTime);
-        SceneManager.LoadScene(sceneName);
     }
 }
