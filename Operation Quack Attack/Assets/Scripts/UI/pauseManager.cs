@@ -39,15 +39,17 @@ public class pauseManager : MonoBehaviour
     public void Restart()
     {
         Time.timeScale = 1.0f;
-        levelManager.Respawn();
+        if (!LevelManager.GamemodeCheckpoints)
+            HUDTimer.Initialize();
         player.SetActive(true);
+        levelManager.Respawn();
     }
 
     public void RestartLevel()
     {
         Time.timeScale = 1.0f;
-        levelManager.RestartLevel();
         player.SetActive(true);
+        levelManager.RestartLevel();
     }
 
 
