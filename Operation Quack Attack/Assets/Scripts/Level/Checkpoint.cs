@@ -5,8 +5,8 @@ using UnityEngine.SceneManagement;
 
 public class Checkpoint : MonoBehaviour
 {
-    [SerializeField] private Vector2 respawnOffset = Vector2.zero;
-    private bool isActivated = false;
+    [SerializeField] protected Vector2 respawnOffset = Vector2.zero;
+    protected bool isActivated = false;
 
     public Vector2 RespawnPosition { get => (Vector2) transform.position + respawnOffset; }
     public bool IsActivated { get => isActivated; set => isActivated = value; }
@@ -14,7 +14,7 @@ public class Checkpoint : MonoBehaviour
     public delegate void CheckpointEvent(Checkpoint cp);
     public event CheckpointEvent OnActivated;
 
-    public void Activate()
+    public virtual void Activate()
     {
         if (isActivated) return;
 
@@ -23,16 +23,14 @@ public class Checkpoint : MonoBehaviour
         OnActivated?.Invoke(this);
     }
 
-    public void SetComplete()
+    public virtual void SetComplete()
     {
         isActivated = true;
-        gameObject.SetActive(false);
     }
 
-    public void Restart()
+    public virtual void Restart()
     {
         isActivated = false;
-        gameObject.SetActive(true);
     }
 
     private void OnTriggerEnter2D(Collider2D collider)

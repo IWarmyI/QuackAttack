@@ -44,13 +44,14 @@ public class CheckpointManager : MonoBehaviour
         }
 
         // Restart checkpoints if desired
-        if (RestartFlag)
+        foreach (Checkpoint cp in checkpoints)
         {
-            foreach (Checkpoint cp in checkpoints)
-            {
+            if (RestartFlag)
                 cp.Restart();
-            }
+            else if (cp.IsActivated)
+                cp.SetComplete();
         }
+        RestartFlag = false;
     }
 
     // Start is called before the first frame update
