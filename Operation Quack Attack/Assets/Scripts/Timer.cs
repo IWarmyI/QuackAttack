@@ -10,8 +10,8 @@ public class Timer
 
     [SerializeField] private float time;
     [SerializeField] private float currentTime;
-    private event TimerCallback OnTimerComplete;
     [SerializeField] private bool isPaused = false;
+    private event TimerCallback OnTimerComplete;
 
     public bool IsReady { get { return currentTime == time; } }
     public bool IsComplete { get { return currentTime <= 0; } }
@@ -20,13 +20,18 @@ public class Timer
     public float MaxTime { get { return time; } }
     public float CurrentTime { get { return currentTime; } }
 
-    public Timer(float time, TimerCallback timerCallback)
+    public Timer(float time, bool startComplete, TimerCallback timerCallback)
     {
         this.time = time;
         this.currentTime = 0;
         this.OnTimerComplete = timerCallback;
+        if (startComplete) this.currentTime = time;
     }
-    public Timer(float time) : this(time, null)
+    public Timer(float time, TimerCallback timerCallback) :
+        this(time, false, timerCallback)
+    { }
+    public Timer(float time, bool startComplete = false) :
+        this (time, startComplete, null)
     { }
 
     public void Update()

@@ -94,7 +94,7 @@ public class Player : MonoBehaviour, IDamageable
     [SerializeField] private float topAirSpeed = 10;
 
     private bool onGround = true;
-    [SerializeField] private Timer jumpCoyote = new Timer(0.2f);
+    [SerializeField] private Timer jumpCoyote = new Timer(0.2f, true);
     private Timer jumpCooldown;
     private const float airDeccel = 0.96f; // Air Resistance
 
@@ -103,7 +103,7 @@ public class Player : MonoBehaviour, IDamageable
 
     private bool onWall = false;
     private int wallSide = 0;
-    [SerializeField] private Timer wallCoyote = new Timer(0.2f);
+    [SerializeField] private Timer wallCoyote = new Timer(0.2f, true);
     private Timer wallCooldown;
     private const float wallDeccel = 0.8f; // Wall Friction
 
@@ -634,7 +634,7 @@ public class Player : MonoBehaviour, IDamageable
         }
 
         pauseObj.SetActive(!pauseObj.activeSelf);
-        HUD.SetActive(!HUD.activeSelf);
+        //HUD.SetActive(!HUD.activeSelf);
         gameObject.SetActive(false);
     }
 
