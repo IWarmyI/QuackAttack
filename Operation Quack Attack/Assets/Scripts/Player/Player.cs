@@ -618,8 +618,10 @@ public class Player : MonoBehaviour, IDamageable
 
     public void OnRestart(InputValue value)
     {
-        levelManager.Respawn();
         Time.timeScale = 1.0f;
+        if (!LevelManager.GamemodeCheckpoints)
+            HUDTimer.Initialize();
+        levelManager.Respawn();
     }
 
     private void OnPauseToggle(InputValue value)

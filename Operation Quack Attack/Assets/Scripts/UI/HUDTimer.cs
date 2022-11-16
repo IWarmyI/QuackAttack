@@ -58,7 +58,7 @@ public class HUDTimer : MonoBehaviour
         string text = $"<mspace=0.95em>{min:00}</mspace>" +
                       $"'<mspace=0.95em>{sec:00}</mspace>" +
                       $"''<mspace=0.95em>{mil:00}</mspace>\n";
-        text += $"Water {(int)water}\n";
+        //text += $"Water {(int)water}\n";
         hud.text = text;
     }
 }

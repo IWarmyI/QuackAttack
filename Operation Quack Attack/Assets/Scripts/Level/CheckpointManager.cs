@@ -46,6 +46,9 @@ public class CheckpointManager : MonoBehaviour
         // Restart checkpoints if desired
         foreach (Checkpoint cp in checkpoints)
         {
+            if (!LevelManager.GamemodeCheckpoints)
+                cp.gameObject.SetActive(false);
+
             if (RestartFlag)
                 cp.Restart();
             else if (cp.IsActivated)
@@ -62,8 +65,15 @@ public class CheckpointManager : MonoBehaviour
         {
             Checkpoint cp = child.GetComponent<Checkpoint>();
 
-            checkpoints.Add(cp);
-            cp.OnActivated += UpdateCheckpoints;
+            if (!LevelManager.GamemodeCheckpoints)
+            {
+                cp.gameObject.SetActive(false);
+            }
+            else
+            {
+                checkpoints.Add(cp);
+                cp.OnActivated += UpdateCheckpoints;
+            }
         }
         if (RestartFlag) RestartFlag = false;
     }

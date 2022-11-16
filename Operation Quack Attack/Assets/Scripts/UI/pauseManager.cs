@@ -8,6 +8,9 @@ using UnityEngine.InputSystem;
 public class pauseManager : MonoBehaviour
 {
     public GameObject FirstOption;
+    public GameObject RestartButton;
+    public GameObject CheckpointButtons;
+
     public GameObject pauseObj;
     public GameObject player;
 
@@ -16,6 +19,12 @@ public class pauseManager : MonoBehaviour
     void Start()
     {
         levelManager = GameObject.FindWithTag("LevelManager").GetComponent<LevelManager>();
+
+        if (RestartButton != null)
+            RestartButton.SetActive(!LevelManager.GamemodeCheckpoints);
+
+        if (CheckpointButtons != null)
+            CheckpointButtons.SetActive(LevelManager.GamemodeCheckpoints);
 
         EventSystem.current.SetSelectedGameObject(null);
         EventSystem.current.SetSelectedGameObject(FirstOption);

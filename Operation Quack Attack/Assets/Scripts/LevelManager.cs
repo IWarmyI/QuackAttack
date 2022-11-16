@@ -14,6 +14,8 @@ public class LevelManager : MonoBehaviour
     public static bool IsInGame = false;
     public static string[] MenuLevels = { "MainMenu", "EndLevel", "GameOver" };
 
+    public static bool GamemodeCheckpoints = true;
+
     public static LevelManager Instance;
 
     public Animator transitionAnimator;
