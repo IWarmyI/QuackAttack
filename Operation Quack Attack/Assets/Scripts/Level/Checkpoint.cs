@@ -38,9 +38,13 @@ public class Checkpoint : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collider)
     {
         if (isActivated) return;
+        if (collider.isTrigger) return;
 
         if (collider.gameObject.CompareTag("Player"))
         {
+            Player player = collider.gameObject.GetComponentInParent<Player>();
+            if (player.State == Player.PlayerState.Dead) return;
+
             Activate();
         }
     }

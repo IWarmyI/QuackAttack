@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6862023376413928738}
-  - component: {fileID: 6862023376413928736}
+  - component: {fileID: 7366551265416460921}
   - component: {fileID: 5174173645267102345}
   m_Layer: 0
   m_Name: Pen
@@ -34,7 +34,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!70 &6862023376413928736
+--- !u!70 &7366551265416460921
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -48,7 +48,7 @@ CapsuleCollider2D:
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
-  m_Size: {x: 0.75, y: 1.5}
+  m_Size: {x: 1, y: 1.5}
   m_Direction: 0
 --- !u!114 &5174173645267102345
 MonoBehaviour:
