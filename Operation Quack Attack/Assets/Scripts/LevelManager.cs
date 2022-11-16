@@ -11,6 +11,7 @@ public class LevelManager : MonoBehaviour
     public const int FirstLevel = 1;
     public const int NumberOfLevels = 2;
     public static bool IsLastLevel = false;
+    public static bool IsInGame = false;
     public static string[] MenuLevels = { "MainMenu", "EndLevel", "GameOver" };
 
     public static LevelManager Instance;
@@ -39,11 +40,16 @@ public class LevelManager : MonoBehaviour
         if (!MenuLevels.Contains(name))
         {
             CurrentLevel = SceneManager.GetActiveScene().buildIndex;
+            IsInGame = false;
+        }
+        else
+        {
+            IsInGame = true;
         }
 
         IsLastLevel = CurrentLevel + 1 == FirstLevel + NumberOfLevels;
 
-        Debug.Log($"Current Level: {CurrentLevel}");
+        //Debug.Log($"Current Level: {CurrentLevel}");
     }
 
     public void LoadScene(string sceneName)

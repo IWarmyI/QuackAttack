@@ -16,35 +16,38 @@ public class CheckpointManager : MonoBehaviour
 
     private void Awake()
     {
+        // Destroy new checkpoints if checkpoints of same level already exist
         if (Instance != null && Level == Instance.Level)
         {
             Destroy(gameObject);
             return;
         }
 
-        if (Level == LevelManager.CurrentLevel)
-        {
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-
+        // Attach onload event
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
+        // Keep checkpoints if checkpoints match current level
         if (Instance == null && Level == LevelManager.CurrentLevel)
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
-            SceneManager.sceneLoaded += OnSceneLoaded;
+        }
+        // Destroy old checkpoints if it doesn't, or if you're in the main menu
+        else if (Level != LevelManager.CurrentLevel || SceneManager.GetActiveScene().buildIndex == 0)
+        {
+            Instance = null;
+            SceneManager.sceneLoaded -= OnSceneLoaded;
+            Destroy(gameObject);
         }
 
+        // Restart checkpoints if desired
         if (RestartFlag)
         {
             foreach (Checkpoint cp in checkpoints)
             {
-                //cp.gameObject.SetActive(true);
                 cp.Restart();
             }
         }
@@ -64,17 +67,13 @@ public class CheckpointManager : MonoBehaviour
         if (RestartFlag) RestartFlag = false;
     }
 
+    // Restart all checkpoints
     public static void Initialize()
     {
         RestartFlag = true;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
+    // Activates all checkpoints before the furthest checkpoint touched
     private void UpdateCheckpoints(Checkpoint e)
     {
         int last = checkpoints.IndexOf(e);
