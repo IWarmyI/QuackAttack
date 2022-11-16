@@ -163,6 +163,9 @@ public class Player : MonoBehaviour, IDamageable
         _isIntro = true;
         _isRespawn = false;
         _respawnPos = Vector2.zero;
+
+        CheckpointManager.Initialize();
+        HUDTimer.Initialize();
     }
 
     public static void Respawn(Vector2 position)

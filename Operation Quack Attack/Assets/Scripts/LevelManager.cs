@@ -18,7 +18,7 @@ public class LevelManager : MonoBehaviour
 
     public Animator transitionAnimator;
     public float transitionDelayTime = 1.0f;
-    public bool isLoading;
+    public static bool IsLoading;
 
     private void Awake()
     {
@@ -85,7 +85,6 @@ public class LevelManager : MonoBehaviour
     public void LoadNewLevel(int level, bool transition = true)
     {
         Player.Initialize();
-        CheckpointManager.Initialize();
         CurrentLevel = level;
         if (transition)
             StartCoroutine(DelayLoadLevel(level));
@@ -95,26 +94,26 @@ public class LevelManager : MonoBehaviour
 
     private IEnumerator DelayLoadLevel(int sceneID)
     {
-        if (!isLoading)
+        if (!IsLoading)
         {
             if (transitionAnimator != null)
             transitionAnimator.SetTrigger("TriggerTransition");
-            isLoading = true;
+            IsLoading = true;
             yield return new WaitForSeconds(transitionDelayTime);
-            isLoading = false;
+            IsLoading = false;
             SceneManager.LoadScene(sceneID);
         }
     }
 
     private IEnumerator DelayLoadLevel(string sceneName)
     {
-        if (!isLoading)
+        if (!IsLoading)
         {
             if (transitionAnimator != null)
                 transitionAnimator.SetTrigger("TriggerTransition");
-            isLoading = true;
+            IsLoading = true;
             yield return new WaitForSeconds(transitionDelayTime);
-            isLoading = false;
+            IsLoading = false;
             SceneManager.LoadScene(sceneName);
         }
     }

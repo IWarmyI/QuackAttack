@@ -5,6 +5,8 @@ using TMPro;
 
 public class HUDTimer : MonoBehaviour
 {
+    public static bool RestartFlag = true;
+
     [SerializeField] private Player player;
     private TextMeshProUGUI hud;
     public static float timer = 0;
@@ -16,18 +18,29 @@ public class HUDTimer : MonoBehaviour
     void Start()
     {
         hud = GetComponentInChildren<TextMeshProUGUI>();
-        timer = 0;
         water = 0;
+        if (RestartFlag)
+        {
+            timer = 0;
+            RestartFlag = false;
+        }
+    }
+
+    // Restart timer
+    public static void Initialize()
+    {
+        RestartFlag = true;
     }
 
     // Update is called once per frame
     void Update()
     {
         if (player == null) return;
+        if (LevelManager.IsLoading) return;
 
         if (player.HasStarted)
         {
-            if (!Stop)
+            if (!Stop && Time.timeScale != 0)
             {
                 timer += Time.deltaTime;
             }
