@@ -32,13 +32,10 @@ public class Stats : MonoBehaviour
         score.text = "Score: 0";
         time.text = $"Time: {formattedTime}";
 
-        EventSystem.current.SetSelectedGameObject(null);
-        EventSystem.current.SetSelectedGameObject(mainmenuButton);
+        nextLevelButton.SetActive(!LevelManager.IsLastLevel);
 
-        if (LevelManager.IsLastLevel)
-            nextLevelButton.SetActive(false);
-        else
-            nextLevelButton.SetActive(true);
+        EventSystem.current.SetSelectedGameObject(null);
+        EventSystem.current.SetSelectedGameObject(nextLevelButton.activeSelf ? nextLevelButton : mainmenuButton);
 
         canvas.GetComponent<AudioSource>().volume = musicFloat;
     }
