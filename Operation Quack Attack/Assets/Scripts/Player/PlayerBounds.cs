@@ -43,7 +43,7 @@ public class PlayerBounds : MonoBehaviour
                 ShrinkBox();
             }
         }
-        else if (player.State == Player.PlayerState.Dashing)
+        else if (player.State == Player.PlayerState.Dashing && !player.OnGround)
         {
             ShrinkBox();
         }
