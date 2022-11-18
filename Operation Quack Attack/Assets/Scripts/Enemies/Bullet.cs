@@ -117,11 +117,15 @@ public class Bullet : MonoBehaviour, IDamageable
     }
     public int DealDamage(GameObject target, int damage = 1)
     {
-        if (target.TryGetComponent(out IDamageable damageable))
+        try
         {
+            IDamageable damageable = target.GetComponentInParent<IDamageable>();
             return DealDamage(damageable, damage);
         }
-        return -1;
+        catch
+        {
+            return -1;
+        }
     }
 
     public int TakeDamage(int damage = 1)

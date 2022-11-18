@@ -36,16 +36,34 @@ public class PlayerBounds : MonoBehaviour
         {
             if (player.OnGround || (player.Velocity.y < 0 && !player.OnGround))
             {
-                Vector2[] points = boundingBox.points;
-                points[bottomIndex] = bottom;
-                boundingBox.points = points;
+                GrowBox();
             }
             else
             {
-                Vector2[] points = boundingBox.points;
-                points[bottomIndex] = bottom + new Vector2(0, offset);
-                boundingBox.points = points;
+                ShrinkBox();
             }
         }
+        else if (player.State == Player.PlayerState.Dashing)
+        {
+            ShrinkBox();
+        }
+        else
+        {
+            GrowBox();
+        }
+    }
+
+    private void ShrinkBox()
+    {
+        Vector2[] points = boundingBox.points;
+        points[bottomIndex] = bottom + new Vector2(0, offset);
+        boundingBox.points = points;
+    }
+
+    private void GrowBox()
+    {
+        Vector2[] points = boundingBox.points;
+        points[bottomIndex] = bottom;
+        boundingBox.points = points;
     }
 }

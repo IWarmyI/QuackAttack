@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 6650108568059193559}
   - component: {fileID: 1011854901874334030}
   m_Layer: 0
-  m_Name: SignParticle
+  m_Name: Particle Sign
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
