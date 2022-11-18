@@ -11,7 +11,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/TutorialChallenge.unity
     guid: 01f5b372925bb0b4a9badb1b64c059fd
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/LevelTemplate.unity
     guid: f9ac4419372b4704c82ddf7153dc8c4c
   - enabled: 1

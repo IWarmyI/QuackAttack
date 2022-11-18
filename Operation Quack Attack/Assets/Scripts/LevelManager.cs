@@ -9,7 +9,7 @@ public class LevelManager : MonoBehaviour
 {
     public static int CurrentLevel = -1;
     public const int FirstLevel = 1;
-    public const int NumberOfLevels = 2;
+    public const int NumberOfLevels = 1;
     public static bool IsLastLevel = false;
     public static bool IsInGame = false;
     public static string[] MenuLevels = { "MainMenu", "EndLevel", "GameOver" };
