@@ -9,7 +9,6 @@ using static AudioSliders;
 
 public class Stats : MonoBehaviour
 {
-    public TextMeshProUGUI score;
     public TextMeshProUGUI time;
 
     public GameObject mainmenuButton;
@@ -29,8 +28,7 @@ public class Stats : MonoBehaviour
         int mil = Mathf.FloorToInt((timer - (min * 60 + sec)) * 100);
         string formattedTime = $"{min:00}:{sec:00}.{mil:00}";
 
-        score.text = "Score: 0";
-        time.text = $"Time: {formattedTime}";
+        time.text = $"Your Time: {formattedTime}";
 
         nextLevelButton.SetActive(!LevelManager.IsLastLevel);
 

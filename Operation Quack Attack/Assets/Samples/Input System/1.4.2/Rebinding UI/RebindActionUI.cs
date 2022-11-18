@@ -212,23 +212,23 @@ namespace UnityEngine.InputSystem.Samples.RebindUI
         /// <summary>
         /// Remove currently applied binding overrides.
         /// </summary>
-        // public void ResetToDefault()
-        // {
-        //     if (!ResolveActionAndBinding(out var action, out var bindingIndex))
-        //         return;
+        public void ResetToDefault()
+        {
+            if (!ResolveActionAndBinding(out var action, out var bindingIndex))
+                return;
 
-        //     if (action.bindings[bindingIndex].isComposite)
-        //     {
-        //         // It's a composite. Remove overrides from part bindings.
-        //         for (var i = bindingIndex + 1; i < action.bindings.Count && action.bindings[i].isPartOfComposite; ++i)
-        //             action.RemoveBindingOverride(i);
-        //     }
-        //     else
-        //     {
-        //         action.RemoveBindingOverride(bindingIndex);
-        //     }
-        //     UpdateBindingDisplay();
-        // }
+            if (action.bindings[bindingIndex].isComposite)
+            {
+                // It's a composite. Remove overrides from part bindings.
+                for (var i = bindingIndex + 1; i < action.bindings.Count && action.bindings[i].isPartOfComposite; ++i)
+                    action.RemoveBindingOverride(i);
+            }
+            else
+            {
+                action.RemoveBindingOverride(bindingIndex);
+            }
+            UpdateBindingDisplay();
+        }
 
         /// <summary>
         /// Initiate an interactive rebind that lets the player actuate a control to choose a new binding
@@ -262,16 +262,17 @@ namespace UnityEngine.InputSystem.Samples.RebindUI
                 m_RebindOperation = null;
             }
 
+            //Disable the action
+            action.Disable();
+
             // Configure the rebind.
             m_RebindOperation = action.PerformInteractiveRebinding(bindingIndex)
-                .WithControlsExcluding("<Mouse>/leftButton")
-                .WithControlsExcluding("<Mouse>/rightButton")
-                .WithControlsExcluding("<Mouse>/press")
-                .WithControlsExcluding("<Pointer>/position")
                 .WithCancelingThrough("<Keyboard>/escape")
+                .WithControlsExcluding("<Mouse>")
                 .OnCancel(
                     operation =>
                     {
+                        action.Enable();
                         m_RebindStopEvent?.Invoke(this, operation);
                         m_RebindOverlay?.SetActive(false);
                         UpdateBindingDisplay();
@@ -280,17 +281,9 @@ namespace UnityEngine.InputSystem.Samples.RebindUI
                 .OnComplete(
                     operation =>
                     {
+                        action.Enable();
                         m_RebindOverlay?.SetActive(false);
                         m_RebindStopEvent?.Invoke(this, operation);
-
-                        // check for duplicate
-                        if (CheckDuplicateBindings(action, bindingIndex, allCompositeParts))
-                        {
-                            action.RemoveBindingOverride(bindingIndex);
-                            CleanUp();
-                            PerformInteractiveRebind(action, bindingIndex, allCompositeParts);
-                            return;
-                        }
 
                         UpdateBindingDisplay();
                         CleanUp();
