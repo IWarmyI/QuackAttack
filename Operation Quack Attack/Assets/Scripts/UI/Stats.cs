@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 using TMPro;
 using static HUDTimer;
 using static AudioSliders;
+using System;
 
 public class Stats : MonoBehaviour
 {
@@ -17,6 +18,9 @@ public class Stats : MonoBehaviour
     public GameObject canvas;
 
     private LevelManager levelManager;
+
+    [SerializeField] AchievementManager achievement;
+
 
     // Start is called before the first frame update
     void Start()
@@ -36,6 +40,11 @@ public class Stats : MonoBehaviour
         EventSystem.current.SetSelectedGameObject(nextLevelButton.activeSelf ? nextLevelButton : mainmenuButton);
 
         canvas.GetComponent<AudioSource>().volume = musicFloat;
+
+        if ( Convert.ToInt32(formattedTime) < 000811)
+        {
+            achievement.Unlock("BeatDev");
+        }
     }
 
     public void MainMenuButton()

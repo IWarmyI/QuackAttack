@@ -136,6 +136,10 @@ public class Player : MonoBehaviour, IDamageable
     public event PlayerEvent OnPlayerShoot;
     public event PlayerEvent OnPlayerQuack;
 
+    //Quack Counter
+    int quackCount = 0;
+    [SerializeField] AchievementManager achievementManager;
+
     // Properties
     public PlayerState State { get { return state; } }
     public AnimState Animation { get { return animState; } }
@@ -194,7 +198,6 @@ public class Player : MonoBehaviour, IDamageable
     void Start()
     {
         levelManager = GameObject.FindWithTag("LevelManager").GetComponent<LevelManager>();
-
         pos = transform.position;
         speed = baseSpeed;
         dashingTimer = dashingTime;
@@ -605,6 +608,15 @@ public class Player : MonoBehaviour, IDamageable
 
     private void OnQuack(InputValue value)
     {
+        quackCount++;
+        if (quackCount == 1)
+        {
+            achievementManager.Unlock("Quack");
+        }
+        if ( quackCount == 50)
+        {
+            achievementManager.Unlock("QuackQuackQuack");
+        }
         OnPlayerQuack?.Invoke();
     }
 
