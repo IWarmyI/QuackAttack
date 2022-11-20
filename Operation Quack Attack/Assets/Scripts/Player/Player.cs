@@ -169,8 +169,7 @@ public class Player : MonoBehaviour, IDamageable
         _isRespawn = false;
         _respawnPos = Vector2.zero;
 
-        CheckpointManager.Initialize();
-        LevelMusic.Initialize();
+        LevelPersistence.Initialize();
         HUDTimer.Initialize();
     }
 

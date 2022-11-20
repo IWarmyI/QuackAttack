@@ -4,38 +4,24 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public abstract class LevelPersistent : MonoBehaviour
+public class LevelPersistence : MonoBehaviour
 {
-    public static Dictionary<Type, LevelPersistent> instances = new();
-    public static Dictionary<Type, bool> restartFlags = new();
+    // Dictionaries to store instances and restart flags for each inheritor
+    public static LevelPersistence Instance;
+    public static bool RestartFlag;
 
+    // Level of this instance of persistent
     [SerializeField] private int levelNumber;
 
     public delegate void PersistentEvent();
     public event PersistentEvent OnReload;
+    public event PersistentEvent OnStart;
 
     public int Level { get => levelNumber; }
-    public LevelPersistent Instance
-    {
-        get
-        {
-            bool value = instances.TryGetValue(GetType(), out LevelPersistent lp);
-            if (value) return lp;
-            return null;
-        }
-        set => instances[GetType()] = value;
-    }
-    public bool RestartFlag
-    {
-        get
-        {
-            bool value = restartFlags.TryGetValue(GetType(), out bool rf);
-            if (value) return rf;
-            return true;
-        }
-        set => restartFlags[GetType()] = value;
-    }
 
+    /// <summary>
+    /// On awake, ensure only one instance of Persistent can exist.
+    /// </summary>
     protected virtual void Awake()
     {
         // Destroy new persistent if persistent of same level already exist
@@ -49,6 +35,10 @@ public abstract class LevelPersistent : MonoBehaviour
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
+    /// <summary>
+    /// Every time a scene is loaded, ensures that this persistent persists
+    /// until a new level is loaded.
+    /// </summary>
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         // Keep persistent if persistent match current level
@@ -67,18 +57,23 @@ public abstract class LevelPersistent : MonoBehaviour
         }
 
         OnReload?.Invoke();
+        RestartFlag = false;
     }
 
-    // Start is called before the first frame update
+    /// <summary>
+    /// On start, sets own restart flag as false.
+    /// </summary>
     protected virtual void Start()
     {
-        if (RestartFlag) RestartFlag = false;
+        OnStart?.Invoke();
+        RestartFlag = false;
     }
 
-
-    // Restart this persistant
-    protected static void Initialize(Type t)
+    /// <summary>
+    /// Initialize persistent of specified type by setting its restart flag.
+    /// </summary>
+    public static void Initialize()
     {
-        restartFlags[t] = true;
+        RestartFlag = true;
     }
 }

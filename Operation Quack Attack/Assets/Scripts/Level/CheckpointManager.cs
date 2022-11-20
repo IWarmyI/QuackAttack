@@ -4,14 +4,16 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class CheckpointManager : LevelPersistent
+public class CheckpointManager : MonoBehaviour
 {
     private List<Checkpoint> checkpoints = new List<Checkpoint>();
+    private LevelPersistence persist;
 
-    protected override void Awake()
+    private  void Awake()
     {
-        base.Awake();
-        OnReload += RestartCheckpoints;
+        persist = GetComponentInParent<LevelPersistence>();
+        persist.OnStart += OnStart;
+        persist.OnReload += RestartCheckpoints;
     }
 
     void RestartCheckpoints()
@@ -22,16 +24,15 @@ public class CheckpointManager : LevelPersistent
             if (!LevelManager.GamemodeCheckpoints)
                 cp.gameObject.SetActive(false);
 
-            if (RestartFlag)
+            if (LevelPersistence.RestartFlag)
                 cp.Restart();
             else if (cp.IsActivated)
                 cp.SetComplete();
         }
-        RestartFlag = false;
     }
 
     // Start is called before the first frame update
-    protected override void Start()
+    private void OnStart()
     {
         checkpoints.Clear();
         foreach (Transform child in transform)
@@ -48,8 +49,6 @@ public class CheckpointManager : LevelPersistent
                 cp.OnActivated += UpdateCheckpoints;
             }
         }
-
-        base.Start();
     }
 
     // Activates all checkpoints before the furthest checkpoint touched
@@ -60,10 +59,5 @@ public class CheckpointManager : LevelPersistent
         {
             checkpoints[i].SetComplete();
         }
-    }
-
-    public static void Initialize()
-    {
-        Initialize(typeof(CheckpointManager));
     }
 }

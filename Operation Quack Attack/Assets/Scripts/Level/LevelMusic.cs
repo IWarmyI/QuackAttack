@@ -3,33 +3,28 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class LevelMusic : LevelPersistent
+public class LevelMusic : MonoBehaviour
 {
     [SerializeField] private AudioSource source;
+    private LevelPersistence persist;
 
-    protected override void Awake()
+    private void Awake()
     {
-        base.Awake();
-        OnReload += RestartMusic;
+        persist = GetComponentInParent<LevelPersistence>();
+        persist.OnReload += RestartMusic;
     }
 
     void RestartMusic()
     {
-        if (RestartFlag)
+        if (LevelPersistence.RestartFlag)
         {
             source.Stop();
             source.Play();
         }
-        RestartFlag = false;
 
-        if (Level != SceneManager.GetActiveScene().buildIndex)
+        if (persist.Level != SceneManager.GetActiveScene().buildIndex)
         {
             source.Stop();
         }
-    }
-
-    public static void Initialize()
-    {
-        Initialize(typeof(LevelMusic));
     }
 }
