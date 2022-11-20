@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class WaterGauge : MonoBehaviour
+public class HUDWaterGauge : MonoBehaviour
 {
     [SerializeField] private Player player;
     [SerializeField] private Image image;

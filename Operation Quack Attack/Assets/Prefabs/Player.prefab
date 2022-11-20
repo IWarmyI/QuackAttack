@@ -5125,6 +5125,9 @@ MonoBehaviour:
   health: 1
   maxWater: 50
   waterRegen: 5
+  dashCost: 15
+  airJumpCost: 10
+  shotCost: 4
   vel: {x: 0, y: 0}
   baseSpeed: 8.5
   topSpeed: 20
