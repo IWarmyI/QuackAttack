@@ -30,8 +30,8 @@ public class MainMenu : MonoBehaviour
 
         if (firstTime)
         {
-            musicFloat = 1.0f;
-            sfxFloat = 1.0f;
+            musicFloat = 0.5f;
+            sfxFloat = 0.5f;
         }
         canvas.GetComponent<AudioSource>().volume = musicFloat;
     }

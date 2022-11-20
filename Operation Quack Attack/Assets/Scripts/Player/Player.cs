@@ -135,6 +135,7 @@ public class Player : MonoBehaviour, IDamageable
     public event PlayerEvent OnPlayerDashReady;
     public event PlayerEvent OnPlayerShoot;
     public event PlayerEvent OnPlayerQuack;
+    public event PlayerEvent OnPlayerRefillWater;
 
     // Properties
     public PlayerState State { get { return state; } }
@@ -165,6 +166,7 @@ public class Player : MonoBehaviour, IDamageable
         _respawnPos = Vector2.zero;
 
         CheckpointManager.Initialize();
+        LevelMusic.Initialize();
         HUDTimer.Initialize();
     }
 
@@ -720,6 +722,7 @@ public class Player : MonoBehaviour, IDamageable
     public void RefillWater(float amount)
     {
         currentWater += amount;
+        OnPlayerRefillWater?.Invoke();
         //waterGauge.UpdateBar(currentWater, maxWater);
     }
 

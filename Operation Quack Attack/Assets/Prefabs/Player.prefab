@@ -113,7 +113,7 @@ ParticleSystem:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 292420917}
   serializedVersion: 8
-  lengthInSec: 0.245
+  lengthInSec: 0.23
   simulationSpeed: 1
   stopAction: 0
   cullingMode: 0
@@ -5123,14 +5123,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health: 1
-  maxWater: 100
-  waterRegen: 2.5
+  maxWater: 50
+  waterRegen: 5
   vel: {x: 0, y: 0}
   baseSpeed: 8.5
   topSpeed: 20
   accelRate: 15
   dashingSpeed: 30
-  dashingTime: 0.175
+  dashingTime: 0.16
   dashingCooldown: 0.35
   jumpStrength: 15
   jumpGravity: 40
@@ -5172,6 +5172,10 @@ MonoBehaviour:
   - {fileID: 8300000, guid: d2652cfc308606d429265f8183b3d7e3, type: 3}
   - {fileID: 8300000, guid: 07390601828d53b4fad3a573ff59a892, type: 3}
   - {fileID: 8300000, guid: 8fd7d62adcf1eec4b9ccf5b608805872, type: 3}
+  miscSfx:
+  - {fileID: 8300000, guid: 34793c4f15e9bd245b89078afe3ed342, type: 3}
+  - {fileID: 8300000, guid: 9bda2ab87b07b4047a4016fd1e94eeaa, type: 3}
+  - {fileID: 8300000, guid: 3c2e212d52cec9041a2a3a8fab7f7f87, type: 3}
 --- !u!114 &913230024881484952
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5220,7 +5224,7 @@ Rigidbody2D:
   m_GravityScale: 0
   m_Material: {fileID: 0}
   m_Interpolate: 1
-  m_SleepingMode: 1
+  m_SleepingMode: 0
   m_CollisionDetection: 1
   m_Constraints: 4
 --- !u!82 &3463381780900638049
@@ -5456,7 +5460,7 @@ ParticleSystem:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1353844997876464844}
   serializedVersion: 8
-  lengthInSec: 0.245
+  lengthInSec: 0.23
   simulationSpeed: 1
   stopAction: 0
   cullingMode: 0
