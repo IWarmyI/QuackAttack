@@ -10,15 +10,7 @@ public class PickupWater : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player") && gameObject.activeSelf)
         {
-            Player player = null;
-            try
-            {
-                player = collision.gameObject.GetComponentInParent<Player>();
-            }
-            catch
-            {
-                Debug.Log("Water failed.");
-            }
+            Player player = collision.gameObject.GetComponentInParent<Player>();
 
             if (player != null)
             {
