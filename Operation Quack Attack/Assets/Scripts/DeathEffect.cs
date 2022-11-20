@@ -5,6 +5,7 @@ using UnityEngine;
 public class DeathEffect : MonoBehaviour
 {
     [SerializeField] private GameObject effectPrefab;
+    [SerializeField] private bool inheritRotation = true;
     private bool flag = false;
 
     private void Start()
@@ -19,6 +20,6 @@ public class DeathEffect : MonoBehaviour
 
         GameObject effect = Instantiate(effectPrefab, transform.parent, true);
         effect.transform.position = transform.position;
-        effect.transform.rotation = transform.rotation;
+        effect.transform.rotation = inheritRotation ? transform.rotation : Quaternion.identity;
     }
 }

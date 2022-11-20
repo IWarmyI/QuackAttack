@@ -230,12 +230,6 @@ public class Player : MonoBehaviour, IDamageable
         // Compute collisions
         ComputeCollisions();
 
-        // Apply rigidbody velocity
-        rb.velocity = vel;
-    }
-
-    public void Update()
-    {
         // Get current position
         pos = transform.position;
 
@@ -265,6 +259,12 @@ public class Player : MonoBehaviour, IDamageable
         // Apply velocity
         pos += vel * Time.deltaTime;
 
+        // Apply rigidbody velocity
+        rb.velocity = vel;
+    }
+
+    public void Update()
+    {
         // Update Shooting Timer
         if (fireTimer < FireTime)
             fireTimer += Time.deltaTime;
