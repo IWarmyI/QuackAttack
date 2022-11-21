@@ -8,13 +8,9 @@ public class GameOverScript : MonoBehaviour
 {
     public GameObject firstOption;
 
-    private LevelManager levelManager;
-
     // Start is called before the first frame update
     void Start()
     {
-        levelManager = GameObject.FindWithTag("LevelManager").GetComponent<LevelManager>();
-
         EventSystem.current.SetSelectedGameObject(null);
         EventSystem.current.SetSelectedGameObject(firstOption);
     }
@@ -27,11 +23,11 @@ public class GameOverScript : MonoBehaviour
 
     public void Restart()
     {
-        levelManager.LoadScene("TutorialChallenge");
+        LevelManager.Instance.LoadScene("TutorialChallenge");
     }
 
     public void BacktoMainMenu()
     {
-        levelManager.RestartLevel();
+        LevelManager.Instance.RestartLevel();
     }
 }

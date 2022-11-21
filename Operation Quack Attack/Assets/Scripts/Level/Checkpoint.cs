@@ -20,7 +20,7 @@ public class Checkpoint : MonoBehaviour
         if (isActivated) return;
 
         SetComplete();
-        Player.Respawn(RespawnPosition);
+        Player.SetRespawn(RespawnPosition);
         OnActivated?.Invoke(this);
     }
 

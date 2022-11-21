@@ -16,13 +16,9 @@ public class Stats : MonoBehaviour
 
     public GameObject canvas;
 
-    private LevelManager levelManager;
-
     // Start is called before the first frame update
     void Start()
     {
-        levelManager = GameObject.FindWithTag("LevelManager").GetComponent<LevelManager>();
-
         int min = Mathf.FloorToInt(timer / 60.0f);
         int sec = Mathf.FloorToInt(timer - min * 60);
         int mil = Mathf.FloorToInt((timer - (min * 60 + sec)) * 100);
@@ -40,16 +36,16 @@ public class Stats : MonoBehaviour
 
     public void MainMenuButton()
     {
-        levelManager.MainMenu();
+        LevelManager.Instance.MainMenu();
     }
 
     public void NextLevelButton()
     {
-        levelManager.NextLevel();
+        LevelManager.Instance.NextLevel();
     }
 
     public void RestartLevelButton()
     {
-        levelManager.RestartLevel();
+        LevelManager.Instance.RestartLevel();
     }
 }

@@ -16,15 +16,11 @@ public class MainMenu : MonoBehaviour
     public GameObject CreditsFirstObject;
 
     public GameObject canvas;
-    public LevelManager levelManager;
-
     private static bool firstTime = true;
 
     // Start is called before the first frame update
     void Start()
     {
-        levelManager = GameObject.FindWithTag("LevelManager").GetComponent<LevelManager>();
-
         MainMenuButton();
         Time.timeScale = 1.0f;
 
@@ -53,7 +49,7 @@ public class MainMenu : MonoBehaviour
         firstTime = false;
         //Play Tutorial
         Player.Initialize();
-        levelManager.NewGame();
+        LevelManager.Instance.NewGame();
     }
 
     public void StartButton()

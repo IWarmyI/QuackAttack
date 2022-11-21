@@ -49,6 +49,7 @@ public class Player : MonoBehaviour, IDamageable
     [SerializeField] private float airJumpCost = 10;
     [SerializeField] private float shotCost = 5;
     private bool hasRefund = false;
+    [SerializeField] private float dashRefund = 10;
 
     // Animation
     private AnimState animState = AnimState.Idle;
@@ -125,7 +126,6 @@ public class Player : MonoBehaviour, IDamageable
     [Header("UI")]
     [SerializeField] private GameObject pauseObj;
     [SerializeField] private GameObject HUD;
-    private LevelManager levelManager;
     private Rigidbody2D rb;
 
     // Events
@@ -174,7 +174,7 @@ public class Player : MonoBehaviour, IDamageable
         HUDTimer.Initialize();
     }
 
-    public static void Respawn(Vector2 position)
+    public static void SetRespawn(Vector2 position)
     {
         _isRespawn = true;
         _respawnPos = position;
@@ -199,8 +199,6 @@ public class Player : MonoBehaviour, IDamageable
     // Start is called before the first frame update
     void Start()
     {
-        levelManager = GameObject.FindWithTag("LevelManager").GetComponent<LevelManager>();
-
         pos = transform.position;
         speed = baseSpeed;
         dashingTimer = dashingTime;
@@ -488,7 +486,9 @@ public class Player : MonoBehaviour, IDamageable
         // Once complete, activate game over screen
         if (anim.IsComplete(animState))
         {
-            levelManager.Respawn();
+            if (!LevelManager.GamemodeCheckpoints)
+                HUDTimer.Initialize();
+            LevelManager.Instance.Respawn();
         }
     }    
 
@@ -633,7 +633,7 @@ public class Player : MonoBehaviour, IDamageable
         Time.timeScale = 1.0f;
         if (!LevelManager.GamemodeCheckpoints)
             HUDTimer.Initialize();
-        levelManager.Respawn();
+        LevelManager.Instance.Respawn();
     }
 
     private void OnPauseToggle(InputValue value)
@@ -759,7 +759,7 @@ public class Player : MonoBehaviour, IDamageable
                     if (!hasRefund)
                     {
                         hasRefund = true;
-                        RefillWater(dashCost);
+                        RefillWater(dashRefund);
                     }
 
                     if (dashingCooldownTimer > 0)
