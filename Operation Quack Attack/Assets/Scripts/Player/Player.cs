@@ -140,6 +140,7 @@ public class Player : MonoBehaviour, IDamageable
     public event PlayerEvent OnPlayerShoot;
     public event PlayerEvent OnPlayerQuack;
     public event PlayerEvent OnPlayerRefillWater;
+    public event PlayerEvent OnPlayerTopSpeed;
 
     // Properties
     public PlayerState State { get { return state; } }
@@ -325,7 +326,10 @@ public class Player : MonoBehaviour, IDamageable
                 if (input.x != oldInput.x) speed = baseSpeed;
 
                 // Accelerate speed, clamped from baseSpeed to topSpeed
+                float oldSpeed = speed;
                 speed = Mathf.Clamp(speed + accelRate * Time.deltaTime, baseSpeed, topSpeed);
+                if (speed == topSpeed && oldSpeed != topSpeed)
+                    OnPlayerTopSpeed?.Invoke();
 
                 // Update velocity
                 vel.x = input.x * speed;
@@ -644,7 +648,7 @@ public class Player : MonoBehaviour, IDamageable
         }
 
         pauseObj.SetActive(!pauseObj.activeSelf);
-        //HUD.SetActive(!HUD.activeSelf);
+        HUD.SetActive(!HUD.activeSelf);
         gameObject.SetActive(false);
     }
 
@@ -661,13 +665,14 @@ public class Player : MonoBehaviour, IDamageable
         // If on ground
         if (events[CollisionEvent.Land])
         {
+            if (!onGround && !jumpCooldown.IsRunning)
+                OnPlayerLand?.Invoke();
             onGround = true;
             jumpCount = 0;
             if (vel.y < 0) vel.y = 0;
         }
         else
         {
-            if (onGround) OnPlayerLand?.Invoke();
             onGround = false;
         }
 

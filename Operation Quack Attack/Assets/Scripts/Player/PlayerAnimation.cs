@@ -34,7 +34,13 @@ public class PlayerAnimation : MonoBehaviour
     private ParticleSystem psJump;
     private ParticleSystem psShoot;
     private ParticleSystem psAfter;
+    private ParticleSystem psTrail;
     private ParticleSystemRenderer psrAfter;
+
+    private ParticleSystem psDustJump;
+    private ParticleSystem psWaveLand;
+    private ParticleSystem psDustLand;
+    private ParticleSystem psDustRun;
 
     private Vector3 rotate180 = new Vector3(0, 180, 0);
 
@@ -50,12 +56,23 @@ public class PlayerAnimation : MonoBehaviour
         psJump = waterFx.GetComponentsInChildren<ParticleSystem>()[1];
         psShoot = waterFx.GetComponentsInChildren<ParticleSystem>()[2];
         psAfter = waterFx.GetComponentsInChildren<ParticleSystem>()[3];
+        psTrail = waterFx.GetComponentsInChildren<ParticleSystem>()[4];
         psrAfter = psAfter.GetComponent<ParticleSystemRenderer>();
 
-        player.OnPlayerAirJump += JumpFX;
+        GameObject dustFx = transform.GetChild(1).gameObject;
+        psDustJump = dustFx.GetComponentsInChildren<ParticleSystem>()[0];
+        psWaveLand = dustFx.GetComponentsInChildren<ParticleSystem>()[1];
+        psDustLand = dustFx.GetComponentsInChildren<ParticleSystem>()[2];
+        psDustRun = dustFx.GetComponentsInChildren<ParticleSystem>()[3];
+
+        player.OnPlayerLand += LandFX;
+        player.OnPlayerJump += JumpFX;
+        player.OnPlayerWallJump += JumpFX;
+        player.OnPlayerAirJump += AirJumpFX;
         player.OnPlayerDash += DashFX;
         player.OnPlayerDashReady += FlashFX;
         player.OnPlayerShoot += ShootFX;
+        player.OnPlayerTopSpeed += RunFX; 
     }
 
     private void Update()
@@ -85,9 +102,11 @@ public class PlayerAnimation : MonoBehaviour
         {
             spr.flipX = !_facing;
         }
+
         psDash.transform.rotation  = Quaternion.Euler(_facing ? Vector3.zero : rotate180);
         psShoot.transform.rotation = Quaternion.Euler(_facing ? Vector3.zero : rotate180);
         psrAfter.flip = _facing ? Vector2.zero : Vector2.right;
+        if (!_onGround && psDustRun.isPlaying) psDustRun.Stop();
     }
 
     public void Animate(AnimState animState, bool onGround, bool onWall, bool isFalling, bool isTopSpeed, bool facing)
@@ -128,19 +147,35 @@ public class PlayerAnimation : MonoBehaviour
     }
     private void JumpFX()
     {
-        psJump.Stop(true, ParticleSystemStopBehavior.StopEmitting);
-        psJump.Play();
+        StopStart(psDustJump);
+    }
+    private void AirJumpFX()
+    {
+        StopStart(psJump);
+        StopStart(psTrail);
     }
     private void DashFX()
     {
-        psDash.Stop(true, ParticleSystemStopBehavior.StopEmitting);
-        psDash.Play();
-        psAfter.Stop(true, ParticleSystemStopBehavior.StopEmitting);
-        psAfter.Play();
+        StopStart(psDash);
+        StopStart(psAfter);
     }
     private void ShootFX()
     {
-        psShoot.Stop(true, ParticleSystemStopBehavior.StopEmitting);
-        psShoot.Play();
+        StopStart(psShoot);
+    }
+    private void LandFX()
+    {
+        StopStart(psWaveLand);
+        StopStart(psDustLand);
+    }
+    private void RunFX()
+    {
+        StopStart(psDustRun);
+    }
+
+    private void StopStart(ParticleSystem ps)
+    {
+        ps.Stop(true, ParticleSystemStopBehavior.StopEmitting);
+        ps.Play();
     }
 }

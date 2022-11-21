@@ -2045,7 +2045,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 93.23767}
+  m_SizeDelta: {x: 0.115478516, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &321114735
 MonoBehaviour:
@@ -5863,7 +5863,7 @@ AudioSource:
   Priority: 128
   DopplerLevel: 1
   MinDistance: 1
-  MaxDistance: 500
+  MaxDistance: 50
   Pan2D: 0
   rolloffMode: 0
   BypassEffects: 0
@@ -6233,6 +6233,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1044116072}
   - component: {fileID: 1044116073}
+  - component: {fileID: 1044116074}
   m_Layer: 5
   m_Name: PauseMenu
   m_TagString: Untagged
@@ -6283,6 +6284,35 @@ MonoBehaviour:
   CheckpointButtons: {fileID: 1066863753}
   pauseObj: {fileID: 1044116071}
   player: {fileID: 1830123194}
+--- !u!114 &1044116074
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1044116071}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates:
+  - eventID: 16
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1044116073}
+          m_TargetAssemblyTypeName: pauseManager, Assembly-CSharp
+          m_MethodName: ReturnToGane
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!1 &1050182987
 GameObject:
   m_ObjectHideFlags: 0
