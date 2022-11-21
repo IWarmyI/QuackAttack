@@ -372,12 +372,15 @@ public class Player : MonoBehaviour, IDamageable
                 vel.x *= Mathf.Pow(airDeccel, 50 * Time.deltaTime);
             }
 
-            // Wall sliding
-            if (onWall && input.x != 0)
+            if (onWall)
             {
                 if (wallCooldown.IsComplete)
                     wallCoyote.Ready();
+            }
 
+            // Wall sliding
+            if (onWall && input.x != 0)
+            {
                 // If pressing against wall, wallslide
                 if (input.x == wallSide * -1)
                 {

@@ -10515,7 +10515,7 @@ MonoBehaviour:
     isPaused: 0
   airJumps: 1
   wallCoyote:
-    time: 0.25
+    time: 0.15
     currentTime: 0
     isPaused: 0
   projectile: {fileID: 8125120347618727777, guid: 381eb93ad2ad0ea4697c6c43fabe51a0, type: 3}

@@ -105,7 +105,7 @@ public class PlayerAnimation : MonoBehaviour
             spr.flipX = !_facing;
         }
 
-        if (_onWall && !_onGround)
+        if (_animState == AnimState.Wall)
         {
             if (!psDustWall.isPlaying)
                 StopStart(psDustWall);
