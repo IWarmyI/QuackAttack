@@ -10493,9 +10493,10 @@ MonoBehaviour:
   health: 1
   maxWater: 60
   waterRegen: 5
-  dashCost: 15
+  dashCost: 10
   airJumpCost: 10
-  shotCost: 5
+  shotCost: 4
+  dashRefund: 10
   vel: {x: 0, y: 0}
   baseSpeed: 8.5
   topSpeed: 20
@@ -10520,7 +10521,7 @@ MonoBehaviour:
   projectile: {fileID: 8125120347618727777, guid: 381eb93ad2ad0ea4697c6c43fabe51a0, type: 3}
   projectileManager: {fileID: 0}
   projectileOffset: {x: 0.4, y: 0.35}
-  fireRate: 5
+  fireRate: 6
   projectileList: []
   pauseObj: {fileID: 0}
   HUD: {fileID: 0}
