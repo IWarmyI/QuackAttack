@@ -41,6 +41,7 @@ public class PlayerAnimation : MonoBehaviour
     private ParticleSystem psWaveLand;
     private ParticleSystem psDustLand;
     private ParticleSystem psDustRun;
+    private ParticleSystem psDustWall;
 
     private Vector3 rotate180 = new Vector3(0, 180, 0);
 
@@ -64,6 +65,7 @@ public class PlayerAnimation : MonoBehaviour
         psWaveLand = dustFx.GetComponentsInChildren<ParticleSystem>()[1];
         psDustLand = dustFx.GetComponentsInChildren<ParticleSystem>()[2];
         psDustRun = dustFx.GetComponentsInChildren<ParticleSystem>()[3];
+        psDustWall = dustFx.GetComponentsInChildren<ParticleSystem>()[4];
 
         player.OnPlayerLand += LandFX;
         player.OnPlayerJump += JumpFX;
@@ -103,10 +105,23 @@ public class PlayerAnimation : MonoBehaviour
             spr.flipX = !_facing;
         }
 
+        if (_onWall && !_onGround)
+        {
+            if (!psDustWall.isPlaying)
+                StopStart(psDustWall);
+        }
+        else
+        {
+            if (psDustWall.isPlaying)
+                psDustWall.Stop();
+        }
+
         psDash.transform.rotation  = Quaternion.Euler(_facing ? Vector3.zero : rotate180);
         psShoot.transform.rotation = Quaternion.Euler(_facing ? Vector3.zero : rotate180);
+        psDustWall.transform.rotation = Quaternion.Euler(_facing ? Vector3.zero : rotate180);
         psrAfter.flip = _facing ? Vector2.zero : Vector2.right;
-        if (!_onGround && psDustRun.isPlaying) psDustRun.Stop();
+        if (!_onGround && psDustRun.isPlaying)
+            psDustRun.Stop();
     }
 
     public void Animate(AnimState animState, bool onGround, bool onWall, bool isFalling, bool isTopSpeed, bool facing)
