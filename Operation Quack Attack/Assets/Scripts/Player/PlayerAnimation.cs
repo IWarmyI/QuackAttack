@@ -119,6 +119,7 @@ public class PlayerAnimation : MonoBehaviour
         psDash.transform.rotation  = Quaternion.Euler(_facing ? Vector3.zero : rotate180);
         psShoot.transform.rotation = Quaternion.Euler(_facing ? Vector3.zero : rotate180);
         psDustWall.transform.rotation = Quaternion.Euler(_facing ? Vector3.zero : rotate180);
+        psWaveLand.transform.rotation = Quaternion.Euler(_facing ? Vector3.zero : rotate180);
         psrAfter.flip = _facing ? Vector2.zero : Vector2.right;
         if (!_onGround && psDustRun.isPlaying)
             psDustRun.Stop();
