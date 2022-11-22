@@ -648,8 +648,7 @@ public class Player : MonoBehaviour, IDamageable
         }
 
         pauseObj.SetActive(!pauseObj.activeSelf);
-        //HUD.SetActive(!HUD.activeSelf);
-        gameObject.SetActive(false);
+        gameObject.SetActive(!gameObject.activeSelf);
     }
 
     // ========================================================================

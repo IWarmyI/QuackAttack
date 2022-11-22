@@ -30,6 +30,8 @@ public class pauseManager : MonoBehaviour
         EventSystem.current.SetSelectedGameObject(FirstOption);
     }
 
+
+
     public void BackToMain()
     {
         Time.timeScale = 1.0f;
@@ -60,4 +62,12 @@ public class pauseManager : MonoBehaviour
         pauseObj.SetActive(false);
 
     }
+
+    private void OnPauseToggleOff(InputValue value)
+    {
+        Time.timeScale = 1.0f;
+        player.SetActive(true);
+        pauseObj.SetActive(false);
+    }
+
 }

@@ -862,7 +862,7 @@
                 {
                     "name": "",
                     "id": "4946b9fb-df38-4e67-a7ab-80e4c931092e",
-                    "path": "<Keyboard>/escape",
+                    "path": "<Keyboard>/tab",
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard",

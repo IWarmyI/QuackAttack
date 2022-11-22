@@ -1,0 +1,45 @@
+{
+    "name": "UI Control",
+    "maps": [
+        {
+            "name": "UI",
+            "id": "b4c98b3c-6324-4644-9f87-e43433025c8a",
+            "actions": [
+                {
+                    "name": "PauseToggleOff",
+                    "type": "Button",
+                    "id": "55ba7bb2-ebd8-4f02-89a7-da75875d8111",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "7037b89f-7a69-4863-a7b4-e80d054c5cc3",
+                    "path": "<Keyboard>/tab",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "PauseToggleOff",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "20a744b7-f8c9-41b7-9fe8-9b4f42190c43",
+                    "path": "<Keyboard>/p",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "PauseToggleOff",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}
