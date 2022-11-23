@@ -34,8 +34,10 @@ public class PlayerCamera : MonoBehaviour
 
     void LateUpdate()
     {
+        if (player == null) return;
         Vector3 futurePos = player.position + offset;
         Vector3 lerpPos = Vector3.Lerp(transform.position, futurePos, camSpeed * Time.deltaTime);
+        //if ((lerpPos - futurePos).magnitude < 0.001) lerpPos = futurePos;
         transform.position = lerpPos;
     }
 }
