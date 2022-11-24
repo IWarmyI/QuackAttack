@@ -11,6 +11,7 @@ TagManager:
   - Tutorial
   - PickUp
   - LevelManager
+  - AchievementManager
   layers:
   - Default
   - TransparentFX
