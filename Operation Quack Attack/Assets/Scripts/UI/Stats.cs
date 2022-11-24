@@ -23,8 +23,8 @@ public class Stats : MonoBehaviour
     {
         int min = Mathf.FloorToInt(timer / 60.0f);
         int sec = Mathf.FloorToInt(timer - min * 60);
-        int mil = Mathf.FloorToInt((timer - (min * 60 + sec)) * 100);
-        string formattedTime = $"{min:00}:{sec:00}.{mil:00}";
+        int dec = Mathf.FloorToInt((timer - (min * 60 + sec)) * 100);
+        string formattedTime = $"{min:00}:{sec:00}.{dec:00}";
 
         time.text = $"Your Time: {formattedTime}";
 
@@ -35,7 +35,8 @@ public class Stats : MonoBehaviour
 
         canvas.GetComponent<AudioSource>().volume = musicFloat;
 
-        if ( Convert.ToInt32(formattedTime) < 000811)
+        // HUDTimer.timer is in seconds
+        if (timer < 8.11)
         {
             achievement.Unlock("BeatDev");
         }
