@@ -10,6 +10,7 @@ public class PlayerAudio : MonoBehaviour
     [Header("Sound")]
     [SerializeField] private AudioClip[] quack = null;
     [SerializeField] private AudioClip[] movementSfx = null;
+    [SerializeField] private AudioClip[] miscSfx = null;
     private AudioSource[] _sources;
     private AudioSource quackSource;
     private AudioSource sfxSource;
@@ -39,6 +40,10 @@ public class PlayerAudio : MonoBehaviour
         player.OnPlayerAirJump += Jump;
         player.OnPlayerWallJump += WallJump;
         player.OnPlayerDash += Dash;
+
+        player.OnPlayerShoot += Shoot;
+        player.OnPlayerDashReady += DashReady;
+        player.OnPlayerRefillWater += RefillWater;
     }
 
     private void Quack()
@@ -67,5 +72,18 @@ public class PlayerAudio : MonoBehaviour
     private void Dash()
     {
         sfxSource.PlayOneShot(movementSfx[2]);
+    }
+
+    private void Shoot()
+    {
+        sfxSource.PlayOneShot(miscSfx[0], 0.5f);
+    }
+    private void DashReady()
+    {
+        sfxSource.PlayOneShot(miscSfx[1], 0.5f);
+    }
+    private void RefillWater()
+    {
+        sfxSource.PlayOneShot(miscSfx[2], 0.5f);
     }
 }

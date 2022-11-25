@@ -16,22 +16,18 @@ public class MainMenu : MonoBehaviour
     public GameObject CreditsFirstObject;
 
     public GameObject canvas;
-    public LevelManager levelManager;
-
     private static bool firstTime = true;
 
     // Start is called before the first frame update
     void Start()
     {
-        levelManager = GameObject.FindWithTag("LevelManager").GetComponent<LevelManager>();
-
         MainMenuButton();
         Time.timeScale = 1.0f;
 
         if (firstTime)
         {
-            musicFloat = 1.0f;
-            sfxFloat = 1.0f;
+            musicFloat = 0.5f;
+            sfxFloat = 0.5f;
         }
         canvas.GetComponent<AudioSource>().volume = musicFloat;
     }
@@ -53,7 +49,7 @@ public class MainMenu : MonoBehaviour
         firstTime = false;
         //Play Tutorial
         Player.Initialize();
-        levelManager.NewGame();
+        LevelManager.Instance.NewGame();
     }
 
     public void StartButton()

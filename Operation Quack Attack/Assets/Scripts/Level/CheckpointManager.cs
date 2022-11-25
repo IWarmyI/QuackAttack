@@ -6,59 +6,33 @@ using UnityEngine.SceneManagement;
 
 public class CheckpointManager : MonoBehaviour
 {
-    public static CheckpointManager Instance;
-    public static bool RestartFlag = true;
-
-    [SerializeField] private int levelNumber;
     private List<Checkpoint> checkpoints = new List<Checkpoint>();
+    private LevelPersistence persist;
 
-    public int Level { get => levelNumber; }
-
-    private void Awake()
+    private  void Awake()
     {
-        // Destroy new checkpoints if checkpoints of same level already exist
-        if (Instance != null && Level == Instance.Level)
-        {
-            Destroy(gameObject);
-            return;
-        }
-
-        // Attach onload event
-        SceneManager.sceneLoaded += OnSceneLoaded;
+        persist = GetComponentInParent<LevelPersistence>();
+        persist.OnStart += OnStart;
+        persist.OnReload += RestartCheckpoints;
     }
 
-    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    void RestartCheckpoints()
     {
-        // Keep checkpoints if checkpoints match current level
-        if (Instance == null && Level == LevelManager.CurrentLevel)
-        {
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        // Destroy old checkpoints if it doesn't, or if you're in the main menu
-        else if (Level != LevelManager.CurrentLevel || SceneManager.GetActiveScene().buildIndex == 0)
-        {
-            Instance = null;
-            SceneManager.sceneLoaded -= OnSceneLoaded;
-            Destroy(gameObject);
-        }
-
         // Restart checkpoints if desired
         foreach (Checkpoint cp in checkpoints)
         {
             if (!LevelManager.GamemodeCheckpoints)
                 cp.gameObject.SetActive(false);
 
-            if (RestartFlag)
+            if (LevelPersistence.RestartFlag)
                 cp.Restart();
             else if (cp.IsActivated)
                 cp.SetComplete();
         }
-        RestartFlag = false;
     }
 
     // Start is called before the first frame update
-    void Start()
+    private void OnStart()
     {
         checkpoints.Clear();
         foreach (Transform child in transform)
@@ -75,13 +49,6 @@ public class CheckpointManager : MonoBehaviour
                 cp.OnActivated += UpdateCheckpoints;
             }
         }
-        if (RestartFlag) RestartFlag = false;
-    }
-
-    // Restart all checkpoints
-    public static void Initialize()
-    {
-        RestartFlag = true;
     }
 
     // Activates all checkpoints before the furthest checkpoint touched

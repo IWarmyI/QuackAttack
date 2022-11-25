@@ -16,21 +16,15 @@ public class Stats : MonoBehaviour
     public GameObject nextLevelButton;
 
     public GameObject canvas;
-
-    private LevelManager levelManager;
-
     [SerializeField] AchievementManager achievement;
-
 
     // Start is called before the first frame update
     void Start()
     {
-        levelManager = GameObject.FindWithTag("LevelManager").GetComponent<LevelManager>();
-
         int min = Mathf.FloorToInt(timer / 60.0f);
         int sec = Mathf.FloorToInt(timer - min * 60);
-        int mil = Mathf.FloorToInt((timer - (min * 60 + sec)) * 100);
-        string formattedTime = $"{min:00}:{sec:00}.{mil:00}";
+        int dec = Mathf.FloorToInt((timer - (min * 60 + sec)) * 100);
+        string formattedTime = $"{min:00}:{sec:00}.{dec:00}";
 
         time.text = $"Your Time: {formattedTime}";
 
@@ -41,7 +35,8 @@ public class Stats : MonoBehaviour
 
         canvas.GetComponent<AudioSource>().volume = musicFloat;
 
-        if ( Convert.ToInt32(formattedTime) < 000811)
+        // HUDTimer.timer is in seconds
+        if (timer < 8.11)
         {
             achievement.Unlock("BeatDev");
         }
@@ -49,16 +44,16 @@ public class Stats : MonoBehaviour
 
     public void MainMenuButton()
     {
-        levelManager.MainMenu();
+        LevelManager.Instance.MainMenu();
     }
 
     public void NextLevelButton()
     {
-        levelManager.NextLevel();
+        LevelManager.Instance.NextLevel();
     }
 
     public void RestartLevelButton()
     {
-        levelManager.RestartLevel();
+        LevelManager.Instance.RestartLevel();
     }
 }

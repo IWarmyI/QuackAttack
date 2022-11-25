@@ -9,15 +9,21 @@ public class CheckpointSign : Checkpoint
     [SerializeField] private Sprite defaultSprite;
     [SerializeField] private Sprite activatedSprite;
 
+    [SerializeField] private AudioClip sfx;
+
     private SpriteRenderer spr;
     private ParticleSystem ps;
     private GameObject notif;
+    private AudioSource source;
 
     private void Start()
     {
         spr = GetComponentInChildren<SpriteRenderer>();
         ps = GetComponentInChildren<ParticleSystem>();
         notif = GetComponentInChildren<Animator>().gameObject;
+
+        source = GetComponentInChildren<AudioSource>();
+        source.volume = AudioSliders.sfxFloat;
 
         spr.enabled = true;
         spr.sprite = defaultSprite;
@@ -31,6 +37,7 @@ public class CheckpointSign : Checkpoint
         base.SetComplete();
         spr.enabled = true;
         spr.sprite = activatedSprite;
+        ps.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
     }
 
     public override void Restart()
@@ -46,5 +53,6 @@ public class CheckpointSign : Checkpoint
         spr.enabled = false;
         notif.SetActive(true);
         ps.Emit(1);
+        source.PlayOneShot(sfx);
     }
 }

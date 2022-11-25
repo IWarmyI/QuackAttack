@@ -42,6 +42,15 @@ public class TutorialEvent : MonoBehaviour
             needHelp = true;
         }
     }
+    void OnTriggerStay2D(Collider2D col)
+    {
+        if (needHelp) return;
+
+        if (col.gameObject.CompareTag("Player"))
+        {
+            needHelp = true;
+        }
+    }
 
     void OnTriggerExit2D(Collider2D col)
     {

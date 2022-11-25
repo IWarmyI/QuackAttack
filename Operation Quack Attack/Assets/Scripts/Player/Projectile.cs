@@ -59,7 +59,7 @@ public class Projectile : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         pos = transform.position;
         spr.flipX = !facingRight;

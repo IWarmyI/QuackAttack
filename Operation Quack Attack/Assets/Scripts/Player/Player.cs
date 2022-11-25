@@ -45,6 +45,11 @@ public class Player : MonoBehaviour, IDamageable
     [SerializeField] private float maxWater = 100;
     private float currentWater = 0;
     [SerializeField] private float waterRegen = 5;
+    [SerializeField] private float dashCost = 10;
+    [SerializeField] private float airJumpCost = 10;
+    [SerializeField] private float shotCost = 5;
+    private bool hasRefund = false;
+    [SerializeField] private float dashRefund = 10;
 
     // Animation
     private AnimState animState = AnimState.Idle;
@@ -121,7 +126,6 @@ public class Player : MonoBehaviour, IDamageable
     [Header("UI")]
     [SerializeField] private GameObject pauseObj;
     [SerializeField] private GameObject HUD;
-    private LevelManager levelManager;
     private Rigidbody2D rb;
 
     // Events
@@ -135,6 +139,8 @@ public class Player : MonoBehaviour, IDamageable
     public event PlayerEvent OnPlayerDashReady;
     public event PlayerEvent OnPlayerShoot;
     public event PlayerEvent OnPlayerQuack;
+    public event PlayerEvent OnPlayerRefillWater;
+    public event PlayerEvent OnPlayerTopSpeed;
 
     //Quack Counter
     int quackCount = 0;
@@ -168,11 +174,11 @@ public class Player : MonoBehaviour, IDamageable
         _isRespawn = false;
         _respawnPos = Vector2.zero;
 
-        CheckpointManager.Initialize();
+        LevelPersistence.Initialize();
         HUDTimer.Initialize();
     }
 
-    public static void Respawn(Vector2 position)
+    public static void SetRespawn(Vector2 position)
     {
         _isRespawn = true;
         _respawnPos = position;
@@ -197,7 +203,6 @@ public class Player : MonoBehaviour, IDamageable
     // Start is called before the first frame update
     void Start()
     {
-        levelManager = GameObject.FindWithTag("LevelManager").GetComponent<LevelManager>();
         pos = transform.position;
         speed = baseSpeed;
         dashingTimer = dashingTime;
@@ -233,12 +238,6 @@ public class Player : MonoBehaviour, IDamageable
         // Compute collisions
         ComputeCollisions();
 
-        // Apply rigidbody velocity
-        rb.velocity = vel;
-    }
-
-    public void Update()
-    {
         // Get current position
         pos = transform.position;
 
@@ -268,11 +267,17 @@ public class Player : MonoBehaviour, IDamageable
         // Apply velocity
         pos += vel * Time.deltaTime;
 
+        // Apply rigidbody velocity
+        rb.velocity = vel;
+    }
+
+    public void Update()
+    {
         // Update Shooting Timer
         if (fireTimer < FireTime)
             fireTimer += Time.deltaTime;
 
-        if (currentWater < maxWater)
+        if (currentWater < maxWater && state == PlayerState.Normal)
         {
             currentWater += waterRegen * Time.deltaTime;
             //waterGauge.UpdateBar(currentWater, maxWater);
@@ -323,7 +328,10 @@ public class Player : MonoBehaviour, IDamageable
                 if (input.x != oldInput.x) speed = baseSpeed;
 
                 // Accelerate speed, clamped from baseSpeed to topSpeed
+                float oldSpeed = speed;
                 speed = Mathf.Clamp(speed + accelRate * Time.deltaTime, baseSpeed, topSpeed);
+                if (speed == topSpeed && oldSpeed != topSpeed)
+                    OnPlayerTopSpeed?.Invoke();
 
                 // Update velocity
                 vel.x = input.x * speed;
@@ -368,12 +376,15 @@ public class Player : MonoBehaviour, IDamageable
                 vel.x *= Mathf.Pow(airDeccel, 50 * Time.deltaTime);
             }
 
-            // Wall sliding
-            if (onWall && input.x != 0)
+            if (onWall)
             {
                 if (wallCooldown.IsComplete)
                     wallCoyote.Ready();
+            }
 
+            // Wall sliding
+            if (onWall && input.x != 0)
+            {
                 // If pressing against wall, wallslide
                 if (input.x == wallSide * -1)
                 {
@@ -408,7 +419,7 @@ public class Player : MonoBehaviour, IDamageable
 
             if (dashingCooldownTimer <= 0)
             {
-                OnPlayerDashReady();
+                OnPlayerDashReady?.Invoke();
             }
         }
 
@@ -423,7 +434,6 @@ public class Player : MonoBehaviour, IDamageable
         {
             dashingTimer = dashingTime;
             iFramesTimer = iFrames;
-            dashingCooldownTimer = dashingCooldown;
             state = PlayerState.Normal;
         }
 
@@ -483,15 +493,17 @@ public class Player : MonoBehaviour, IDamageable
         // Once complete, activate game over screen
         if (anim.IsComplete(animState))
         {
-            levelManager.Respawn();
+            if (!LevelManager.GamemodeCheckpoints)
+                HUDTimer.Initialize();
+            LevelManager.Instance.Respawn();
         }
     }    
 
     private void ShootProjectile()
     {
-        if (currentWater >= 5)
+        if (currentWater >= shotCost)
         {
-            currentWater -= 5;
+            currentWater -= shotCost;
             //waterGauge.UpdateBar(currentWater, maxWater);
             OnPlayerShoot?.Invoke();
 
@@ -570,12 +582,12 @@ public class Player : MonoBehaviour, IDamageable
             }
 
             // Double jumps if in air
-            else if (jumpCount < airJumps && currentWater >= 10)
+            else if (jumpCount < airJumps && currentWater >= airJumpCost)
             {
                 vel.y = jumpStrength;
                 onGround = false;
                 jumpCount++;
-                currentWater -= 10;
+                currentWater -= airJumpCost;
 
                 //waterGauge.UpdateBar(currentWater, maxWater);
                 OnPlayerAirJump?.Invoke();
@@ -589,7 +601,8 @@ public class Player : MonoBehaviour, IDamageable
     private void OnDash(InputValue value)
     {
         // Can only dash if in normal state
-        if (state == PlayerState.Normal && dashingCooldownTimer <= 0 && currentWater >= 10)
+        if ((state == PlayerState.Normal || state == PlayerState.Dashing)
+            && dashingCooldownTimer <= 0 && currentWater >= dashCost)
         {
             // Change state to dashing and reset vertical speed
             state = PlayerState.Dashing;
@@ -597,7 +610,10 @@ public class Player : MonoBehaviour, IDamageable
 
             // Set dashing speed
             speed = dashingSpeed;
-            currentWater -= 10;
+            dashingCooldownTimer = dashingCooldown;
+
+            currentWater -= dashCost;
+            hasRefund = false;
             //waterGauge.UpdateBar(currentWater, maxWater);
             OnPlayerDash?.Invoke();
         }
@@ -633,7 +649,7 @@ public class Player : MonoBehaviour, IDamageable
         Time.timeScale = 1.0f;
         if (!LevelManager.GamemodeCheckpoints)
             HUDTimer.Initialize();
-        levelManager.Respawn();
+        LevelManager.Instance.Respawn();
     }
 
     private void OnPauseToggle(InputValue value)
@@ -664,13 +680,14 @@ public class Player : MonoBehaviour, IDamageable
         // If on ground
         if (events[CollisionEvent.Land])
         {
+            if (!onGround && !jumpCooldown.IsRunning)
+                OnPlayerLand?.Invoke();
             onGround = true;
             jumpCount = 0;
             if (vel.y < 0) vel.y = 0;
         }
         else
         {
-            if (onGround) OnPlayerLand?.Invoke();
             onGround = false;
         }
 
@@ -728,9 +745,10 @@ public class Player : MonoBehaviour, IDamageable
         }
     }
 
-    public void RefillWater(float amount)
+    public void RefillWater(float amount, bool pickup = true)
     {
         currentWater += amount;
+        if (pickup) OnPlayerRefillWater?.Invoke();
         //waterGauge.UpdateBar(currentWater, maxWater);
     }
 
@@ -747,7 +765,25 @@ public class Player : MonoBehaviour, IDamageable
     {
         if (target.TryGetComponent(out IDamageable damageable))
         {
-            return DealDamage(damageable, damage);
+            int targetHP = DealDamage(damageable, damage);
+
+            if (targetHP <= 0)
+            {
+                if (damageable is Enemy)
+                {
+                    if (!hasRefund)
+                    {
+                        hasRefund = true;
+                        RefillWater(dashRefund);
+                    }
+
+                    if (dashingCooldownTimer > 0)
+                    {
+                        dashingCooldownTimer = 0;
+                        OnPlayerDashReady?.Invoke();
+                    }
+                }
+            }
         }
         return 0;
     }

@@ -33,6 +33,24 @@ public class Bullet : MonoBehaviour, IDamageable
 
         spr = GetComponent<SpriteRenderer>();
         rb = GetComponent<Rigidbody2D>();
+
+        player = GameObject.FindWithTag("Player");
+        if (player != null)
+        {
+            Collider2D[] colliders = GetComponentsInChildren<Collider2D>();
+            Collider2D[] playerCols = player.GetComponentsInChildren<Collider2D>();
+
+            foreach (Collider2D col in colliders)
+            {
+                foreach (Collider2D col2 in playerCols)
+                {
+                    if (!col2.isTrigger)
+                    {
+                        Physics2D.IgnoreCollision(col, col2);
+                    }
+                }
+            }
+        }
     }
 
     // Update is called once per frame
@@ -69,23 +87,16 @@ public class Bullet : MonoBehaviour, IDamageable
 
     private void IgnoreCollision()
     {
+        if (player == null) return;
+
         Collider2D[] colliders = GetComponentsInChildren<Collider2D>();
         Collider2D[] ownerCols = owner.GetComponentsInChildren<Collider2D>();
-        Collider2D[] playerCols = GameObject.FindWithTag("Player").GetComponentsInChildren<Collider2D>();
 
         foreach (Collider2D col in colliders)
         {
             foreach (Collider2D col2 in ownerCols)
             {
                 Physics2D.IgnoreCollision(col, col2);
-            }
-
-            foreach (Collider2D col3 in playerCols)
-            {
-                if (!col3.isTrigger)
-                {
-                    Physics2D.IgnoreCollision(col, col3);
-                }
             }
         }
     }

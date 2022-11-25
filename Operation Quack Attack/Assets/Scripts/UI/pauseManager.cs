@@ -14,12 +14,8 @@ public class pauseManager : MonoBehaviour
     public GameObject pauseObj;
     public GameObject player;
 
-    private LevelManager levelManager;
-
     void Start()
     {
-        levelManager = GameObject.FindWithTag("LevelManager").GetComponent<LevelManager>();
-
         if (RestartButton != null)
             RestartButton.SetActive(!LevelManager.GamemodeCheckpoints);
 
@@ -35,7 +31,7 @@ public class pauseManager : MonoBehaviour
     public void BackToMain()
     {
         Time.timeScale = 1.0f;
-        levelManager.LoadScene("MainMenu");
+        LevelManager.Instance.LoadScene("MainMenu");
     }
 
     public void Restart()
@@ -44,14 +40,14 @@ public class pauseManager : MonoBehaviour
         if (!LevelManager.GamemodeCheckpoints)
             HUDTimer.Initialize();
         player.SetActive(true);
-        levelManager.Respawn();
+        LevelManager.Instance.Respawn();
     }
 
     public void RestartLevel()
     {
         Time.timeScale = 1.0f;
         player.SetActive(true);
-        levelManager.RestartLevel();
+        LevelManager.Instance.RestartLevel();
     }
 
 
@@ -60,7 +56,6 @@ public class pauseManager : MonoBehaviour
         Time.timeScale = 1.0f;
         player.SetActive(true);
         pauseObj.SetActive(false);
-
     }
 
     private void OnPauseToggleOff(InputValue value)

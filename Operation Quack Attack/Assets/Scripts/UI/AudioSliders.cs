@@ -7,8 +7,8 @@ using UnityEngine.Audio;
 public class AudioSliders : MonoBehaviour
 {
     public Slider music, sfx;
-    public static float musicFloat;
-    public static float sfxFloat;
+    public static float musicFloat = 0.5f;
+    public static float sfxFloat = 0.5f;
 
     void OnEnable()
     {
