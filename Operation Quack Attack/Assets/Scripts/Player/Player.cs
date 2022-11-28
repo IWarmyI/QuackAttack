@@ -55,6 +55,7 @@ public class Player : MonoBehaviour, IDamageable
     private AnimState animState = AnimState.Idle;
     private PlayerAnimation anim;
     private bool hasStarted = false;
+    private Timer stepTime;
 
     // Position and Input
     private Vector2 pos;
@@ -211,6 +212,7 @@ public class Player : MonoBehaviour, IDamageable
 
         jumpCooldown = new Timer(jumpCoyote.MaxTime);
         wallCooldown = new Timer(wallCoyote.MaxTime / 2);
+        stepTime = new Timer(0.2f, false, () => OnPlayerStep?.Invoke());
 
         rb = GetComponentInChildren<Rigidbody2D>();
         col = gameObject.GetOrAddComponent<PlayerCollision>();
@@ -288,6 +290,7 @@ public class Player : MonoBehaviour, IDamageable
         wallCoyote.Update();
         jumpCooldown.Update();
         wallCooldown.Update();
+        stepTime.Update();
     }
 
     private void LateUpdate()
@@ -324,6 +327,10 @@ public class Player : MonoBehaviour, IDamageable
                 // Set animation state to Run
                 animState = AnimState.Run;
 
+                // Periodic step effects
+                if (stepTime.IsPaused) OnPlayerStep?.Invoke();
+                stepTime.Play();
+
                 // Reset speed when changing directions
                 if (input.x != oldInput.x) speed = baseSpeed;
 
@@ -340,6 +347,7 @@ public class Player : MonoBehaviour, IDamageable
             {
                 // Set animation state to Idle
                 animState = AnimState.Idle;
+                stepTime.Ready();
 
                 // Reset speed and deccelerate velocity
                 speed = baseSpeed;
@@ -353,6 +361,7 @@ public class Player : MonoBehaviour, IDamageable
         {
             // Set animation state to Air
             animState = AnimState.Air;
+            stepTime.Ready();
 
             // Vertical movement
             // If rising, use jump gravity; if falling, use fall gravity

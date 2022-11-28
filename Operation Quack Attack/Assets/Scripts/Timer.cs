@@ -76,4 +76,14 @@ public class Timer
         currentTime = 0;
         isPaused = true;
     }
+
+    public void Play()
+    {
+        if (IsComplete)
+        {
+            Start();
+            return;
+        }
+        Resume();
+    }
 }
