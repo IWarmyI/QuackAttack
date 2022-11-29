@@ -10,6 +10,7 @@ using System;
 
 public class Stats : MonoBehaviour
 {
+    public TextMeshProUGUI dev;
     public TextMeshProUGUI time;
 
     public GameObject mainmenuButton;
@@ -21,12 +22,11 @@ public class Stats : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        int min = Mathf.FloorToInt(timer / 60.0f);
-        int sec = Mathf.FloorToInt(timer - min * 60);
-        int dec = Mathf.FloorToInt((timer - (min * 60 + sec)) * 100);
-        string formattedTime = $"{min:00}:{sec:00}.{dec:00}";
+        string yourTime = FormatTime(timer);
+        string devTime = FormatTime(LevelManager.DevTime);
 
-        time.text = $"Your Time: {formattedTime}";
+        dev.text = $"Dev Time: {devTime}";
+        time.text = $"Your Time: {yourTime}";
 
         nextLevelButton.SetActive(!LevelManager.IsLastLevel);
 
@@ -36,7 +36,7 @@ public class Stats : MonoBehaviour
         canvas.GetComponent<AudioSource>().volume = musicFloat;
 
         // HUDTimer.timer is in seconds
-        if (timer < 8.11)
+        if (timer < LevelManager.DevTime)
         {
             achievement.Unlock("BeatDev");
         }
@@ -55,5 +55,13 @@ public class Stats : MonoBehaviour
     public void RestartLevelButton()
     {
         LevelManager.Instance.RestartLevel();
+    }
+
+    private string FormatTime(float value)
+    {
+        int min = (int)(value / 6000);
+        int sec = (int)(value / 100 - min * 60);
+        int dec = (int)(value - (min * 6000 + sec * 100));
+        return $"{min:00}:{sec:00}.{dec:00}";
     }
 }

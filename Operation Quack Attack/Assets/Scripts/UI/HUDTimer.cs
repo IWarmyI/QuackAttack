@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using static UnityEngine.Rendering.DebugUI;
 
 public class HUDTimer : MonoBehaviour
 {
@@ -42,7 +43,7 @@ public class HUDTimer : MonoBehaviour
         {
             if (!Stop && Time.timeScale != 0)
             {
-                timer += Time.deltaTime;
+                timer += Time.deltaTime * 100;
             }
         }
 
@@ -51,13 +52,13 @@ public class HUDTimer : MonoBehaviour
 
     private void LateUpdate()
     {
-        int min = Mathf.FloorToInt(timer / 60.0f);
-        int sec = Mathf.FloorToInt(timer - min * 60);
-        int mil = Mathf.FloorToInt((timer - (min * 60 + sec)) * 100);
+        int min = (int)(timer / 6000);
+        int sec = (int)(timer / 100 - min * 60);
+        int dec = (int)(timer - (min * 6000 + sec * 100));
 
         string text = $"<mspace=0.95em>{min:00}</mspace>" +
                       $"'<mspace=0.95em>{sec:00}</mspace>" +
-                      $"''<mspace=0.95em>{mil:00}</mspace>\n";
+                      $"''<mspace=0.95em>{dec:00}</mspace>\n";
         //text += $"Water {(int)water}\n";
         hud.text = text;
     }

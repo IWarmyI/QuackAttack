@@ -148,7 +148,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   transitionAnimator: {fileID: 5214206389388754122}
   transitionDelayTime: 0.5
-  isLoading: 0
+  firstLevel: 1
+  numberOfLevels: 1
+  menuScenes:
+  - MainMenu
+  - EndLevel
+  - GameOver
+  devTimes:
+  - 811
+  - 1000
 --- !u!1001 &6611503348703108068
 PrefabInstance:
   m_ObjectHideFlags: 0

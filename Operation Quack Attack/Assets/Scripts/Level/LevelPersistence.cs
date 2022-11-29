@@ -12,6 +12,8 @@ public class LevelPersistence : MonoBehaviour
 
     // Level of this instance of persistent
     [SerializeField] private int levelNumber;
+    [Tooltip("Does not delete level if not in build list. Disable once added to build list.")]
+    [SerializeField] private bool debugMode;
 
     public delegate void PersistentEvent();
     public event PersistentEvent OnReload;
@@ -42,7 +44,8 @@ public class LevelPersistence : MonoBehaviour
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         // Keep persistent if persistent match current level
-        if (Instance == null && Level == LevelManager.CurrentLevel)
+        if ((Instance == null && Level == LevelManager.CurrentLevel) ||
+            debugMode && SceneManager.GetActiveScene().buildIndex != 0)
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);

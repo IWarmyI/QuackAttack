@@ -7,20 +7,38 @@ using UnityEngine.SceneManagement;
 
 public class LevelManager : MonoBehaviour
 {
-    public static int CurrentLevel = -1;
-    public const int FirstLevel = 1;
-    public const int NumberOfLevels = 1;
-    public static bool IsLastLevel = false;
-    public static bool IsInGame = false;
-    public static string[] MenuLevels = { "MainMenu", "EndLevel", "GameOver" };
+    // Static
+    public static LevelManager Instance;
 
     public static bool GamemodeCheckpoints = true;
 
-    public static LevelManager Instance;
+    public static int CurrentLevel = -1;
+    public static bool IsLastLevel = false;
+    public static bool IsInGame = false;
+    public static int FirstLevel { get => Instance.firstLevel; }
+    public static int NumberOfLevels { get => Instance.numberOfLevels; }
+    public static string[] MenuLevels { get => Instance.menuScenes; }
+    public static float[] DevTimes { get => Instance.devTimes; }
+    public static float DevTime {
+        get
+        {
+            if (CurrentLevel - FirstLevel >= DevTimes.Length) return 0;
+            return DevTimes[CurrentLevel - FirstLevel];
+        }
+    }
 
+    // Instance
     public Animator transitionAnimator;
     public float transitionDelayTime = 1.0f;
     public static bool IsLoading;
+
+    [Header("Global (Only Edit in Prefab)")]
+    [Tooltip("Build index of first level's scene.")]
+    public int firstLevel = 1;
+    [Tooltip("Number of playable levels.")]
+    public int numberOfLevels = 1;
+    public string[] menuScenes = { "MainMenu", "EndLevel", "GameOver" };
+    public float[] devTimes = { 811f, 1000f };
 
     private void Awake()
     {
@@ -49,7 +67,7 @@ public class LevelManager : MonoBehaviour
             IsInGame = true;
         }
 
-        IsLastLevel = CurrentLevel + 1 == FirstLevel + NumberOfLevels;
+        IsLastLevel = CurrentLevel + 1 >= FirstLevel + NumberOfLevels;
 
         //Debug.Log($"Current Level: {CurrentLevel}");
     }

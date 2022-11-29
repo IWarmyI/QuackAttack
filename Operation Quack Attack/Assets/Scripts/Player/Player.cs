@@ -466,6 +466,7 @@ public class Player : MonoBehaviour, IDamageable
                 _isIntro = false;
                 state = PlayerState.Normal;
                 animState = AnimState.Idle;
+                if (input != Vector2.zero) hasStarted = true;
             }
         }
         // Else, return to normal
@@ -473,6 +474,7 @@ public class Player : MonoBehaviour, IDamageable
         {
             state = PlayerState.Normal;
             animState = AnimState.Idle;
+            if (input != Vector2.zero) hasStarted = true;
         }
 
         // Don't move when stopped
