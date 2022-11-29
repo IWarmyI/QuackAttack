@@ -45,6 +45,7 @@ public class PlayerAnimation : MonoBehaviour
 
     private Vector3 rotate180 = new Vector3(0, 180, 0);
 
+    public float SpeedMultiplier { get => speedMultiplier; }
 
     void Start()
     {
@@ -153,6 +154,10 @@ public class PlayerAnimation : MonoBehaviour
     public void OnAnimExit(AnimState animState)
     {
         complete[animState] = true;
+    }
+    public void OnStep()
+    {
+        player.Step();
     }
 
     private void FlashFX()

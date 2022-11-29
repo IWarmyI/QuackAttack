@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using static AudioSliders;
 
 public class LevelMusic : MonoBehaviour
 {
@@ -11,6 +12,7 @@ public class LevelMusic : MonoBehaviour
     private void Awake()
     {
         persist = GetComponentInParent<LevelPersistence>();
+        source.volume = musicFloat;
         persist.OnReload += RestartMusic;
     }
 
@@ -19,6 +21,7 @@ public class LevelMusic : MonoBehaviour
         if (LevelPersistence.RestartFlag)
         {
             source.Stop();
+            source.volume = musicFloat;
             source.Play();
         }
 
