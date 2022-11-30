@@ -25,7 +25,7 @@ public class LevelMusic : MonoBehaviour
             source.Play();
         }
 
-        if (persist.Level != SceneManager.GetActiveScene().buildIndex)
+        if (persist.Level != SceneManager.GetActiveScene().buildIndex && !persist.debugMode)
         {
             source.Stop();
         }

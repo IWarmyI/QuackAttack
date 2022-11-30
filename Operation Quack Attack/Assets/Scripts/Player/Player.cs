@@ -564,7 +564,7 @@ public class Player : MonoBehaviour, IDamageable
             if (!onGround && wallJumpInput && wallJumpReady)
             {
                 Vector2 wallJump = new Vector2(wallSide * 0.75f, 1);
-                if (input.x + wallSide > 0) wallJump = new Vector2(wallSide * 0.65f, 0.75f);
+                if (input.x + wallSide > 0) wallJump = new Vector2(wallSide * 0.65f, 0.85f);
                 vel = wallJump * jumpStrength;
                 onWall = false;
                 wallCoyote.Stop();

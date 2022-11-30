@@ -13,7 +13,7 @@ public class LevelPersistence : MonoBehaviour
     // Level of this instance of persistent
     [SerializeField] private int levelNumber;
     [Tooltip("Does not delete level if not in build list. Disable once added to build list.")]
-    [SerializeField] private bool debugMode;
+    [SerializeField] public bool debugMode;
 
     public delegate void PersistentEvent();
     public event PersistentEvent OnReload;
