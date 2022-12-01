@@ -148,6 +148,7 @@ public class Player : MonoBehaviour, IDamageable
     [SerializeField] AchievementManager achievementManager;
 
     // Properties
+    public static bool IsIntro { get { return _isIntro; } } 
     public PlayerState State { get { return state; } }
     public AnimState Animation { get { return animState; } }
     public bool HasStarted { get { return hasStarted; } }
