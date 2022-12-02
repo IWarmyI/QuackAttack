@@ -2943,6 +2943,7 @@ MonoBehaviour:
   door: {fileID: 1121634476}
   panTime: 2.5
   panSize: 15
+  panZoomTime: 1
 --- !u!114 &519420034
 MonoBehaviour:
   m_ObjectHideFlags: 0

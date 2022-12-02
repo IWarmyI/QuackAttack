@@ -45,7 +45,7 @@ public class Stats : MonoBehaviour
         {
             achievement.Unlock("NoCheckpoints");
         }
-        if (timer < LevelManager.DevTime)
+        if (timer <= LevelManager.DevTime)
         {
             achievement.Unlock("BeatDev");
         }
