@@ -43,6 +43,11 @@ public class PlayerAnimation : MonoBehaviour
     private ParticleSystem psDustRun;
     private ParticleSystem psDustWall;
 
+    // Player Hat
+    public SpriteRenderer hatSpriteRenderer;
+    public List<Sprite> hatSpriteList;
+    private int currHatSprite;
+
     private Vector3 rotate180 = new Vector3(0, 180, 0);
 
     public float SpeedMultiplier { get => speedMultiplier; }
@@ -91,6 +96,8 @@ public class PlayerAnimation : MonoBehaviour
             }
         }
 
+        currHatSprite = HatManager.currSprite;
+        hatSpriteRenderer.sprite = hatSpriteList[currHatSprite];
     }
 
     public void Animate()

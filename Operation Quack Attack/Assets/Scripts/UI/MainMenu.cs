@@ -9,11 +9,13 @@ public class MainMenu : MonoBehaviour
     public GameObject main;
     public GameObject difficulty;
     public GameObject options;
+    public GameObject customize;
     public GameObject credits;
 
     public GameObject mainMenuFirstOption;
     public GameObject DifficultyFirstOption;
     public GameObject OptionsFirstOption;
+    public GameObject CustomizeFirstOption;
     public GameObject CreditsFirstObject;
 
     public GameObject canvas;
@@ -71,6 +73,7 @@ public class MainMenu : MonoBehaviour
         options.SetActive(false);
         credits.SetActive(false);
         main.SetActive(false);
+        customize.SetActive(false);
         difficulty.SetActive(true);
 
         EventSystem.current.SetSelectedGameObject(null);
@@ -83,6 +86,7 @@ public class MainMenu : MonoBehaviour
         options.SetActive(false);
         credits.SetActive(false);
         difficulty.SetActive(false);
+        customize.SetActive(false);
         main.SetActive(true);
 
         EventSystem.current.SetSelectedGameObject(null);
@@ -96,10 +100,25 @@ public class MainMenu : MonoBehaviour
         main.SetActive(false);
         credits.SetActive(false);
         difficulty.SetActive(false);
+        customize.SetActive(false);
         options.SetActive(true);
 
         EventSystem.current.SetSelectedGameObject(null);
         EventSystem.current.SetSelectedGameObject(OptionsFirstOption);
+    }
+
+    public void CustomizeButton()
+    {
+        // Show Customization Options
+        main.SetActive(false);
+        credits.SetActive(false);
+        difficulty.SetActive(false);
+        options.SetActive(false);
+        customize.SetActive(true);
+
+        EventSystem.current.SetSelectedGameObject(null);
+        EventSystem.current.SetSelectedGameObject(CustomizeFirstOption);
+
     }
 
     public void CreditsButton()
@@ -108,6 +127,7 @@ public class MainMenu : MonoBehaviour
         main.SetActive(false);
         options.SetActive(false);
         difficulty.SetActive(false);
+        customize.SetActive(false);
         credits.SetActive(true);
 
         EventSystem.current.SetSelectedGameObject(null);
