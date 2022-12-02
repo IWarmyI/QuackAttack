@@ -747,6 +747,12 @@ public class Player : MonoBehaviour, IDamageable
                     vel.y *= Mathf.Pow(airDeccel, 50 * Time.deltaTime);
             }
         }
+
+        // When falling off of a wall, prevent walljumps
+        if (events[CollisionEvent.WallExit])
+        {
+            wallCoyote.Stop();
+        }
     }
 
     public void RefillWater(float amount, bool pickup = true)
