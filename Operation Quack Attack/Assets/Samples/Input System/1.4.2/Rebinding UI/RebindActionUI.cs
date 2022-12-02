@@ -296,6 +296,9 @@ namespace UnityEngine.InputSystem.Samples.RebindUI
                             if (nextBindingIndex < action.bindings.Count && action.bindings[nextBindingIndex].isPartOfComposite)
                                 PerformInteractiveRebind(action, nextBindingIndex, true);
                         }
+
+                        // save rebinds
+
                     });
 
             // If it's a part binding, show the name of the part in the UI.

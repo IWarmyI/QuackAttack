@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using static AudioSliders;
+using UnityEngine.InputSystem;
 
 public class MainMenu : MonoBehaviour
 {
@@ -18,6 +19,8 @@ public class MainMenu : MonoBehaviour
     public GameObject canvas;
     private static bool firstTime = true;
 
+    public InputActionAsset actions;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -30,6 +33,16 @@ public class MainMenu : MonoBehaviour
             sfxFloat = 0.5f;
         }
         canvas.GetComponent<AudioSource>().volume = musicFloat;
+
+        var rebinds = PlayerPrefs.GetString("rebinds");
+        if (!string.IsNullOrEmpty(rebinds))
+            actions.LoadBindingOverridesFromJson(rebinds);
+    }
+
+    public void Save()
+    {
+        var rebinds = actions.SaveBindingOverridesAsJson();
+        PlayerPrefs.SetString("rebinds", rebinds);
     }
 
     void Update()
