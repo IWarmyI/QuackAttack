@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
+using UnityEngine.SocialPlatforms.Impl;
 using static PlayerCollision;
 
 public class Player : MonoBehaviour, IDamageable
@@ -145,9 +146,10 @@ public class Player : MonoBehaviour, IDamageable
 
     //Quack Counter
     int quackCount = 0;
-    [SerializeField] AchievementManager achievementManager;
+    AchievementManager achievementManager;
 
     // Properties
+    public static bool IsIntro { get { return _isIntro; } } 
     public PlayerState State { get { return state; } }
     public AnimState Animation { get { return animState; } }
     public bool HasStarted { get { return hasStarted; } }
@@ -216,6 +218,8 @@ public class Player : MonoBehaviour, IDamageable
         rb = GetComponentInChildren<Rigidbody2D>();
         col = gameObject.GetOrAddComponent<PlayerCollision>();
         anim = GetComponentInChildren<PlayerAnimation>();
+
+        achievementManager = AchievementManager.instance;
 
         for (int i = 0; i < 10; i++)
         {
@@ -745,6 +749,12 @@ public class Player : MonoBehaviour, IDamageable
                 if (vel.y > 0 && Mathf.Abs(vel.x) >= baseSpeed)
                     vel.y *= Mathf.Pow(airDeccel, 50 * Time.deltaTime);
             }
+        }
+
+        // When falling off of a wall, prevent walljumps
+        if (events[CollisionEvent.WallExit])
+        {
+            wallCoyote.Stop();
         }
     }
 

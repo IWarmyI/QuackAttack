@@ -15,7 +15,8 @@ public class PlayerCollision : MonoBehaviour
         WallSide,
         WallBonk,
         WallLat,
-        WallVert
+        WallVert,
+        WallExit
     }
 
     [SerializeField] private Player player;
@@ -30,6 +31,7 @@ public class PlayerCollision : MonoBehaviour
         { CollisionEvent.WallBonk, 0},
         { CollisionEvent.WallLat, 0},
         { CollisionEvent.WallVert, 0},
+        { CollisionEvent.WallExit, 0},
     };
 
     private void Start()
@@ -183,6 +185,24 @@ public class PlayerCollision : MonoBehaviour
 
         if (collision.gameObject.CompareTag("Stage"))
         {
+            // OtherCollider (Player)
+            float aLeft = collision.otherCollider.bounds.min.x;
+            float aRight = collision.otherCollider.bounds.max.x;
+            float aBottom = collision.otherCollider.bounds.min.y;
+            float aTop = collision.otherCollider.bounds.max.y;
+            // Collider (Wall)
+            float bLeft = collision.collider.bounds.min.x;
+            float bRight = collision.collider.bounds.max.x;
+            float bBottom = collision.collider.bounds.min.y;
+            float bTop = collision.collider.bounds.max.y;
+
+            if (aBottom < bTop && bBottom <= aTop && !player.OnGround)
+            {
+                if (collision.otherCollider.bounds.center.y < bBottom)
+                {
+                    events[CollisionEvent.WallExit]++;
+                }
+            }
         }
     }
 }
