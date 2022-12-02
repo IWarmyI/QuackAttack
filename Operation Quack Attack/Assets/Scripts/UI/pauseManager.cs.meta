@@ -3,7 +3,13 @@ guid: bc42a83d34016fe4b89d70b6e5b185a6
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - FirstOption: {instanceID: 0}
+  - RestartButton: {instanceID: 0}
+  - CheckpointButtons: {instanceID: 0}
+  - pauseObj: {instanceID: 0}
+  - player: {instanceID: 0}
+  - transition: {fileID: 1413094895158535980, guid: c818be162face5248a2d1eaa474b30fb, type: 3}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

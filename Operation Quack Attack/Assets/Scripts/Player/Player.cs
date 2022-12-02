@@ -128,6 +128,9 @@ public class Player : MonoBehaviour, IDamageable
     [SerializeField] private GameObject HUD;
     private Rigidbody2D rb;
 
+    // Transition
+    private GameObject transition;
+
     // Events
     public delegate void PlayerEvent();
     public event PlayerEvent OnPlayerStep; // (Not Implemented)
@@ -681,6 +684,7 @@ public class Player : MonoBehaviour, IDamageable
             Time.timeScale = 0.0f;
         }
 
+        transition.SetActive(false);
         pauseObj.SetActive(!pauseObj.activeSelf);
         gameObject.SetActive(!gameObject.activeSelf);
     }
