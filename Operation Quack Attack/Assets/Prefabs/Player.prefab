@@ -9996,7 +9996,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   health: 1
   maxWater: 60
-  waterRegen: 5
+  waterRegen: 2.5
   dashCost: 10
   airJumpCost: 10
   shotCost: 4
@@ -10029,7 +10029,6 @@ MonoBehaviour:
   projectileList: []
   pauseObj: {fileID: 0}
   HUD: {fileID: 0}
-  achievementManager: {fileID: 0}
 --- !u!114 &5718507700172701313
 MonoBehaviour:
   m_ObjectHideFlags: 0

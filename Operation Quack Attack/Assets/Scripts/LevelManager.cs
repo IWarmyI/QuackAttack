@@ -89,7 +89,11 @@ public class LevelManager : MonoBehaviour
 
     public void RestartLevel()
     {
-        LoadNewLevel(CurrentLevel);
+        LoadNewLevel(CurrentLevel, GamemodeCheckpoints);
+    }
+    public void RestartLevel(bool showLevelPan)
+    {
+        LoadNewLevel(CurrentLevel, showLevelPan);
     }
 
     public void NextLevel()
@@ -102,9 +106,9 @@ public class LevelManager : MonoBehaviour
         StartCoroutine(DelayLoadLevel(CurrentLevel));
     }
 
-    public void LoadNewLevel(int level, bool transition = true)
+    public void LoadNewLevel(int level, bool showLevelPan = true, bool transition = true)
     {
-        Player.Initialize();
+        Player.Initialize(showLevelPan);
         CurrentLevel = level;
         if (transition)
             StartCoroutine(DelayLoadLevel(level));

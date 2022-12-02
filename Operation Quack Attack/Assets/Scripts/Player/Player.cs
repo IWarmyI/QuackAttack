@@ -2,10 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
-using UnityEngine.SceneManagement;
-using UnityEngine.SocialPlatforms.Impl;
 using static PlayerCollision;
 
 public class Player : MonoBehaviour, IDamageable
@@ -26,7 +23,8 @@ public class Player : MonoBehaviour, IDamageable
         Dash,
         Intro,
         Wall,
-        Dead
+        Dead,
+        Wait
     }
 
     public enum Difficulty
@@ -64,6 +62,7 @@ public class Player : MonoBehaviour, IDamageable
     private bool facingRight = true;
 
     // Restart
+    private static bool _isStageIntro = true;
     private static bool _isIntro = true;
     private static bool _isRespawn = false;
     private static Vector2 _respawnPos = Vector2.zero;
@@ -149,7 +148,7 @@ public class Player : MonoBehaviour, IDamageable
     AchievementManager achievementManager;
 
     // Properties
-    public static bool IsIntro { get { return _isIntro; } } 
+    public static bool IsIntro { get { return _isStageIntro; } } 
     public PlayerState State { get { return state; } }
     public AnimState Animation { get { return animState; } }
     public bool HasStarted { get { return hasStarted; } }
@@ -171,8 +170,9 @@ public class Player : MonoBehaviour, IDamageable
     }
     private float FireTime { get { return 1.0f / fireRate; } }
 
-    public static void Initialize()
+    public static void Initialize(bool showLevelPan = true)
     {
+        _isStageIntro = showLevelPan;
         _isIntro = true;
         _isRespawn = false;
         _respawnPos = Vector2.zero;
@@ -230,7 +230,10 @@ public class Player : MonoBehaviour, IDamageable
         if (_isIntro)
         {
             state = PlayerState.Stopped;
-            animState = AnimState.Intro;
+            if (_isStageIntro)
+                animState = AnimState.Wait;
+            else
+                animState = AnimState.Intro;
         }
         if (_isRespawn)
         {
@@ -455,7 +458,15 @@ public class Player : MonoBehaviour, IDamageable
     private void UpdateStopped()
     {
         // If intro animation is playing, wait for it to complete
-        if (_isIntro)
+        if (_isStageIntro)
+        {
+            if (anim.IsComplete(animState))
+            {
+                _isStageIntro = false;
+                animState = AnimState.Intro;
+            }
+        }
+        else if (_isIntro)
         {
             if (anim.IsComplete(animState))
             {
