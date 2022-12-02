@@ -3749,7 +3749,7 @@ MonoBehaviour:
   OptionsFirstOption: {fileID: 1680848671}
   CreditsFirstObject: {fileID: 2139024008}
   canvas: {fileID: 1013050553}
-  actions: {fileID: 0}
+  actions: {fileID: -944628639613478452, guid: 9eab2b5560fcb974aa5192b9d3f8b5c7, type: 3}
 --- !u!114 &1013050555
 MonoBehaviour:
   m_ObjectHideFlags: 0
