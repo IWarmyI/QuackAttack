@@ -66,6 +66,12 @@ public class MainMenu : MonoBehaviour
         Player.Initialize();
         LevelManager.Instance.NewGame();
     }
+    public void PlayLevel(int level)
+    {
+        firstTime = false;
+        Player.Initialize();
+        LevelManager.Instance.LoadNewLevel(LevelManager.FirstLevel + level);
+    }
 
     public void StartButton()
     {

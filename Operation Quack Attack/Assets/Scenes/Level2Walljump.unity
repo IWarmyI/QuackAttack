@@ -11047,6 +11047,26 @@ PrefabInstance:
       propertyPath: m_Name
       value: Paper.1
       objectReference: {fileID: 0}
+    - target: {fileID: 4305858158652385443, guid: 8e2ded0af93f62040ad7190b1af3d92d, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4305858158652385443, guid: 8e2ded0af93f62040ad7190b1af3d92d, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4305858158652385443, guid: 8e2ded0af93f62040ad7190b1af3d92d, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4305858158652385443, guid: 8e2ded0af93f62040ad7190b1af3d92d, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4305858158652385443, guid: 8e2ded0af93f62040ad7190b1af3d92d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 180
+      objectReference: {fileID: 0}
     - target: {fileID: 4557821782950026997, guid: 8e2ded0af93f62040ad7190b1af3d92d, type: 3}
       propertyPath: m_FlipX
       value: 1
@@ -34764,7 +34784,7 @@ Tilemap:
     second:
       serializedVersion: 2
       m_TileIndex: 16
-      m_TileSpriteIndex: 16
+      m_TileSpriteIndex: 17
       m_TileMatrixIndex: 0
       m_TileColorIndex: 0
       m_TileObjectToInstantiateIndex: 65535
@@ -34944,7 +34964,7 @@ Tilemap:
     second:
       serializedVersion: 2
       m_TileIndex: 15
-      m_TileSpriteIndex: 15
+      m_TileSpriteIndex: 16
       m_TileMatrixIndex: 0
       m_TileColorIndex: 0
       m_TileObjectToInstantiateIndex: 65535
@@ -45289,12 +45309,12 @@ Tilemap:
     m_Data: {fileID: -1612030063, guid: a65b7a3213e2f304d9363d9fb43f006a, type: 3}
   - m_RefCount: 2
     m_Data: {fileID: 121633007, guid: a65b7a3213e2f304d9363d9fb43f006a, type: 3}
+  - m_RefCount: 0
+    m_Data: {fileID: 0}
   - m_RefCount: 1
     m_Data: {fileID: -1390557747, guid: a65b7a3213e2f304d9363d9fb43f006a, type: 3}
   - m_RefCount: 1
     m_Data: {fileID: 501763685, guid: a65b7a3213e2f304d9363d9fb43f006a, type: 3}
-  - m_RefCount: 0
-    m_Data: {fileID: 0}
   m_TileMatrixArray:
   - m_RefCount: 1608
     m_Data:

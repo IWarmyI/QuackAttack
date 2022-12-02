@@ -13,10 +13,12 @@ public class pauseManager : MonoBehaviour
 
     public GameObject pauseObj;
     public GameObject player;
-    public GameObject transition;
+    private GameObject transition;
 
     void Start()
     {
+        transition = LevelManager.Instance.transition;
+
         if (RestartButton != null)
             RestartButton.SetActive(!LevelManager.GamemodeCheckpoints);
 
@@ -31,14 +33,14 @@ public class pauseManager : MonoBehaviour
 
     public void BackToMain()
     {
-        //transition.SetActive(true);
+        transition.SetActive(true);
         Time.timeScale = 1.0f;
         LevelManager.Instance.LoadScene("MainMenu");
     }
 
     public void Restart()
     {
-        //transition.SetActive(true);
+        transition.SetActive(true);
         Time.timeScale = 1.0f;
         if (!LevelManager.GamemodeCheckpoints)
             HUDTimer.Initialize();
@@ -48,7 +50,7 @@ public class pauseManager : MonoBehaviour
 
     public void RestartLevel()
     {
-        //transition.SetActive(true);
+        transition.SetActive(true);
         Time.timeScale = 1.0f;
         player.SetActive(true);
         LevelManager.Instance.RestartLevel();
@@ -57,7 +59,7 @@ public class pauseManager : MonoBehaviour
 
     public void ReturnToGane()
     {
-        //transition.SetActive(true);
+        transition.SetActive(true);
         Time.timeScale = 1.0f;
         player.SetActive(true);
         pauseObj.SetActive(false);

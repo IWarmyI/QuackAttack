@@ -223,6 +223,7 @@ public class Player : MonoBehaviour, IDamageable
         anim = GetComponentInChildren<PlayerAnimation>();
 
         achievementManager = AchievementManager.instance;
+        transition = LevelManager.Instance.transition;
 
         for (int i = 0; i < 10; i++)
         {

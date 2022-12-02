@@ -31,6 +31,7 @@ public class LevelManager : MonoBehaviour
     public Animator transitionAnimator;
     public float transitionDelayTime = 1.0f;
     public static bool IsLoading;
+    [NonSerialized] public GameObject transition;
 
     [Header("Global (Only Edit in Prefab)")]
     [Tooltip("Build index of first level's scene.")]
@@ -49,6 +50,7 @@ public class LevelManager : MonoBehaviour
         }
 
         Instance = this;
+        transition = GameObject.Find("Transition");
         DontDestroyOnLoad(gameObject);
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
