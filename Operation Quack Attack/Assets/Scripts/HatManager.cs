@@ -13,6 +13,7 @@ public class HatManager : MonoBehaviour
     void Start()
     {
         currSprite = 0;
+        hatDisplay.text = hatNames[currSprite];
     }
 
     // Update is called once per frame
