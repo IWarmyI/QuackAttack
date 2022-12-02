@@ -17,7 +17,12 @@ public class Stats : MonoBehaviour
     public GameObject nextLevelButton;
 
     public GameObject canvas;
-    [SerializeField] AchievementManager achievement;
+    private AchievementManager achievement;
+
+    private void Awake()
+    {
+        achievement = AchievementManager.instance;
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -36,6 +41,10 @@ public class Stats : MonoBehaviour
         canvas.GetComponent<AudioSource>().volume = musicFloat;
 
         // HUDTimer.timer is in seconds
+        if (LevelManager.GamemodeCheckpoints == false)
+        {
+            achievement.Unlock("NoCheckpoints");
+        }
         if (timer < LevelManager.DevTime)
         {
             achievement.Unlock("BeatDev");

@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
+using UnityEngine.SocialPlatforms.Impl;
 using static PlayerCollision;
 
 public class Player : MonoBehaviour, IDamageable
@@ -145,7 +146,7 @@ public class Player : MonoBehaviour, IDamageable
 
     //Quack Counter
     int quackCount = 0;
-    [SerializeField] AchievementManager achievementManager;
+    AchievementManager achievementManager;
 
     // Properties
     public static bool IsIntro { get { return _isIntro; } } 
@@ -217,6 +218,8 @@ public class Player : MonoBehaviour, IDamageable
         rb = GetComponentInChildren<Rigidbody2D>();
         col = gameObject.GetOrAddComponent<PlayerCollision>();
         anim = GetComponentInChildren<PlayerAnimation>();
+
+        achievementManager = AchievementManager.instance;
 
         for (int i = 0; i < 10; i++)
         {
