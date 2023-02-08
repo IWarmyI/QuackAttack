@@ -4898,8 +4898,8 @@ MonoBehaviour:
   player: {fileID: 1830123204}
   camSpeed: 10
   offset: {x: 0, y: 0, z: -10}
-  door: {fileID: 0}
-  panTime: 2.5
+  door: {fileID: 1144232114}
+  panTime: 7
   panSize: 15
   panZoomTime: 1
 --- !u!114 &519420034
