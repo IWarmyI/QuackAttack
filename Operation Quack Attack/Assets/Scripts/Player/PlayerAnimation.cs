@@ -20,6 +20,7 @@ public class PlayerAnimation : MonoBehaviour
     private Player player;
     private Animator anim;
     private SpriteRenderer spr;
+    [SerializeField] private GameObject hat;
     private Dictionary<AnimState, bool> complete = new();
 
     // Dash Ready Flash
@@ -111,6 +112,7 @@ public class PlayerAnimation : MonoBehaviour
         if (!(_onWall && _animState == AnimState.Air))
         {
             spr.flipX = !_facing;
+            hat.GetComponent<SpriteRenderer>().flipX = !_facing;
         }
 
         if (_animState == AnimState.Wall)
