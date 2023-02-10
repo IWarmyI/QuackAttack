@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static ButtonInteract;
 
 public class Projectile : MonoBehaviour
 {
@@ -97,6 +98,11 @@ public class Projectile : MonoBehaviour
         {
             DealDamage(collision.gameObject);
             this.gameObject.SetActive(false);
+        }
+
+        if (collision.gameObject.CompareTag("Button") && gameObject.activeSelf)
+        {
+            hit = true;
         }
     }
 
