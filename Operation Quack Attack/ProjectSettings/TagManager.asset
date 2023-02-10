@@ -12,6 +12,7 @@ TagManager:
   - PickUp
   - LevelManager
   - AchievementManager
+  - Button
   layers:
   - Default
   - TransparentFX
