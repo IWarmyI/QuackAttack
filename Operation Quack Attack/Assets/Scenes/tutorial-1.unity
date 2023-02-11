@@ -15972,6 +15972,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5214206389339890862, guid: c3fc61aeb0fe57f4e9f0b09539ee47e3, type: 3}
+      propertyPath: numberOfLevels
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 5214206389339890863, guid: c3fc61aeb0fe57f4e9f0b09539ee47e3, type: 3}
       propertyPath: m_Name
       value: LevelManager
@@ -21443,7 +21447,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 512fcbc88785fef4cba9748d05627017, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  levelNumber: 6
+  levelNumber: 1
   debugMode: 0
 --- !u!4 &1795429281
 Transform:
