@@ -149,7 +149,7 @@ MonoBehaviour:
   transitionAnimator: {fileID: 5214206389388754122}
   transitionDelayTime: 0.5
   firstLevel: 1
-  numberOfLevels: 3
+  numberOfLevels: 4
   menuScenes:
   - MainMenu
   - EndLevel
