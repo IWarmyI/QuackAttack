@@ -2181,7 +2181,8 @@ GameObject:
   - component: {fileID: 188236105}
   - component: {fileID: 188236107}
   - component: {fileID: 188236106}
-  m_Layer: 0
+  - component: {fileID: 188236108}
+  m_Layer: 5
   m_Name: Button Tutorial
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2205,7 +2206,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -41.75, y: -2.38}
+  m_AnchoredPosition: {x: -41.61, y: -2.36}
   m_SizeDelta: {x: 20, y: 5}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &188236106
@@ -2228,10 +2229,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Shoot Buttons To Open Doors and Find Secrets
+  m_text: You can <color=#3f6ffc>shoot</color> enemies and buttons with <color=#3f6ffc>[$Shoot$]</color>
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2100000, guid: e73a58f6e2794ae7b1b7e50b7fb811b0, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -2255,8 +2256,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 6
-  m_fontSizeBase: 6
+  m_fontSize: 5
+  m_fontSizeBase: 5
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -2291,7 +2292,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 1.9062333, z: 13.061227, w: 0}
+  m_margin: {x: 0, y: 1.9062333, z: 12.336705, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   _SortingLayer: 0
@@ -2320,7 +2321,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  - {fileID: 2100000, guid: e73a58f6e2794ae7b1b7e50b7fb811b0, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -2342,6 +2343,19 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &188236108
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 188236104}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a214522a910cfcf4788a29826c725e4a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  input: {fileID: -944628639613478452, guid: 9eab2b5560fcb974aa5192b9d3f8b5c7, type: 3}
 --- !u!4 &222181559 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6862023376413928738, guid: f7c5ccdd6168b8941b73a95f8fff5953, type: 3}
