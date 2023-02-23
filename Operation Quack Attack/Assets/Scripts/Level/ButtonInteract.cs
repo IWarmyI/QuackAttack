@@ -4,32 +4,59 @@ using UnityEngine;
 
 public class ButtonInteract : MonoBehaviour
 {
-    // interactable to change with button
+    // move interactable x/y and pos/neg
     public GameObject interactable;
-    // check for button hit
-    public static bool hit = false;
-    // indicate button has been pressed
+    private Vector3 interactablePos;
+    public float interactableDist = 0.0f;
+    public bool interactableMoveX = true;
+    public bool interactableMoveNeg = false;
+
+    // move button x/y and pos/neg
     public GameObject button;
-    private Vector3 buttonpos;
-    private Vector3 interactablepos;
+    private Vector3 buttonPos;
+    public bool buttonMoveX = true;
+    public bool buttonMoveNeg = false;
+    // button can only be hit once
+    private bool hit = false;
 
     void Start()
     {
-        buttonpos = button.transform.position;
-        interactablepos = interactable.transform.position;
-        buttonpos.x -= 0.5f;
-        interactablepos.y += 2.0f;
+        buttonPos = button.transform.position;
+        interactablePos = interactable.transform.position;
     }
 
-    // Update is called once per frame
     void Update()
     {
-        if (hit)
-        {
-            // for now set active, later animation?
-            //interactable.SetActive(false);
-            button.transform.position = buttonpos;
-            interactable.transform.position = interactablepos;
+        button.transform.position = buttonPos;
+        interactable.transform.position = interactablePos;
+    }
+
+    private void OnTriggerEnter2D(Collider2D col)
+    {
+        // check for projectile col and not hit
+        if (col.gameObject.CompareTag("Projectile") && !hit) {
+            // move button pos/neg in x dir
+            if (buttonMoveX) {
+                if (buttonMoveNeg) buttonPos.x -= 0.5f;
+                else buttonPos.x += 0.5f;
+            }
+            // move button pos/neg in y dir
+            else {
+                if (buttonMoveNeg) buttonPos.y -= 0.5f;
+                else buttonPos.y += 0.5f;
+            }
+
+            // move interactable pos/neg in x dir
+            if (interactableMoveX) {
+                if (interactableMoveNeg) interactablePos.x -= interactableDist;
+                else interactablePos.x += interactableDist;
+            }
+            // move interactable pos/neg in y dir
+            else {
+                if (interactableMoveNeg) interactablePos.y -= interactableDist;
+                else interactablePos.y += interactableDist;
+            }
+            hit = true;
         }
     }
 }
