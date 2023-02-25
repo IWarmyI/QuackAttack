@@ -6,7 +6,6 @@ public class ButtonInteract : MonoBehaviour
 {
     // move interactable x/y and pos/neg
     public GameObject interactable;
-    private Vector3 interactablePos;
     public float interactableDist = 0.0f;
     public bool interactableMoveX = true;
     public bool interactableMoveNeg = false;
@@ -19,16 +18,38 @@ public class ButtonInteract : MonoBehaviour
     // button can only be hit once
     private bool hit = false;
 
+    // lerp
+    public float durationTime = 3.0f;
+    private float currentTime = 0.0f;
+    private Vector3 startPos; 
+    private Vector3 endPos;
+
     void Start()
     {
         buttonPos = button.transform.position;
-        interactablePos = interactable.transform.position;
+        startPos = interactable.transform.position;
+        endPos = interactable.transform.position;
+
+        // move interactable pos/neg in x dir
+        if (interactableMoveX) {
+            if (interactableMoveNeg) endPos.x -= interactableDist;
+            else endPos.x += interactableDist;
+        }
+        // move interactable pos/neg in y dir
+        else {
+            if (interactableMoveNeg) endPos.y -= interactableDist;
+            else endPos.y += interactableDist;
+        }
     }
 
     void Update()
     {
         button.transform.position = buttonPos;
-        interactable.transform.position = interactablePos;
+        if (hit)
+        {
+            currentTime += Time.deltaTime;
+            interactable.transform.position = Vector3.Lerp(startPos, endPos, (currentTime / durationTime));
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D col)
@@ -43,19 +64,9 @@ public class ButtonInteract : MonoBehaviour
             // move button pos/neg in y dir
             else {
                 if (buttonMoveNeg) buttonPos.y -= 0.5f;
-                else buttonPos.y += 0.5f;
+              else buttonPos.y += 0.5f;
             }
-
-            // move interactable pos/neg in x dir
-            if (interactableMoveX) {
-                if (interactableMoveNeg) interactablePos.x -= interactableDist;
-                else interactablePos.x += interactableDist;
-            }
-            // move interactable pos/neg in y dir
-            else {
-                if (interactableMoveNeg) interactablePos.y -= interactableDist;
-                else interactablePos.y += interactableDist;
-            }
+            
             hit = true;
         }
     }
