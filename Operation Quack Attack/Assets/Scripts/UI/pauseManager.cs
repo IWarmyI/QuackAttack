@@ -35,7 +35,7 @@ public class pauseManager : MonoBehaviour
     {
         transition.SetActive(true);
         Time.timeScale = 1.0f;
-        LevelManager.Instance.LoadScene("MainMenu-with-level-select");
+        LevelManager.Instance.LoadScene("MainMenu");
     }
 
     public void Restart()
