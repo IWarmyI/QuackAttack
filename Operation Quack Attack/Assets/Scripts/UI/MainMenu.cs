@@ -104,6 +104,12 @@ public class MainMenu : MonoBehaviour
 
     }
 
+    public void PlayButton()
+    {
+        // Show level select
+
+    }
+
     public void OptionsButton()
     {
         // Show Options
