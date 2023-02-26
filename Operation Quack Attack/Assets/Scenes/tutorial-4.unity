@@ -22888,10 +22888,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5214206389339890862, guid: c3fc61aeb0fe57f4e9f0b09539ee47e3, type: 3}
-      propertyPath: numberOfLevels
-      value: 4
-      objectReference: {fileID: 0}
     - target: {fileID: 5214206389339890863, guid: c3fc61aeb0fe57f4e9f0b09539ee47e3, type: 3}
       propertyPath: m_Name
       value: LevelManager
@@ -23082,19 +23078,7 @@ Transform:
   - {fileID: 1599833935}
   - {fileID: 1234508264}
   - {fileID: 2095582948}
-  - {fileID: 1066467920}
-  - {fileID: 1338986938}
-  - {fileID: 940664236}
-  - {fileID: 827959642}
   - {fileID: 1966512417}
-  - {fileID: 2081118872}
-  - {fileID: 1145904067}
-  - {fileID: 248884945}
-  - {fileID: 280755054}
-  - {fileID: 590671518}
-  - {fileID: 1599833935}
-  - {fileID: 1234508264}
-  - {fileID: 2095582948}
   - {fileID: 1066467920}
   - {fileID: 1338986938}
   - {fileID: 940664236}
@@ -24896,7 +24880,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1571595446}
-  m_RootOrder: 12
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1966512418
 MonoBehaviour:
