@@ -149,15 +149,12 @@ MonoBehaviour:
   transitionAnimator: {fileID: 5214206389388754122}
   transitionDelayTime: 0.5
   firstLevel: 1
-  numberOfLevels: 4
+  numberOfLevels: 5
   menuScenes:
   - MainMenu
   - EndLevel
   - GameOver
-  devTimes:
-  - 811
-  - 778
-  - 1114
+  devTimes: []
 --- !u!1001 &6611503348703108068
 PrefabInstance:
   m_ObjectHideFlags: 0
