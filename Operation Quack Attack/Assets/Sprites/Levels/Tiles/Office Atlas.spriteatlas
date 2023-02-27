@@ -71,6 +71,14 @@ SpriteAtlas:
   - {fileID: 21300000, guid: dfacfe3327fc9664bba9407ea5fdccf9, type: 3}
   - {fileID: 21300000, guid: b3f4715382d27594f8d3f070a402e974, type: 3}
   - {fileID: 21300000, guid: c5e783a3db68a9d48b5837631bdc5498, type: 3}
+  - {fileID: -1939199843, guid: f2ab53c3bd26be640a2687c14c49f1d9, type: 3}
+  - {fileID: 1933710229, guid: f2ab53c3bd26be640a2687c14c49f1d9, type: 3}
+  - {fileID: -1065014706, guid: f2ab53c3bd26be640a2687c14c49f1d9, type: 3}
+  - {fileID: -1942303179, guid: f2ab53c3bd26be640a2687c14c49f1d9, type: 3}
+  - {fileID: 1182105586, guid: f2ab53c3bd26be640a2687c14c49f1d9, type: 3}
+  - {fileID: 1324197637, guid: f2ab53c3bd26be640a2687c14c49f1d9, type: 3}
+  - {fileID: -2086428797, guid: f2ab53c3bd26be640a2687c14c49f1d9, type: 3}
+  - {fileID: 1594552768, guid: f2ab53c3bd26be640a2687c14c49f1d9, type: 3}
   - {fileID: 21300000, guid: 4dee6f147796b09488e1d607cb51cfbe, type: 3}
   - {fileID: 21300000, guid: cb9b8c9441ff91f4daeb1eaa4b442851, type: 3}
   - {fileID: 21300000, guid: ae6cd6c43243fc6439750e5207c944b2, type: 3}
@@ -146,6 +154,14 @@ SpriteAtlas:
   - WhiteboardCornerTR
   - LeafType4
   - BathroomSignM
+  - Pipes_5
+  - Pipes_4
+  - Pipes_3
+  - Pipes_2
+  - Pipes_1
+  - Pipes_0
+  - Pipes_7
+  - Pipes_6
   - LeafType1
   - HangingLightL
   - Locker
