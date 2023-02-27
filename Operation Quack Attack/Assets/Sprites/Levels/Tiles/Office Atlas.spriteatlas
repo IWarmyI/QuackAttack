@@ -73,6 +73,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: c5e783a3db68a9d48b5837631bdc5498, type: 3}
   - {fileID: 21300000, guid: 4dee6f147796b09488e1d607cb51cfbe, type: 3}
   - {fileID: 21300000, guid: cb9b8c9441ff91f4daeb1eaa4b442851, type: 3}
+  - {fileID: 21300000, guid: ae6cd6c43243fc6439750e5207c944b2, type: 3}
   - {fileID: 21300000, guid: 0e9eb5e4fe6db9d4ead27a707cdf4ff2, type: 3}
   - {fileID: 21300000, guid: 0fa1e875fce9af24ebec71d9fe9d6c19, type: 3}
   - {fileID: 21300000, guid: d18a4e068ed97ee4bb19755d45f980a7, type: 3}
@@ -84,6 +85,15 @@ SpriteAtlas:
   - {fileID: 21300000, guid: e5531aa8555d4f24abc72128606d489f, type: 3}
   - {fileID: 21300000, guid: 5063bac98f412114eac5fc90fee39fd4, type: 3}
   - {fileID: 21300000, guid: 9c0ba71a2bcb6214d88828a602d26ae4, type: 3}
+  - {fileID: 1334528214, guid: 4871ef2a4c08c744192a0e81bc0ebf65, type: 3}
+  - {fileID: 1491216086, guid: 4871ef2a4c08c744192a0e81bc0ebf65, type: 3}
+  - {fileID: -1640374744, guid: 4871ef2a4c08c744192a0e81bc0ebf65, type: 3}
+  - {fileID: -501133780, guid: 4871ef2a4c08c744192a0e81bc0ebf65, type: 3}
+  - {fileID: -309377945, guid: 4871ef2a4c08c744192a0e81bc0ebf65, type: 3}
+  - {fileID: 1470498142, guid: 4871ef2a4c08c744192a0e81bc0ebf65, type: 3}
+  - {fileID: -1355985424, guid: 4871ef2a4c08c744192a0e81bc0ebf65, type: 3}
+  - {fileID: 1003136446, guid: 4871ef2a4c08c744192a0e81bc0ebf65, type: 3}
+  - {fileID: 1465492524, guid: 4871ef2a4c08c744192a0e81bc0ebf65, type: 3}
   - {fileID: 21300000, guid: 87765e3a1cc47454eb134c03ebe73d3c, type: 3}
   - {fileID: -1208447987, guid: 0207674a86e93c64bacd7ad7b0f4ac88, type: 3}
   - {fileID: -657113950, guid: 0207674a86e93c64bacd7ad7b0f4ac88, type: 3}
@@ -138,6 +148,7 @@ SpriteAtlas:
   - BathroomSignM
   - LeafType1
   - HangingLightL
+  - Locker
   - Computer
   - WhiteboardMidBottom
   - LeafType2_L
@@ -149,6 +160,15 @@ SpriteAtlas:
   - BathroomSignF
   - WhiteboardMidRight
   - WallLight 1
+  - TV_0
+  - TV_1
+  - TV_2
+  - TV_3
+  - TV_4
+  - TV_5
+  - TV_6
+  - TV_7
+  - TV_8
   - whiteboardmid
   - wet-floor_1
   - wet-floor_0
