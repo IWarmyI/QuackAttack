@@ -17,9 +17,13 @@ public class MainMenu : MonoBehaviour
     public GameObject OptionsFirstOption;
     public GameObject CustomizeFirstOption;
     public GameObject CreditsFirstObject;
+    public GameObject CreditsMainMembers;
+    public GameObject CreditsExternalMembers;
+    public GameObject CreditsExternalButtonText;
 
     public GameObject canvas;
     private static bool firstTime = true;
+    private bool switchCredits = false;
 
     public InputActionAsset actions;
 
@@ -100,6 +104,12 @@ public class MainMenu : MonoBehaviour
 
     }
 
+    public void PlayButton()
+    {
+        // Show level select
+
+    }
+
     public void OptionsButton()
     {
         // Show Options
@@ -138,5 +148,22 @@ public class MainMenu : MonoBehaviour
 
         EventSystem.current.SetSelectedGameObject(null);
         EventSystem.current.SetSelectedGameObject(CreditsFirstObject);
+    }
+
+    public void ExternalButton()
+    {
+        // Show Credits Menu
+        switchCredits = !switchCredits;
+        if(switchCredits)
+        {
+            CreditsMainMembers.SetActive(false);
+            CreditsExternalMembers.SetActive(true);
+            CreditsExternalButtonText.GetComponent<UnityEngine.UI.Text>().text = "INTERNAL";
+        } else
+        {
+            CreditsMainMembers.SetActive(true);
+            CreditsExternalMembers.SetActive(false);
+            CreditsExternalButtonText.GetComponent<UnityEngine.UI.Text>().text = "EXTERNAL";
+        }
     }
 }
