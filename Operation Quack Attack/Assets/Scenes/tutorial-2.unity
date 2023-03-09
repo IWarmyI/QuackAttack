@@ -23564,7 +23564,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3445537332379995646, guid: 472db25ac23f9d4468d99ae361e6c622, type: 3}
       propertyPath: respawnOffset.x
-      value: -4
+      value: -2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 472db25ac23f9d4468d99ae361e6c622, type: 3}
