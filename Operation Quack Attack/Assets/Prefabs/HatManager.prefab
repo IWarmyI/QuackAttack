@@ -44,10 +44,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bba9bdd97272db742baf8999d846b32c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sprites:
+  hatNames:
+  - None
+  - Fedora
+  - Top Hat
+  - Witch Hat
+  - Transparent
+  hatSprites:
   - {fileID: 0}
-  - {fileID: 21300000, guid: ee6d06144cf08de4d810da2042b1891e, type: 3}
+  - {fileID: 21300000, guid: 09ac722a1f27c9f4a95c6f44c4f57b30, type: 3}
   - {fileID: 21300000, guid: ef7588249e1574743a59ab090ef5c42b, type: 3}
   - {fileID: 21300000, guid: 5ed45a62ad6128440a58e40ebe2331c5, type: 3}
-  - {fileID: 21300000, guid: 5389ddb22013a4941927be027f1ff7e4, type: 3}
-  currSprite: 0
+  - {fileID: 21300000, guid: 4c2d98984cf9a774a928e5fef1fc3955, type: 3}
+  hatDisplay: {fileID: 0}
+  hatImage: {fileID: 0}

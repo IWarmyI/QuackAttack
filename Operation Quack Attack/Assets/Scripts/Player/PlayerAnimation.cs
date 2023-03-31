@@ -97,7 +97,7 @@ public class PlayerAnimation : MonoBehaviour
             }
         }
 
-        currHatSprite = HatManager.currSprite;
+        currHatSprite = HatManager.selectedSprite;
         hatSpriteRenderer.sprite = hatSpriteList[currHatSprite];
     }
 
