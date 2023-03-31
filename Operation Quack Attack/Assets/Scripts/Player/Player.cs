@@ -247,6 +247,13 @@ public class Player : MonoBehaviour, IDamageable
         {
             Reposition(_respawnPos);
         }
+
+        // Set the color of the duck sprite if it has already been
+        // selected by the player. Otherwise, default to yellow.
+        GetComponentInChildren<SpriteRenderer>().color = 
+            TintManager.selectedColor == Color.clear 
+            ? TintManager.MakeColor() 
+            : TintManager.selectedColor;
     }
 
     private void FixedUpdate()
