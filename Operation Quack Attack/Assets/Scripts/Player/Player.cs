@@ -101,11 +101,10 @@ public class Player : MonoBehaviour, IDamageable
     private bool onGround = true;
     [SerializeField] private Timer jumpCoyote = new Timer(0.2f, true);
     private Timer jumpCooldown;
-    
-    // === TESTING PLAYER JUMP ===
+
     // Separate variables for these two so wall jumping is controlled by a separate variable.
-    /*private const*/[SerializeField] private float airDeccel = 0.875f/*0.96f*/; // Air Resistance
-    [SerializeField] private float airDeccelWall = 0.96f;
+    [SerializeField] private float airDeccel = 0.875f; // Air Resistance
+    [SerializeField] private float wallAirDecel = 0.96f; // Air resistance when wall jumping
 
     [SerializeField] private int airJumps = 1;
     private int jumpCount = 0;
@@ -776,7 +775,7 @@ public class Player : MonoBehaviour, IDamageable
             if (jumpCooldown.IsComplete)
             {
                 if (vel.y > 0 && Mathf.Abs(vel.x) >= baseSpeed)
-                    vel.y *= Mathf.Pow(airDeccelWall, 50 * Time.deltaTime);
+                    vel.y *= Mathf.Pow(wallAirDecel, 50 * Time.deltaTime);
             }
         }
 
