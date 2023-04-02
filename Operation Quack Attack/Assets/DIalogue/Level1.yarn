@@ -1,14 +1,14 @@
-﻿title: Start
+﻿title: Start1
 ---
 General Von Mallard: Alright Soldier, you're in!
-Doctor Quaxmore: We are going to patch you in with instructions.
-General Von Mallard: Start by moving with "A" and "D". What does this mean, Quaxmore?
-Doctor Quaxmore: Don't worry, Dewey will get it. Good luck!
+Professor Quaxmore: We are going to patch you in with instructions.
+General Von Mallard: "Start by moving with 'A' and 'D'"... what is this, Quaxmore?
+Professor Quaxmore: Don't worry, Dewey will get it. Good luck!
 ===
 title: JumpTutorial
 ---
-Doctor Quaxmore: These new legs you got will help you here!
-Doctor Quaxmore: Just press the "Spacebar" to jump!
+Professor Quaxmore: These new legs you got will help you here!
+Professor Quaxmore: Just press the "Spacebar" to jump!
 ===
 title: LeapOfFaith
 ---
@@ -16,13 +16,13 @@ General Von Mallard: Don't worry, soldier! It's safe to jump across this gap!
 ===
 title: DoubleJumpTutorial
 ---
-Doctor Quaxmore: Alright, from here you'll need to take your legs a little bit further!
+Professor Quaxmore: Alright, from here you'll need to take your legs a little bit further!
 General Von Mallard: If you jump again while in the air, you can jump again once!
-Doctor Quaxmore: But there's a catch: you see that blue meter on the bottom right?
-Doctor Quaxmore: That's your water meter! You use it to double jump. If you run out, you'll be stuck with lame, normal jumps.
-General Von Mallard: You better use all those lessons about rationing resources, soldier!
+Professor Quaxmore: But there's a catch: you see that blue meter on the bottom right?
+Professor Quaxmore: That's your water meter! You use it to double jump, and some other cool things.
+General Von Mallard: So you better keep an eye on your resources, soldier!
 ===
 title: Exit
 ---
-Doctor Quaxmore: There's the exit! Just keep going!
+Professor Quaxmore: There's the exit! Just keep going!
 ===
