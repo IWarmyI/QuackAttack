@@ -10,9 +10,12 @@ ScriptedImporter:
   script: {fileID: 11500000, guid: 053561912b1654d80a424bb0696a74ae, type: 3}
   sourceScripts:
   - {fileID: 6391573757903218779, guid: 616057da6a864234aabab00c8a782bc0, type: 3}
+  - {fileID: 6391573757903218779, guid: 1f969673af1cc3943a45516f11ea6372, type: 3}
+  - {fileID: 6391573757903218779, guid: 1d833ddd57719c846bf2c9501ebdc019, type: 3}
+  - {fileID: 6391573757903218779, guid: 3cf275365d221bd4ead2950b67b9e0ae, type: 3}
   compileErrors: []
   serializedDeclarations: []
-  defaultLanguage: pt-BR
+  defaultLanguage: en-US
   languagesToSourceAssets: []
   useAddressableAssets: 0
   searchAllAssembliesForActions: 1
