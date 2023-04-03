@@ -143,8 +143,8 @@ TextureImporter:
       name: officetiles_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 990
+        x: 1
+        y: 1013
         width: 90
         height: 90
       alignment: 0
@@ -164,8 +164,8 @@ TextureImporter:
       name: officetiles_1
       rect:
         serializedVersion: 2
-        x: 90
-        y: 990
+        x: 93
+        y: 1013
         width: 90
         height: 90
       alignment: 0
@@ -185,8 +185,8 @@ TextureImporter:
       name: officetiles_2
       rect:
         serializedVersion: 2
-        x: 180
-        y: 990
+        x: 185
+        y: 1013
         width: 90
         height: 90
       alignment: 0
@@ -206,8 +206,8 @@ TextureImporter:
       name: officetiles_3
       rect:
         serializedVersion: 2
-        x: 270
-        y: 990
+        x: 277
+        y: 1013
         width: 90
         height: 90
       alignment: 0
@@ -227,8 +227,8 @@ TextureImporter:
       name: officetiles_4
       rect:
         serializedVersion: 2
-        x: 360
-        y: 990
+        x: 369
+        y: 1013
         width: 90
         height: 90
       alignment: 0
@@ -248,8 +248,8 @@ TextureImporter:
       name: officetiles_5
       rect:
         serializedVersion: 2
-        x: 450
-        y: 990
+        x: 461
+        y: 1013
         width: 90
         height: 90
       alignment: 0
@@ -269,8 +269,8 @@ TextureImporter:
       name: officetiles_6
       rect:
         serializedVersion: 2
-        x: 0
-        y: 900
+        x: 1
+        y: 921
         width: 90
         height: 90
       alignment: 0
@@ -290,8 +290,8 @@ TextureImporter:
       name: officetiles_7
       rect:
         serializedVersion: 2
-        x: 90
-        y: 900
+        x: 93
+        y: 921
         width: 90
         height: 90
       alignment: 0
@@ -311,8 +311,8 @@ TextureImporter:
       name: officetiles_8
       rect:
         serializedVersion: 2
-        x: 180
-        y: 900
+        x: 185
+        y: 921
         width: 90
         height: 90
       alignment: 0
@@ -332,8 +332,8 @@ TextureImporter:
       name: officetiles_9
       rect:
         serializedVersion: 2
-        x: 270
-        y: 900
+        x: 277
+        y: 921
         width: 90
         height: 90
       alignment: 0
@@ -353,8 +353,8 @@ TextureImporter:
       name: officetiles_10
       rect:
         serializedVersion: 2
-        x: 360
-        y: 900
+        x: 369
+        y: 921
         width: 90
         height: 90
       alignment: 0
@@ -374,8 +374,8 @@ TextureImporter:
       name: officetiles_11
       rect:
         serializedVersion: 2
-        x: 450
-        y: 900
+        x: 461
+        y: 921
         width: 90
         height: 90
       alignment: 0
@@ -395,8 +395,8 @@ TextureImporter:
       name: officetiles_12
       rect:
         serializedVersion: 2
-        x: 540
-        y: 900
+        x: 553
+        y: 921
         width: 90
         height: 90
       alignment: 0
@@ -416,8 +416,8 @@ TextureImporter:
       name: officetiles_13
       rect:
         serializedVersion: 2
-        x: 630
-        y: 900
+        x: 645
+        y: 921
         width: 90
         height: 90
       alignment: 0
@@ -437,8 +437,8 @@ TextureImporter:
       name: officetiles_14
       rect:
         serializedVersion: 2
-        x: 0
-        y: 810
+        x: 1
+        y: 829
         width: 90
         height: 90
       alignment: 0
@@ -458,8 +458,8 @@ TextureImporter:
       name: officetiles_15
       rect:
         serializedVersion: 2
-        x: 90
-        y: 810
+        x: 93
+        y: 829
         width: 90
         height: 90
       alignment: 0
@@ -479,8 +479,8 @@ TextureImporter:
       name: officetiles_16
       rect:
         serializedVersion: 2
-        x: 180
-        y: 810
+        x: 185
+        y: 829
         width: 90
         height: 90
       alignment: 0
@@ -500,8 +500,8 @@ TextureImporter:
       name: officetiles_17
       rect:
         serializedVersion: 2
-        x: 270
-        y: 810
+        x: 277
+        y: 829
         width: 90
         height: 90
       alignment: 0
@@ -521,8 +521,8 @@ TextureImporter:
       name: officetiles_18
       rect:
         serializedVersion: 2
-        x: 360
-        y: 810
+        x: 369
+        y: 829
         width: 90
         height: 90
       alignment: 0
@@ -542,8 +542,8 @@ TextureImporter:
       name: officetiles_19
       rect:
         serializedVersion: 2
-        x: 450
-        y: 810
+        x: 461
+        y: 829
         width: 90
         height: 90
       alignment: 0
@@ -563,8 +563,8 @@ TextureImporter:
       name: officetiles_20
       rect:
         serializedVersion: 2
-        x: 540
-        y: 810
+        x: 553
+        y: 829
         width: 90
         height: 90
       alignment: 0
@@ -584,8 +584,8 @@ TextureImporter:
       name: officetiles_21
       rect:
         serializedVersion: 2
-        x: 630
-        y: 810
+        x: 645
+        y: 829
         width: 90
         height: 90
       alignment: 0
@@ -605,8 +605,8 @@ TextureImporter:
       name: officetiles_22
       rect:
         serializedVersion: 2
-        x: 720
-        y: 810
+        x: 737
+        y: 829
         width: 90
         height: 90
       alignment: 0
@@ -626,8 +626,8 @@ TextureImporter:
       name: officetiles_23
       rect:
         serializedVersion: 2
-        x: 810
-        y: 810
+        x: 829
+        y: 829
         width: 90
         height: 90
       alignment: 0
@@ -647,8 +647,8 @@ TextureImporter:
       name: officetiles_24
       rect:
         serializedVersion: 2
-        x: 900
-        y: 810
+        x: 921
+        y: 829
         width: 90
         height: 90
       alignment: 0
@@ -668,8 +668,8 @@ TextureImporter:
       name: officetiles_25
       rect:
         serializedVersion: 2
-        x: 0
-        y: 720
+        x: 1
+        y: 737
         width: 90
         height: 90
       alignment: 0
@@ -689,8 +689,8 @@ TextureImporter:
       name: officetiles_26
       rect:
         serializedVersion: 2
-        x: 90
-        y: 720
+        x: 93
+        y: 737
         width: 90
         height: 90
       alignment: 0
@@ -710,8 +710,8 @@ TextureImporter:
       name: officetiles_27
       rect:
         serializedVersion: 2
-        x: 180
-        y: 720
+        x: 185
+        y: 737
         width: 90
         height: 90
       alignment: 0
@@ -731,8 +731,8 @@ TextureImporter:
       name: officetiles_28
       rect:
         serializedVersion: 2
-        x: 270
-        y: 720
+        x: 277
+        y: 737
         width: 90
         height: 90
       alignment: 0
@@ -752,8 +752,8 @@ TextureImporter:
       name: officetiles_29
       rect:
         serializedVersion: 2
-        x: 360
-        y: 720
+        x: 369
+        y: 737
         width: 90
         height: 90
       alignment: 0
@@ -773,8 +773,8 @@ TextureImporter:
       name: officetiles_30
       rect:
         serializedVersion: 2
-        x: 450
-        y: 720
+        x: 461
+        y: 737
         width: 90
         height: 90
       alignment: 0
@@ -794,8 +794,8 @@ TextureImporter:
       name: officetiles_31
       rect:
         serializedVersion: 2
-        x: 540
-        y: 720
+        x: 553
+        y: 737
         width: 90
         height: 90
       alignment: 0
@@ -815,8 +815,8 @@ TextureImporter:
       name: officetiles_32
       rect:
         serializedVersion: 2
-        x: 630
-        y: 720
+        x: 645
+        y: 737
         width: 90
         height: 90
       alignment: 0
@@ -836,8 +836,8 @@ TextureImporter:
       name: officetiles_33
       rect:
         serializedVersion: 2
-        x: 720
-        y: 720
+        x: 737
+        y: 737
         width: 90
         height: 90
       alignment: 0
@@ -857,8 +857,8 @@ TextureImporter:
       name: officetiles_34
       rect:
         serializedVersion: 2
-        x: 810
-        y: 720
+        x: 829
+        y: 737
         width: 90
         height: 90
       alignment: 0
@@ -878,8 +878,8 @@ TextureImporter:
       name: officetiles_35
       rect:
         serializedVersion: 2
-        x: 900
-        y: 720
+        x: 921
+        y: 737
         width: 90
         height: 90
       alignment: 0
@@ -899,8 +899,8 @@ TextureImporter:
       name: officetiles_36
       rect:
         serializedVersion: 2
-        x: 0
-        y: 630
+        x: 1
+        y: 645
         width: 90
         height: 90
       alignment: 0
@@ -920,8 +920,8 @@ TextureImporter:
       name: officetiles_37
       rect:
         serializedVersion: 2
-        x: 90
-        y: 630
+        x: 93
+        y: 645
         width: 90
         height: 90
       alignment: 0
@@ -941,8 +941,8 @@ TextureImporter:
       name: officetiles_38
       rect:
         serializedVersion: 2
-        x: 180
-        y: 630
+        x: 185
+        y: 645
         width: 90
         height: 90
       alignment: 0
@@ -962,8 +962,8 @@ TextureImporter:
       name: officetiles_39
       rect:
         serializedVersion: 2
-        x: 270
-        y: 630
+        x: 277
+        y: 645
         width: 90
         height: 90
       alignment: 0
@@ -983,8 +983,8 @@ TextureImporter:
       name: officetiles_40
       rect:
         serializedVersion: 2
-        x: 360
-        y: 630
+        x: 369
+        y: 645
         width: 90
         height: 90
       alignment: 0
@@ -1004,8 +1004,8 @@ TextureImporter:
       name: officetiles_41
       rect:
         serializedVersion: 2
-        x: 450
-        y: 630
+        x: 461
+        y: 645
         width: 90
         height: 90
       alignment: 0
@@ -1025,8 +1025,8 @@ TextureImporter:
       name: officetiles_42
       rect:
         serializedVersion: 2
-        x: 540
-        y: 630
+        x: 553
+        y: 645
         width: 90
         height: 90
       alignment: 0
@@ -1046,8 +1046,8 @@ TextureImporter:
       name: officetiles_43
       rect:
         serializedVersion: 2
-        x: 630
-        y: 630
+        x: 645
+        y: 645
         width: 90
         height: 90
       alignment: 0
@@ -1067,8 +1067,8 @@ TextureImporter:
       name: officetiles_44
       rect:
         serializedVersion: 2
-        x: 720
-        y: 630
+        x: 737
+        y: 645
         width: 90
         height: 90
       alignment: 0
@@ -1088,8 +1088,8 @@ TextureImporter:
       name: officetiles_45
       rect:
         serializedVersion: 2
-        x: 810
-        y: 630
+        x: 829
+        y: 645
         width: 90
         height: 90
       alignment: 0
@@ -1109,8 +1109,8 @@ TextureImporter:
       name: officetiles_46
       rect:
         serializedVersion: 2
-        x: 900
-        y: 630
+        x: 921
+        y: 645
         width: 90
         height: 90
       alignment: 0
@@ -1130,8 +1130,8 @@ TextureImporter:
       name: officetiles_47
       rect:
         serializedVersion: 2
-        x: 0
-        y: 540
+        x: 1
+        y: 553
         width: 90
         height: 90
       alignment: 0
@@ -1151,8 +1151,8 @@ TextureImporter:
       name: officetiles_48
       rect:
         serializedVersion: 2
-        x: 90
-        y: 540
+        x: 93
+        y: 553
         width: 90
         height: 90
       alignment: 0
@@ -1172,8 +1172,8 @@ TextureImporter:
       name: officetiles_49
       rect:
         serializedVersion: 2
-        x: 180
-        y: 540
+        x: 185
+        y: 553
         width: 90
         height: 90
       alignment: 0
@@ -1193,8 +1193,8 @@ TextureImporter:
       name: officetiles_50
       rect:
         serializedVersion: 2
-        x: 270
-        y: 540
+        x: 277
+        y: 553
         width: 90
         height: 90
       alignment: 0
@@ -1214,8 +1214,8 @@ TextureImporter:
       name: officetiles_51
       rect:
         serializedVersion: 2
-        x: 360
-        y: 540
+        x: 369
+        y: 553
         width: 90
         height: 90
       alignment: 0
@@ -1235,8 +1235,8 @@ TextureImporter:
       name: officetiles_52
       rect:
         serializedVersion: 2
-        x: 540
-        y: 540
+        x: 553
+        y: 553
         width: 90
         height: 90
       alignment: 0
@@ -1256,8 +1256,8 @@ TextureImporter:
       name: officetiles_53
       rect:
         serializedVersion: 2
-        x: 720
-        y: 540
+        x: 737
+        y: 553
         width: 90
         height: 90
       alignment: 0
@@ -1277,8 +1277,8 @@ TextureImporter:
       name: officetiles_54
       rect:
         serializedVersion: 2
-        x: 0
-        y: 450
+        x: 1
+        y: 461
         width: 90
         height: 90
       alignment: 0
@@ -1298,8 +1298,8 @@ TextureImporter:
       name: officetiles_55
       rect:
         serializedVersion: 2
-        x: 90
-        y: 450
+        x: 93
+        y: 461
         width: 90
         height: 90
       alignment: 0
@@ -1319,8 +1319,8 @@ TextureImporter:
       name: officetiles_56
       rect:
         serializedVersion: 2
-        x: 180
-        y: 450
+        x: 185
+        y: 461
         width: 90
         height: 90
       alignment: 0
@@ -1340,8 +1340,8 @@ TextureImporter:
       name: officetiles_57
       rect:
         serializedVersion: 2
-        x: 270
-        y: 450
+        x: 277
+        y: 461
         width: 90
         height: 90
       alignment: 0
@@ -1361,8 +1361,8 @@ TextureImporter:
       name: officetiles_58
       rect:
         serializedVersion: 2
-        x: 360
-        y: 450
+        x: 369
+        y: 461
         width: 90
         height: 90
       alignment: 0
@@ -1382,8 +1382,8 @@ TextureImporter:
       name: officetiles_59
       rect:
         serializedVersion: 2
-        x: 0
-        y: 360
+        x: 1
+        y: 369
         width: 90
         height: 90
       alignment: 0
@@ -1403,8 +1403,8 @@ TextureImporter:
       name: officetiles_60
       rect:
         serializedVersion: 2
-        x: 90
-        y: 360
+        x: 93
+        y: 369
         width: 90
         height: 90
       alignment: 0
@@ -1424,8 +1424,8 @@ TextureImporter:
       name: officetiles_61
       rect:
         serializedVersion: 2
-        x: 180
-        y: 360
+        x: 185
+        y: 369
         width: 90
         height: 90
       alignment: 0
@@ -1445,8 +1445,8 @@ TextureImporter:
       name: officetiles_62
       rect:
         serializedVersion: 2
-        x: 270
-        y: 360
+        x: 277
+        y: 369
         width: 90
         height: 90
       alignment: 0
@@ -1466,8 +1466,8 @@ TextureImporter:
       name: officetiles_63
       rect:
         serializedVersion: 2
-        x: 0
-        y: 270
+        x: 1
+        y: 277
         width: 90
         height: 90
       alignment: 0
@@ -1487,8 +1487,8 @@ TextureImporter:
       name: officetiles_64
       rect:
         serializedVersion: 2
-        x: 90
-        y: 270
+        x: 93
+        y: 277
         width: 90
         height: 90
       alignment: 0
@@ -1508,8 +1508,8 @@ TextureImporter:
       name: officetiles_65
       rect:
         serializedVersion: 2
-        x: 180
-        y: 270
+        x: 185
+        y: 277
         width: 90
         height: 90
       alignment: 0
@@ -1529,8 +1529,8 @@ TextureImporter:
       name: officetiles_66
       rect:
         serializedVersion: 2
-        x: 0
-        y: 180
+        x: 1
+        y: 185
         width: 90
         height: 90
       alignment: 0
@@ -1550,8 +1550,8 @@ TextureImporter:
       name: officetiles_67
       rect:
         serializedVersion: 2
-        x: 90
-        y: 180
+        x: 93
+        y: 185
         width: 90
         height: 90
       alignment: 0
@@ -1571,8 +1571,8 @@ TextureImporter:
       name: officetiles_68
       rect:
         serializedVersion: 2
-        x: 180
-        y: 180
+        x: 185
+        y: 185
         width: 90
         height: 90
       alignment: 0
