@@ -327,8 +327,6 @@ public class Player : MonoBehaviour, IDamageable
 
     private void UpdateNormal()
     {
-        if (vel.x != 0) Debug.Log("vel.x = " + vel.x + ", vel.y = " + vel.y);
-
         // Get facing
         if (input.x != 0) facingRight = input.x > 0;
 

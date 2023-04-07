@@ -109,11 +109,28 @@ public class PlayerAnimation : MonoBehaviour
         anim.SetBool("IsFalling", _isFalling);
         anim.SetFloat("Speed", _isTopSpeed ? speedMultiplier : 1);
 
-        if (!(_onWall && _animState == AnimState.Air))
-        {
-            spr.flipX = !_facing;
-            hat.GetComponent<SpriteRenderer>().flipX = !_facing;
-        }
+        // When facing == true, the character is facing right, so there
+        // is no need to flip.
+
+        // Flip the character and hat sprites (in-place).
+        spr.flipX = !_facing;
+        hat.GetComponent<SpriteRenderer>().flipX = !_facing;
+
+        // The character's head moves as a result of the flip, so make sure
+        // that the hat's position is updated to reflect this.
+        // Make sure to invert the sprite's rotation as well.
+        hat.transform.localPosition = _facing ?
+            new Vector3(
+                hat.transform.localPosition.x,
+                hat.transform.localPosition.y,
+                hat.transform.localPosition.z)
+            : new Vector3(
+                -hat.transform.localPosition.x,
+                hat.transform.localPosition.y,
+                hat.transform.localPosition.z);
+        hat.transform.localRotation = _facing ?
+            hat.transform.localRotation
+            : Quaternion.Inverse(hat.transform.localRotation);
 
         if (_animState == AnimState.Wall)
         {
