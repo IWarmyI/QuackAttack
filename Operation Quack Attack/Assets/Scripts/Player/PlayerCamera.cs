@@ -7,10 +7,12 @@ public class PlayerCamera : MonoBehaviour
     private Camera cam;
 
     public Transform player;
-    [SerializeField] float camSpeed = 10.0f;
+    [SerializeField] float panSpeed;
+    [SerializeField] float zoomSpeed;
     [SerializeField] Vector3 offset;
-    private float defaultSize;
-    private Vector3 defaultPosition;
+    private Vector3 defaultOffset;
+    private float defaultZoom;
+    private float newOrthographicSize;
 
     public Transform door;
     private Vector3 start;
@@ -23,27 +25,40 @@ public class PlayerCamera : MonoBehaviour
     private bool isIntro = true;
 
     /// <summary>
-    /// Instantaneoulsy adjusts the camera's zoom.
+    /// Adjusts the camera's zoom variable, so that the update loop handles the
+    /// zooming accordingly.
     /// </summary>
     /// <param name="orthographicSize">
     /// Zoom value: a smaller value means a higher amount of zoom, and vice versa.
     /// </param>
     private void Zoom(float orthographicSize)
     {
-        cam.orthographicSize = orthographicSize;
+        newOrthographicSize = orthographicSize;
     }
 
     /// <summary>
-    /// Instantaneously adjusts the camera's position.
-    /// </summary>
+    /// Adjusts the camera's position variable, so that the update loop handles
+    /// the panning accordingly.
+    /// </summary>/
     /// <param name="newPos">
-    /// The position to warp to.
+    /// The position to pan to.
     /// </param>
     private void Pan(Vector3 newPos)
     {
-        cam.transform.position = newPos;
+        // Offset is relative to player's position in the game world.
+        offset = newPos - transform.position;
     }
 
+    /// <summary>
+    /// Sets the camera's zoom and position variables, so that the update loop
+    /// handles zooming and panning accordingly.
+    /// </summary>
+    /// <param name="orthographicSize">
+    /// Zoom value: a smaller valye means a higher amount of zoom, and vice versa.
+    /// </param>
+    /// <param name="newPos">
+    /// The position to pan to.
+    /// </param>
     public void Move(float orthographicSize, Vector3 newPos)
     {
         Zoom(orthographicSize);
@@ -51,19 +66,22 @@ public class PlayerCamera : MonoBehaviour
     }
 
     /// <summary>
-    /// Restores the camera to its original position and zoom level.
+    /// Restores the camera's zoom and position variables to their original values.
     /// </summary>
     public void Reset()
     {
-        cam.orthographicSize = defaultSize;
-        cam.transform.position = defaultPosition;
+        newOrthographicSize = defaultZoom;
+        offset = defaultOffset;
     }
 
     void Start()
     {
         cam = GetComponent<Camera>();
-        defaultPosition = cam.transform.position;
-        defaultSize = cam.orthographicSize;
+
+        // Get default offset and zoom values.
+        defaultOffset = offset;
+        defaultZoom = newOrthographicSize = cam.orthographicSize;
+
         isIntro = Player.IsIntro;
 
         if (isIntro && door != null)
@@ -77,16 +95,11 @@ public class PlayerCamera : MonoBehaviour
         }
     }
 
-    private void Update()
-    {
-        
-    }
-
     void LateUpdate()
     {
         if (isIntro && door != null)
         {
-            float futureSize = defaultSize;
+            float futureSize = defaultZoom;
             Vector3 futurePos = player.position + offset;
 
             float t = time / panTime;
@@ -104,7 +117,7 @@ public class PlayerCamera : MonoBehaviour
 
                 sTime += Time.deltaTime;
 
-                if (sTime >= panZoomTime) cam.orthographicSize = defaultSize;
+                if (sTime >= panZoomTime) cam.orthographicSize = defaultZoom;
             }
 
             time += Time.deltaTime;
@@ -117,9 +130,23 @@ public class PlayerCamera : MonoBehaviour
         }
         else if (player != null)
         {
+            // This code handles the camera following the player as they move.
+            // Camera movement is lerped for smoothness.
+            // offset is adjusted above to effectively change how far the player
+            // can see ahead of themselves. Useful when encountering long jumps,
+            // to avoid the need for leaps of faith.
             Vector3 futurePos = player.position + offset;
-            Vector3 lerpPos = Vector3.Lerp(transform.position, futurePos, camSpeed * Time.deltaTime);
+            Vector3 lerpPos = Vector3.Lerp(transform.position, futurePos, panSpeed * Time.deltaTime);
             transform.position = lerpPos;
+
+            // This check ensures that zooming only happens when there is a change
+            // to the zoom variable's value.
+            if (cam.orthographicSize != newOrthographicSize)
+            {
+                // Using the same logic as panning above, lerp the camera's zoom.
+                float lerpZoom = Mathf.Lerp(cam.orthographicSize, newOrthographicSize, zoomSpeed * Time.deltaTime);
+                cam.orthographicSize = lerpZoom;
+            }
         }
     }
 }

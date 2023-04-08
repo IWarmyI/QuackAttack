@@ -16,6 +16,11 @@ public class CameraActivateTrigger : MonoBehaviour
     [Tooltip("Position to set the camera to.")]
     private Vector3 newPos;
 
+    /// <summary>
+    /// Tells the main camera to zoom and pan to the orthographic size and 
+    /// position specified in this class's fields.
+    /// </summary>
+    /// <param name="collision"></param>
     private void OnTriggerStay2D(Collider2D collision)
     {
         if (collision.gameObject.CompareTag("Player"))
