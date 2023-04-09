@@ -9,7 +9,7 @@ public class DialogueTrigger : MonoBehaviour {
 
     // internal properties not exposed to editor
     private DialogueRunner dialogueRunner;
-    private bool interactable = true;
+    private static bool interactable = true;
     private bool isCurrentConversation = false;
 
     public void Start() {
