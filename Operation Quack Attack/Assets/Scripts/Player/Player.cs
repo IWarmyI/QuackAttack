@@ -101,7 +101,10 @@ public class Player : MonoBehaviour, IDamageable
     private bool onGround = true;
     [SerializeField] private Timer jumpCoyote = new Timer(0.2f, true);
     private Timer jumpCooldown;
-    private const float airDeccel = 0.96f; // Air Resistance
+
+    // Separate variables for these two so wall jumping is controlled by a separate variable.
+    [SerializeField] private float airDeccel = 0.875f; // Air Resistance
+    [SerializeField] private float wallAirDecel = 0.96f; // Air resistance when wall jumping
 
     [SerializeField] private int airJumps = 1;
     private int jumpCount = 0;
@@ -243,6 +246,13 @@ public class Player : MonoBehaviour, IDamageable
         {
             Reposition(_respawnPos);
         }
+
+        // Set the color of the duck sprite if it has already been
+        // selected by the player. Otherwise, default to yellow.
+        GetComponentInChildren<SpriteRenderer>().color = 
+            TintManager.selectedColor == Color.clear 
+            ? TintManager.MakeColor() 
+            : TintManager.selectedColor;
     }
 
     private void FixedUpdate()
@@ -317,6 +327,8 @@ public class Player : MonoBehaviour, IDamageable
 
     private void UpdateNormal()
     {
+        if (vel.x != 0) Debug.Log("vel.x = " + vel.x + ", vel.y = " + vel.y);
+
         // Get facing
         if (input.x != 0) facingRight = input.x > 0;
 
@@ -763,7 +775,7 @@ public class Player : MonoBehaviour, IDamageable
             if (jumpCooldown.IsComplete)
             {
                 if (vel.y > 0 && Mathf.Abs(vel.x) >= baseSpeed)
-                    vel.y *= Mathf.Pow(airDeccel, 50 * Time.deltaTime);
+                    vel.y *= Mathf.Pow(wallAirDecel, 50 * Time.deltaTime);
             }
         }
 
