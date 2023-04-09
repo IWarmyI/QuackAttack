@@ -6,7 +6,7 @@
             "id": "49bf4638-2232-4860-b800-f0635c71a44c",
             "actions": [
                 {
-                    "name": "Move Left",
+                    "name": "Left",
                     "type": "Button",
                     "id": "bbd8fdbf-426e-474f-a2c8-945c8334c4c4",
                     "expectedControlType": "Button",
@@ -15,7 +15,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Move Right",
+                    "name": "Right",
                     "type": "Button",
                     "id": "6dcfc4e4-caaa-481a-8164-971cb036992a",
                     "expectedControlType": "Button",
@@ -69,7 +69,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "PauseToggle",
+                    "name": "Pause",
                     "type": "Button",
                     "id": "57730c44-3cf6-4ff0-9c4a-80ed9504d83d",
                     "expectedControlType": "Button",
@@ -207,18 +207,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard",
-                    "action": "PauseToggle",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "805ce310-be95-4e35-b9bd-adfec907a114",
-                    "path": "<Keyboard>/p",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Keyboard",
-                    "action": "PauseToggle",
+                    "action": "Pause",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -229,7 +218,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "PauseToggle",
+                    "action": "Pause",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -240,7 +229,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard",
-                    "action": "Move Left",
+                    "action": "Left",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -251,7 +240,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Gamepad",
-                    "action": "Move Left",
+                    "action": "Left",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -262,7 +251,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard",
-                    "action": "Move Right",
+                    "action": "Right",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -273,7 +262,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Gamepad",
-                    "action": "Move Right",
+                    "action": "Right",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
