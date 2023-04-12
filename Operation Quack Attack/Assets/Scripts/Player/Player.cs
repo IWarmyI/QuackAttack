@@ -321,7 +321,7 @@ public class Player : MonoBehaviour, IDamageable
 
     private void UpdateNormal()
     {
-        if (vel.x != 0) Debug.Log("vel.x = " + vel.x + ", vel.y = " + vel.y);
+        //if (vel.x != 0) Debug.Log("vel.x = " + vel.x + ", vel.y = " + vel.y);
 
         // Get facing
         if (input.x != 0) facingRight = input.x > 0;
@@ -565,13 +565,32 @@ public class Player : MonoBehaviour, IDamageable
     // ========================================================================
     // Player Input Messages
     // ========================================================================
-    private void OnMove(InputValue value)
+    private void OnLeft(InputValue value)
     {
         // Gets new input
-        input = value.Get<Vector2>();
+        float newInput = value.Get<float>() * -1;
+        input.x = newInput;
+        Debug.Log(input.x);
 
         // Only uses x axis of input (x can only be -1, 0, or 1)
         input.y = 0;
+        
+        if (input != Vector2.zero) input.Normalize();
+
+        if (state != PlayerState.Stopped && state != PlayerState.Dead)
+            if (input != Vector2.zero) hasStarted = true;
+    }
+
+    private void OnRight(InputValue value)
+    {
+        // Gets new input
+        float newInput = value.Get<float>();
+        input.x = newInput;
+        Debug.Log(input.x);
+
+        // Only uses x axis of input (x can only be -1, 0, or 1)
+        input.y = 0;
+        
         if (input != Vector2.zero) input.Normalize();
 
         if (state != PlayerState.Stopped && state != PlayerState.Dead)
@@ -680,7 +699,7 @@ public class Player : MonoBehaviour, IDamageable
         LevelManager.Instance.Respawn();
     }
 
-    private void OnPauseToggle(InputValue value)
+    private void OnPause(InputValue value)
     {
         if (Time.timeScale == 0.0f)
         {
