@@ -565,28 +565,10 @@ public class Player : MonoBehaviour, IDamageable
     // ========================================================================
     // Player Input Messages
     // ========================================================================
-    private void OnLeft(InputValue value)
+    private void OnMove(InputValue value)
     {
         // Gets new input
-        float newInput = value.Get<float>() * -1;
-        input.x = newInput;
-        Debug.Log(input.x);
-
-        // Only uses x axis of input (x can only be -1, 0, or 1)
-        input.y = 0;
-        
-        if (input != Vector2.zero) input.Normalize();
-
-        if (state != PlayerState.Stopped && state != PlayerState.Dead)
-            if (input != Vector2.zero) hasStarted = true;
-    }
-
-    private void OnRight(InputValue value)
-    {
-        // Gets new input
-        float newInput = value.Get<float>();
-        input.x = newInput;
-        Debug.Log(input.x);
+        input = value.Get<Vector2>();
 
         // Only uses x axis of input (x can only be -1, 0, or 1)
         input.y = 0;
