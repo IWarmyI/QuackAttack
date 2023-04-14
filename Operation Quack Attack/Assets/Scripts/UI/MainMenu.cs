@@ -140,6 +140,11 @@ public class MainMenu : MonoBehaviour
         EventSystem.current.SetSelectedGameObject(CreditsFirstObject);
     }
 
+    // quit game
+    public void QuitButton() {
+        Application.Quit();
+    }
+
     public void ExternalButton()
     {
         // Show Credits Menu
