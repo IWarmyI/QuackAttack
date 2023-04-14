@@ -327,7 +327,7 @@ public class Player : MonoBehaviour, IDamageable
 
     private void UpdateNormal()
     {
-        if (vel.x != 0) Debug.Log("vel.x = " + vel.x + ", vel.y = " + vel.y);
+        //if (vel.x != 0) Debug.Log("vel.x = " + vel.x + ", vel.y = " + vel.y);
 
         // Get facing
         if (input.x != 0) facingRight = input.x > 0;
@@ -578,6 +578,7 @@ public class Player : MonoBehaviour, IDamageable
 
         // Only uses x axis of input (x can only be -1, 0, or 1)
         input.y = 0;
+        
         if (input != Vector2.zero) input.Normalize();
 
         if (state != PlayerState.Stopped && state != PlayerState.Dead)
@@ -686,7 +687,7 @@ public class Player : MonoBehaviour, IDamageable
         LevelManager.Instance.Respawn();
     }
 
-    private void OnPauseToggle(InputValue value)
+    private void OnPause(InputValue value)
     {
         if (Time.timeScale == 0.0f)
         {
