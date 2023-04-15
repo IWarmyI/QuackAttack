@@ -5063,10 +5063,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 1830123204}
-  camSpeed: 10
-  offset: {x: 0, y: 0, z: -20}
+  panSpeed: 10
+  zoomSpeed: 2
+  offset: {x: 0, y: 0, z: -10}
+  panTime: 15
   door: {fileID: 6455250}
-  panTime: 2.5
+  introPanTime: 2.5
   panSize: 15
   panZoomTime: 1
 --- !u!114 &519420034
