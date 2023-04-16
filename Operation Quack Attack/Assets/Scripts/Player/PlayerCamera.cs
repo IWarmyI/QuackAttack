@@ -11,10 +11,24 @@ public class PlayerCamera : MonoBehaviour
     [SerializeField] float zoomSpeed;
     [SerializeField] Vector3 offset;
 
+    /// <summary>
+    /// Camera offset from player on scene startup.
+    /// </summary>
     private Vector3 defaultOffset;
+
+    /// <summary>
+    /// Camera orthographic size on scene startup.
+    /// </summary>
     private float defaultZoom;
+
+    /// <summary>
+    /// Camera orthographic size as dictated by activation triggers on the map.
+    /// </summary>
     private float newOrthographicSize;
-    [SerializeField] private float panTime;
+
+    [SerializeField]
+    [Tooltip("Amount of time the camera has to pan between default and new offsets.")]
+    private float panTime;
 
     public Transform door;
     private Vector3 start;
@@ -25,7 +39,15 @@ public class PlayerCamera : MonoBehaviour
     private float sTime = 0;
 
     private bool isIntro = true;
+
+    /// <summary>
+    /// Whether the camera is panning currently.
+    /// </summary>
     private bool moving;
+
+    /// <summary>
+    /// Whether the camera is at its default position and orthographic size.
+    /// </summary>
     private bool reset = true;
 
     /// <summary>
@@ -142,8 +164,10 @@ public class PlayerCamera : MonoBehaviour
         }
         else if (player != null)
         {
+            // Camera is marked to move this frame by player interaction with a trigger.
             if (moving)
             {
+                // Pan to the new position.
                 if (time <= panTime / 5)
                 {
                     // This code handles the camera following the player as they move.
@@ -151,24 +175,23 @@ public class PlayerCamera : MonoBehaviour
                     // offset is adjusted above to effectively change how far the player
                     // can see ahead of themselves. Useful when encountering long jumps,
                     // to avoid the need for leaps of faith.
+                    //
+                    // Mathf.SmoothStep produces an ease-in/out effect.
                     Vector3 futurePos = player.position + offset;
                     Vector3 lerpPos = Vector3.Lerp(transform.position, futurePos, Mathf.SmoothStep(0f, 1f, time / panTime));
                     transform.position = lerpPos;
                     time += Time.deltaTime;
                 }
+                // Finished panning to new position.
                 else
                 {
                     time = 0;
                     moving = false;
                 }
             }
+            // Regular movemoent i.e., not trigger-activated.
             else
             {
-                // This code handles the camera following the player as they move.
-                // Camera movement is lerped for smoothness.
-                // offset is adjusted above to effectively change how far the player
-                // can see ahead of themselves. Useful when encountering long jumps,
-                // to avoid the need for leaps of faith.
                 Vector3 futurePos = player.position + offset;
                 Vector3 lerpPos = Vector3.Lerp(transform.position, futurePos, panSpeed * Time.deltaTime);
                 transform.position = lerpPos;
