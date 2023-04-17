@@ -8,7 +8,6 @@ public class SecretArea : MonoBehaviour
     // Start is called before the first frame update
     [SerializeField] GameObject wall;
     [SerializeField] GameObject zoneHider;
-    bool hitTrigger = false;
 
     void Start()
     {
@@ -23,16 +22,15 @@ public class SecretArea : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.gameObject.CompareTag("Player") && !hitTrigger)
-        {
-            hitTrigger = true;
-            zoneHider.GetComponent<TilemapRenderer>().enabled = false;
-        }
+        zoneHider.GetComponent<TilemapRenderer>().enabled = false;
     }
 
-    private void OnTriggerExit2D(Collider2D collision)
+    private void OnTriggerExit2D(Collider2D other)
     {
-        hitTrigger = false;
+        if (other.gameObject.CompareTag("Projectile"))
+        {
+            return;
+        }
         zoneHider.GetComponent<TilemapRenderer>().enabled = true;
     }
 }
