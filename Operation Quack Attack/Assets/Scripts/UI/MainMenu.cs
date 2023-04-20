@@ -39,16 +39,6 @@ public class MainMenu : MonoBehaviour
             sfxFloat = 0.5f;
         }
         canvas.GetComponent<AudioSource>().volume = musicFloat;
-
-        var rebinds = PlayerPrefs.GetString("rebinds");
-        if (!string.IsNullOrEmpty(rebinds))
-            actions.LoadBindingOverridesFromJson(rebinds);
-    }
-
-    public void Save()
-    {
-        var rebinds = actions.SaveBindingOverridesAsJson();
-        PlayerPrefs.SetString("rebinds", rebinds);
     }
 
     void Update()
@@ -148,6 +138,11 @@ public class MainMenu : MonoBehaviour
 
         EventSystem.current.SetSelectedGameObject(null);
         EventSystem.current.SetSelectedGameObject(CreditsFirstObject);
+    }
+
+    // quit game
+    public void QuitButton() {
+        Application.Quit();
     }
 
     public void ExternalButton()

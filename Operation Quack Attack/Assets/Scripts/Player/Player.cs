@@ -576,6 +576,7 @@ public class Player : MonoBehaviour, IDamageable
 
         // Only uses x axis of input (x can only be -1, 0, or 1)
         input.y = 0;
+        
         if (input != Vector2.zero) input.Normalize();
 
         if (state != PlayerState.Stopped && state != PlayerState.Dead)
@@ -684,7 +685,7 @@ public class Player : MonoBehaviour, IDamageable
         LevelManager.Instance.Respawn();
     }
 
-    private void OnPauseToggle(InputValue value)
+    private void OnPause(InputValue value)
     {
         if (Time.timeScale == 0.0f)
         {

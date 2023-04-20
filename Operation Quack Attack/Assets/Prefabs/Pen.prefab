@@ -359,8 +359,8 @@ MonoBehaviour:
   bulletID: 0
   bulletManager: {fileID: 0}
   bulletOffset: {x: 0, y: 0}
-  fireRate: 0.75
-  visionRadius: 13
+  fireRate: 0.5
+  visionRadius: 8
   target: {fileID: 0}
 --- !u!1 &7557296128729136904
 GameObject:
