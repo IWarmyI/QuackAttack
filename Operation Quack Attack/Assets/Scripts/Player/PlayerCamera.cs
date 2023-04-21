@@ -26,6 +26,9 @@ public class PlayerCamera : MonoBehaviour
     /// </summary>
     private float newOrthographicSize;
 
+    public Vector3 Offset { get { return offset; } }
+    public float NewOrthographicSize { get { return newOrthographicSize; } }
+
     [SerializeField]
     [Tooltip("Amount of time the camera has to pan between default and new offsets.")]
     private float panTime;
@@ -46,9 +49,14 @@ public class PlayerCamera : MonoBehaviour
     private bool moving;
 
     /// <summary>
-    /// Whether the camera is at its default position and orthographic size.
+    /// Whether the camera is at its default orthographic size.
     /// </summary>
-    private bool reset = true;
+    private bool resetZoom = true;
+
+    /// <summary>
+    /// Whether the camera is at its default position.
+    /// </summary>
+    private bool resetPan = true;
 
     /// <summary>
     /// Adjusts the camera's zoom variable, so that the update loop handles the
@@ -60,6 +68,7 @@ public class PlayerCamera : MonoBehaviour
     public void Zoom(float orthographicSize)
     {
         newOrthographicSize = orthographicSize;
+        resetZoom = false;
     }
 
     ///// <summary>
@@ -78,38 +87,59 @@ public class PlayerCamera : MonoBehaviour
     public void Pan(Vector3 newOffset)
     {
         offset = newOffset;
+        moving = true;
+        resetPan = false;
     }
 
-    /// <summary>
-    /// Sets the camera's zoom and position variables, so that the update loop
-    /// handles zooming and panning accordingly.
-    /// </summary>
-    /// <param name="orthographicSize">
-    /// Zoom value: a smaller valye means a higher amount of zoom, and vice versa.
-    /// </param>
-    /// <param name="newPos">
-    /// The position to pan to.
-    /// </param>
-    public void Move(float orthographicSize, Vector3 newPos)
-    {
-        Zoom(orthographicSize);
-        //Pan(newPos);
-        //moving = true;
-        reset = false;
-    }
+    ///// <summary>
+    ///// Sets the camera's zoom and position variables, so that the update loop
+    ///// handles zooming and panning accordingly.
+    ///// </summary>
+    ///// <param name="orthographicSize">
+    ///// Zoom value: a smaller valye means a higher amount of zoom, and vice versa.
+    ///// </param>
+    ///// <param name="newPos">
+    ///// The position to pan to.
+    ///// </param>
+    //public void Move(float orthographicSize, Vector3 newPos)
+    //{
+    //    Zoom(orthographicSize);
+    //    //Pan(newPos);
+    //    //moving = true;
+    //    reset = false;
+    //}
 
     /// <summary>
     /// Restores the camera's zoom and position variables to their original values.
     /// </summary>
     public void Reset()
     {
-        if (!reset)
-        {
-            newOrthographicSize = defaultZoom;
-            //offset = defaultOffset;
-            //moving = true;
-            reset = true;
-        }
+        //if (!reset)
+        //{
+        //    Zoom(defaultZoom);
+        //    //newOrthographicSize = defaultZoom;
+        //    //offset = defaultOffset;
+        //    //moving = true;
+        //    reset = true;
+        //}
+    }
+
+    public void Reset(bool zoom, bool pan)
+    {
+        if (!resetZoom) ResetZoom();
+        if (!resetPan) ResetPan();
+    }
+
+    public void ResetZoom()
+    {
+        if (!resetZoom) Zoom(defaultZoom);
+        resetZoom = true;
+    }
+
+    public void ResetPan()
+    {
+        if (!resetPan) Pan(defaultOffset);
+        resetPan = true;
     }
 
     void Start()
@@ -173,7 +203,7 @@ public class PlayerCamera : MonoBehaviour
             if (moving)
             {
                 // Pan to the new position.
-                if (time <= panTime / 5)
+                if (time <= panTime / 10)
                 {
                     // This code handles the camera following the player as they move.
                     // Camera movement is lerped for smoothness.
@@ -183,7 +213,7 @@ public class PlayerCamera : MonoBehaviour
                     //
                     // Mathf.SmoothStep produces an ease-in/out effect.
                     Vector3 futurePos = player.position + offset;
-                    Vector3 lerpPos = Vector3.Lerp(transform.position, futurePos, Mathf.SmoothStep(0f, 1f, time / panTime));
+                    Vector3 lerpPos = Vector3.Lerp(transform.position, futurePos, Mathf.SmoothStep(0f, 1f, time / (panTime / 2.5f)));
                     transform.position = lerpPos;
                     time += Time.deltaTime;
                 }
