@@ -88,8 +88,8 @@ public class PlayerCamera : MonoBehaviour
     public void Move(float orthographicSize, Vector3 newPos)
     {
         Zoom(orthographicSize);
-        Pan(newPos);
-        moving = true;
+        //Pan(newPos);
+        //moving = true;
         reset = false;
     }
 
@@ -101,8 +101,8 @@ public class PlayerCamera : MonoBehaviour
         if (!reset)
         {
             newOrthographicSize = defaultZoom;
-            offset = defaultOffset;
-            moving = true;
+            //offset = defaultOffset;
+            //moving = true;
             reset = true;
         }
     }
