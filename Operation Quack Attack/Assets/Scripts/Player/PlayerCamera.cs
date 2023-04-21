@@ -57,22 +57,27 @@ public class PlayerCamera : MonoBehaviour
     /// <param name="orthographicSize">
     /// Zoom value: a smaller value means a higher amount of zoom, and vice versa.
     /// </param>
-    private void Zoom(float orthographicSize)
+    public void Zoom(float orthographicSize)
     {
         newOrthographicSize = orthographicSize;
     }
 
-    /// <summary>
-    /// Adjusts the camera's position variable, so that the update loop handles
-    /// the panning accordingly.
-    /// </summary>/
-    /// <param name="newPos">
-    /// The position to pan to.
-    /// </param>
-    private void Pan(Vector3 newPos)
+    ///// <summary>
+    ///// Adjusts the camera's position variable, so that the update loop handles
+    ///// the panning accordingly.
+    ///// </summary>/
+    ///// <param name="newPos">
+    ///// The position to pan to.
+    ///// </param>
+    //public void Pan(Vector3 newPos)
+    //{
+    //    // Offset is relative to player's position in the game world.
+    //    offset = newPos - transform.position;
+    //}
+
+    public void Pan(Vector3 newOffset)
     {
-        // Offset is relative to player's position in the game world.
-        offset = newPos - transform.position;
+        offset = newOffset;
     }
 
     /// <summary>
