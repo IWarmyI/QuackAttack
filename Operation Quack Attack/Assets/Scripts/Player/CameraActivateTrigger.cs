@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public class CameraActivateTrigger : MonoBehaviour
@@ -13,8 +14,12 @@ public class CameraActivateTrigger : MonoBehaviour
     private float orthographicSize;
 
     [SerializeField]
+    [Tooltip("Whether to pan the camera.")]
+    private bool pan;
+
+    [SerializeField]
     [Tooltip("Position to set the camera to.")]
-    private Vector3 newPos;
+    private Vector3 newOffset;
 
     /// <summary>
     /// Tells the main camera to zoom and pan to the orthographic size and 
@@ -24,6 +29,10 @@ public class CameraActivateTrigger : MonoBehaviour
     private void OnTriggerStay2D(Collider2D collision)
     {
         if (collision.gameObject.CompareTag("Player"))
-            mainCamera.Move(orthographicSize, newPos);
+        {
+            if (pan && mainCamera.Offset != newOffset) mainCamera.Pan(newOffset);
+            if (orthographicSize != 0 && mainCamera.NewOrthographicSize != orthographicSize) mainCamera.Zoom(orthographicSize);
+        }
     }
 }
+
