@@ -312,7 +312,7 @@ Tilemap:
       serializedVersion: 2
       m_TileIndex: 47
       m_TileSpriteIndex: 47
-      m_TileMatrixIndex: 2
+      m_TileMatrixIndex: 1
       m_TileColorIndex: 0
       m_TileObjectToInstantiateIndex: 65535
       dummyAlignment: 0
@@ -322,7 +322,7 @@ Tilemap:
       serializedVersion: 2
       m_TileIndex: 48
       m_TileSpriteIndex: 48
-      m_TileMatrixIndex: 2
+      m_TileMatrixIndex: 1
       m_TileColorIndex: 0
       m_TileObjectToInstantiateIndex: 65535
       dummyAlignment: 0
@@ -332,7 +332,7 @@ Tilemap:
       serializedVersion: 2
       m_TileIndex: 49
       m_TileSpriteIndex: 49
-      m_TileMatrixIndex: 2
+      m_TileMatrixIndex: 0
       m_TileColorIndex: 0
       m_TileObjectToInstantiateIndex: 65535
       dummyAlignment: 0
@@ -342,7 +342,7 @@ Tilemap:
       serializedVersion: 2
       m_TileIndex: 50
       m_TileSpriteIndex: 50
-      m_TileMatrixIndex: 2
+      m_TileMatrixIndex: 0
       m_TileColorIndex: 0
       m_TileObjectToInstantiateIndex: 65535
       dummyAlignment: 0
@@ -352,7 +352,7 @@ Tilemap:
       serializedVersion: 2
       m_TileIndex: 55
       m_TileSpriteIndex: 55
-      m_TileMatrixIndex: 2
+      m_TileMatrixIndex: 1
       m_TileColorIndex: 0
       m_TileObjectToInstantiateIndex: 65535
       dummyAlignment: 0
@@ -875,43 +875,43 @@ Tilemap:
   - m_RefCount: 1
     m_Data: {fileID: 2145329713, guid: 29712e3d77c4b284495e254680e89b6b, type: 3}
   m_TileMatrixArray:
-  - m_RefCount: 0
+  - m_RefCount: 2
     m_Data:
-      e00: -1.7492151e+31
-      e01: 7e-45
-      e02: 1.04172115e-10
+      e00: 1.12
+      e01: 0
+      e02: 0
       e03: 0
-      e10: 3.38e-43
-      e11: 0
-      e12: 4.5904e-41
-      e13: 0
-      e20: NaN
+      e10: 0
+      e11: 1.12
+      e12: 0
+      e13: 0.25
+      e20: 0
       e21: 0
-      e22: -1.7492131e+31
+      e22: 1.12
       e23: 0
       e30: 0
-      e31: 7.34684e-40
-      e32: 3.38e-43
+      e31: 0
+      e32: 0
       e33: 1
-  - m_RefCount: 0
+  - m_RefCount: 3
     m_Data:
-      e00: -1.7492151e+31
-      e01: 7e-45
-      e02: 1.04172115e-10
+      e00: 1.12
+      e01: 0
+      e02: 0
       e03: 0
-      e10: 3.38e-43
-      e11: 0
-      e12: 4.5904e-41
-      e13: 0
-      e20: NaN
+      e10: 0
+      e11: 1.12
+      e12: 0
+      e13: 0.45
+      e20: 0
       e21: 0
-      e22: -1.7492131e+31
+      e22: 1.12
       e23: 0
       e30: 0
-      e31: 7.34684e-40
-      e32: 3.38e-43
+      e31: 0
+      e32: 0
       e33: 1
-  - m_RefCount: 56
+  - m_RefCount: 51
     m_Data:
       e00: 1.12
       e01: 0
@@ -1005,7 +1005,7 @@ TilemapRenderer:
   m_Mode: 0
   m_DetectChunkCullingBounds: 0
   m_MaskInteraction: 0
---- !u!114 &5589426476320983125
+--- !u!114 &4453515287688630825
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
