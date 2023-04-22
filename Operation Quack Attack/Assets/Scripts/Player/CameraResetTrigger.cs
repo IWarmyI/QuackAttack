@@ -8,6 +8,14 @@ public class CameraResetTrigger : MonoBehaviour
     [Tooltip("Reference to the main camera in the scene.")]
     private PlayerCamera mainCamera;
 
+    [SerializeField]
+    [Tooltip("Whether to zoom back to the original orthographic size.")]
+    private bool resetZoom;
+
+    [SerializeField]
+    [Tooltip("Whether to pan back to the original offset.")]
+    private bool resetPan;
+
     /// <summary>
     /// Tells the main camera to zoom and pan back to its defaults.
     /// </summary>
@@ -15,6 +23,9 @@ public class CameraResetTrigger : MonoBehaviour
     private void OnTriggerStay2D(Collider2D collision)
     {
         if (collision.gameObject.CompareTag("Player"))
-            mainCamera.Reset();
+        {
+            if (resetZoom) mainCamera.ResetZoom();
+            if (resetPan) mainCamera.ResetPan();
+        }
     }
 }
