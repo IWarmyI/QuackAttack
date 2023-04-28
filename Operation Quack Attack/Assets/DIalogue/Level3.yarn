@@ -1,7 +1,7 @@
 ﻿title: Start3
 tags:
 ---
-Professor Quaxmore: These pits of lava are a problem, but here's one more ability. If you press "Shift", you can propel yourself forward.
+Professor Quaxmore: These pits of lava are a problem, but here's one more ability. If you press {get_bind("Dash")}, you can propel yourself forward.
 General Von Mallard: Be careful because that also spends water! But try using both your extra jump and your new dash to cross these gaps, soldier!
 ===
 title: WaterTutorial

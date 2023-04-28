@@ -1012,6 +1012,7 @@ GameObject:
   - component: {fileID: 8863989416591148833}
   - component: {fileID: 7386921820049882402}
   - component: {fileID: 7063001739155684661}
+  - component: {fileID: 186116011952457747}
   m_Layer: 0
   m_Name: DialogueSystemNoEvent
   m_TagString: Untagged
@@ -1083,6 +1084,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   showDebug: 0
   debugTextView: {fileID: 0}
+--- !u!114 &186116011952457747
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8149581244415997279}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc5840c061ca1144fbd75cdbc3b60ecc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  input: {fileID: -944628639613478452, guid: 9eab2b5560fcb974aa5192b9d3f8b5c7, type: 3}
 --- !u!1 &8836015924361728236
 GameObject:
   m_ObjectHideFlags: 0

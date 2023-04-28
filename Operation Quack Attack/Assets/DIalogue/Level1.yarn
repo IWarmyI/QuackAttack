@@ -1,11 +1,11 @@
 ﻿title: Start1
 ---
 General Von Mallard: Alright Soldier, you're in! Professor Quaxmore and I will patch you in with some instructions!
-Professor Quaxmore: Hi Dewey! You can start by moving with "A & D"! Go and give it a try!
+Professor Quaxmore: Hi Dewey! You can start by moving with {get_bind("Move")}! Go and give it a try!
 ===
 title: JumpTutorial
 ---
-Professor Quaxmore: These new legs you got will help you here, just press "Spacebar" to jump!
+Professor Quaxmore: These new legs you got will help you here, just press {get_bind("Jump")} to jump!
 ===
 title: LeapOfFaith
 ---

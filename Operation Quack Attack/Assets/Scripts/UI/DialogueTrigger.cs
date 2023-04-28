@@ -36,4 +36,6 @@ public class DialogueTrigger : MonoBehaviour {
             Debug.Log($"Started conversation with {name}.");
         }
     }
+
+    
 }

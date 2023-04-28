@@ -2,7 +2,7 @@
 tags:
 ---
 Professor Quaxmore: Okay, there's just one more thing I gotta show you, and it's the power to shoot water from your mouth.
-Professor Quaxmore: Try pressing "K". You'll spend some water but you can blast enemies and activate buttons, like the one right above you!
+Professor Quaxmore: Try pressing {get_bind("Shoot")}. You'll spend some water but you can blast enemies and activate buttons, like the one right above you!
 ===
 title: PenEnemy
 tags:
