@@ -1,30 +1,25 @@
 ﻿title: Start3
 tags:
 ---
-General Von Mallard: These pits of lava seem tough, but we got something for ya!
-Professor Quaxmore: If you press "Shift", you can propel yourself forward.
-Professor Quaxmore: Just be careful, because that also spends water.
-General Von Mallard: Try using both your extra jump and your new dash to cross these gaps, soldier!
+Professor Quaxmore: These pits of lava are a problem, but here's one more ability. If you press {get_bind("Dash")}, you can propel yourself forward.
+General Von Mallard: Be careful because that also spends water! But try using both your extra jump and your new dash to cross these gaps, soldier!
 ===
 title: WaterTutorial
 tags:
 ---
 General Von Mallard: It's good to keep an eye on your water, but remember that it refills over time!
-Professor Quaxmore: Or, if you start to run out, grab one of these water bottles.
-Professor Quaxmore: They're a lot more refreshing than just standing still and waiting!
+Professor Quaxmore: Or, if you start to run out, grab one of these water bottles. They're a lot more refreshing than just standing still and waiting!
 ===
 title: EnemyTutorial
 tags:
 ---
 Professor Quaxmore: Hmmm, of course there is security waiting for us here...
-General Von Mallard: Those stacks of paper have nothing on you, soldier!
-General Von Mallard: Just dash through them and they're gone! And don't worry, soldier, because they can't hit you if you're going that fast!
+General Von Mallard: Those stacks of paper have nothing on you, soldier! Just dash through them and they're gone! They can't hit you if you're going that fast!
 ===
 title: DashThrough
 tags:
 ---
-Professor Quaxmore: Hmmm, it seems that if dash through an enemy, you get some water back.
-Professor Quaxmore: I didn't expect this to happen, but it will be useful! Make good use of it, hehehe...
+Professor Quaxmore: Hmmm, it seems that if dash through an enemy, you get some water back. I didn't expect this to happen, but it will be useful! Make good use of it, hehehe...
 ===
 title: KeepGoing1
 tags:
