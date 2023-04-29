@@ -41,10 +41,10 @@ public class UpdateTutorialText : MonoBehaviour
         //         }
         //     }
         // return s;
-        if (currInput == "Move") {return "(A & D)";}
-        else if (currInput == "Jump") {return "(Spacebar)";}
-        else if (currInput == "Dash") {return "(Shift)";}
-        else if (currInput == "Shoot") {return "(K)";}
+        if (currInput == "Move") {return "(Left Joystick/D-Pad)";}
+        else if (currInput == "Jump") {return "A";}
+        else if (currInput == "Dash") {return "B";}
+        else if (currInput == "Shoot") {return "X";}
         else {return "(NOT FOUND)";};
     }   
 

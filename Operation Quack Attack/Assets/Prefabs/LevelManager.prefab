@@ -148,7 +148,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   transitionAnimator: {fileID: 5214206389388754122}
   transitionDelayTime: 0.5
-  firstLevel: 1
+  firstLevel: 2
   numberOfLevels: 5
   menuScenes:
   - MainMenu
